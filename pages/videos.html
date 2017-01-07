@@ -1,3 +1,32 @@
 <div ng-controller="videosController as videos" ng-init="videos.init()" class="col-sm-9 page col-right">
-    videos
+    <a>
+        <strong>
+            <i class="glyphicon glyphicon-film"></i>
+            视频库发布
+        </strong>
+    </a>
+
+    <hr>
+    <div class="btn-group">
+        <button ng-disabled="!videos.isChecked() || videos.sending" ng-click="videos.send()" type="button" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-send"></i> 一键发布</button>
+        <div ng-show="videos.sending">sending...</div>
+    </div>
+    <hr class="break-space">
+    
+    <table class="table table-hover table-condensed" ng-table="videos.tableParams">
+        <div ng-show="videos.loading">loading...</div>
+        <tr ng-repeat="row in $data track by $index">
+            <td width="30" header="'ng-table/headers/checkbox.html'">
+                <input type="checkbox" ng-model="videos.checkboxes.items[row.ProjectName]" />
+            </td>
+            <td data-title="'项目登录名'" >{{row.ProjectName}}</td>
+            <td data-title="'项目名称'" >{{row.ProjectNameCHZ}}</td>
+            <td data-title="'微信 AppID'" >{{row.WXAppID}}</td>
+            <td data-title="'微信名称'" >{{row.WXName}}</td>
+        </tr>
+    </table>
+    <div ng-show="videos.noData">查无数据</div>
+    <script type="text/ng-template" id="ng-table/headers/checkbox.html">
+        <input type="checkbox" ng-model="videos.checkboxes.checked" value="" />
+    </script>
 </div>

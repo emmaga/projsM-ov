@@ -1,36 +1,30 @@
 <div ng-controller="projectsController as projects" ng-init="projects.init()" class="col-sm-9 page col-right">
     <a>
         <strong>
-            <i class="glyphicon glyphicon-film"></i>
+            <i class="glyphicon glyphicon-flag"></i>
             项目管理
         </strong>
     </a>
     <hr>
 
     <table class="table table-hover table-condensed" ng-table="projects.tableParams">
-        <thead>
-            <tr>
-                <th>项目名称</th>
-                <th>xx</th>
-            </tr>
-        </thead>
-        <tbody>
-            <div ng-show="projects.loading">loading...</div>
-            <tr ng-repeat="project in $data track by $index">
-                <td data-title="'项目名称'" >{{project.name}}</td>
-                <td data-title="'xx'" >{{project.xx}}</td>
+        <div ng-show="projects.loading">loading...</div>
+        <tr ng-repeat="project in $data track by $index">
+            <td data-title="'项目登录名'" >{{project.ProjectName}}</td>
+            <td data-title="'项目名称'" >{{project.ProjectNameCHZ}}</td>
+            <td data-title="'微信 AppID'" >{{project.WXAppID}}</td>
+            <td data-title="'微信名称'" >{{project.WXName}}</td>
 
 
 
 
-                <!-- <td data-title="'操作'">
-                    <button ng-click="projects.edit(project.ID)" class="btn btn-xs btn-default" title="编辑">
-                        <i class="glyphicon glyphicon-pencil"></i>
-                    </button>
-                    
-                </td> -->
-            </tr>
-        </tbody>
+            <!-- <td data-title="'操作'">
+                <button ng-click="projects.edit(project.ID)" class="btn btn-xs btn-default" title="编辑">
+                    <i class="glyphicon glyphicon-pencil"></i>
+                </button>
+                
+            </td> -->
+        </tr>
     </table>
     <div ng-show="projects.noData">查无数据</div>
 </div>
