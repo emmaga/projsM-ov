@@ -103,7 +103,7 @@
                 self.loading = true;
                 self.tableParams = new NgTableParams({
                     page: 1,
-                    count: 1000000, //15
+                    count: 15, //15
                     url: ''
                 }, {
                     counts: [],
@@ -122,14 +122,10 @@
                             data: data
                         }).then(function successCallback(data, status, headers, config) {
                             if (data.data.rescode == '200') {
-                                /*if (data.data.total == 0) {
-                                    self.noData = true;
-                                }*/
-                                if (data.data.data.length == 0) {
+                                if (data.data.total == 0) {
                                     self.noData = true;
                                 }
-                                //params.total(data.data.total);
-                                params.total(data.data.data.length);
+                                params.total(data.data.total);
                                 return data.data.data;
                             } else if (msg.rescode == '401') {
                                 alert('访问超时，请重新登录');
@@ -229,7 +225,7 @@
                 self.loading = true;
                 self.tableParams = new NgTableParams({
                     page: 1,
-                    count: 1000000, //15
+                    count: 15, //15
                     url: ''
                 }, {
                     counts: [],
@@ -248,14 +244,10 @@
                             data: data
                         }).then(function successCallback(data, status, headers, config) {
                             if (data.data.rescode == '200') {
-                                /*if (data.data.total == 0) {
-                                    self.noData = true;
-                                }*/
-                                if (data.data.data.length == 0) {
+                                if (data.data.total == 0) {
                                     self.noData = true;
                                 }
-                                //params.total(data.data.total);
-                                params.total(data.data.data.length);
+                                params.total(data.data.total);
                                 self.tableData = data.data.data;
                                 return data.data.data;
                             } else if (msg.rescode == '401') {
@@ -356,7 +348,7 @@
                 self.loading = true;
                 self.tableParams = new NgTableParams({
                     page: 1,
-                    count: 1000000, //15
+                    count: 15, //15
                     url: ''
                 }, {
                     counts: [],
@@ -375,14 +367,10 @@
                             data: data
                         }).then(function successCallback(data, status, headers, config) {
                             if (data.data.rescode == '200') {
-                                /*if (data.data.total == 0) {
-                                    self.noData = true;
-                                }*/
-                                if (data.data.data.length == 0) {
+                                if (data.data.total == 0) {
                                     self.noData = true;
                                 }
-                                //params.total(data.data.total);
-                                params.total(data.data.data.length);
+                                params.total(data.data.total);
                                 self.tableData = data.data.data;
                                 return data.data.data;
                             } else if (msg.rescode == '401') {
@@ -483,7 +471,7 @@
                 self.loading = true;
                 self.tableParams = new NgTableParams({
                     page: 1,
-                    count: 1000000, //15
+                    count: 15, //15
                     url: ''
                 }, {
                     counts: [],
@@ -502,14 +490,10 @@
                             data: data
                         }).then(function successCallback(data, status, headers, config) {
                             if (data.data.rescode == '200') {
-                                /*if (data.data.total == 0) {
-                                    self.noData = true;
-                                }*/
-                                if (data.data.data.length == 0) {
+                                if (data.data.total == 0) {
                                     self.noData = true;
                                 }
-                                //params.total(data.data.total);
-                                params.total(data.data.data.length);
+                                params.total(data.data.total);
                                 self.tableData = data.data.data;
                                 return data.data.data;
                             } else if (msg.rescode == '401') {
