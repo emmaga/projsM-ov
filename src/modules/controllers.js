@@ -37,10 +37,8 @@
                         console.log(msg.token)
                         util.setParams('token', msg.token);
                         self.getEditLangs();
-                    } else if (msg.rescode == "401") {
-                        alert('访问超时，请重新登录');
-                        $state.go('login')
-                    } else {
+                    } 
+                    else {
                         alert(msg.rescode + ' ' + msg.errInfo);
                     }
                 }, function errorCallback(response) {
