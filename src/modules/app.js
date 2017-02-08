@@ -41,6 +41,11 @@
                 url: '/videos',
                 templateUrl: 'pages/videos.html'
             })
+            // 音乐库
+            .state('app.musics', {
+                url: '/musics',
+                templateUrl: 'pages/musics.html'
+            })
             .state('app.advs', {
                 url: '/advs',
                 templateUrl: 'pages/advs.html'
