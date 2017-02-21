@@ -6,20 +6,14 @@
         </strong>
     </a>
     <hr>
-    <div class="btn-group">
-        <button ng-click="projects.add()" type="button" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-plus"></i> 添加项目</button>
-        <!--<div ng-show="videos.sending">sending...</div>-->
-    </div>
-    <hr class="break-space">
+
     <table class="table table-hover table-condensed" ng-table="projects.tableParams">
         <div ng-show="projects.loading">loading...</div>
         <tr ng-repeat="project in $data track by $index">
             <td data-title="'项目登录名'" >{{project.ProjectName}}</td>
             <td data-title="'项目名称'" >{{project.ProjectNameCHZ}}</td>
-            <td data-title="'在线情况'" >{{project.Online}}/{{project.Total}}</td>
             <td data-title="'微信 AppID'" >{{project.WXAppID}}</td>
             <td data-title="'微信名称'" >{{project.WXName}}</td>
-            <td data-title="'操作'" ng-click="projects.edit(project)"><a style="cursor: pointer">编辑</a></td>
 
 
 
