@@ -8,7 +8,6 @@
     <hr>
     <div class="btn-group">
         <button ng-click="projects.add()" type="button" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-plus"></i> 添加项目</button>
-        <!--<div ng-show="videos.sending">sending...</div>-->
     </div>
     <hr class="break-space">
     <table class="table table-hover table-condensed" ng-table="projects.tableParams">
@@ -20,16 +19,6 @@
             <td data-title="'微信 AppID'" >{{project.WXAppID}}</td>
             <td data-title="'微信名称'" >{{project.WXName}}</td>
             <td data-title="'操作'" ng-click="projects.edit(project)"><a style="cursor: pointer">编辑</a></td>
-
-
-
-
-            <!-- <td data-title="'操作'">
-                <button ng-click="projects.edit(project.ID)" class="btn btn-xs btn-default" title="编辑">
-                    <i class="glyphicon glyphicon-pencil"></i>
-                </button>
-                
-            </td> -->
         </tr>
     </table>
     <div ng-show="projects.noData">查无数据</div>
