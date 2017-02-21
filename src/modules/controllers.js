@@ -81,11 +81,23 @@
                 $state.go('login');
             }
 
+            // 添加 删除 弹窗，增加一个样式的class
+            self.showHideMask = function(bool,url){
+                // bool 为true时，弹窗出现
+                if (bool) {
+                    $scope.app.maskUrl = url;
+                    $scope.app.showMaskClass = true;
+                } else {
+                    $scope.app.maskUrl = '';
+                    $scope.app.showMaskClass = false;
+                }
+            }
+
         }
     ])
 
-    .controller('projectsController', ['$http', '$scope', '$state', '$filter', '$stateParams', 'NgTableParams', 'util', 'CONFIG',
-        function($http, $scope, $state, $filter, $stateParams, NgTableParams, util, CONFIG) {
+    .controller('projectsController', ['$http', '$scope', '$state', '$filter', '$stateParams', 'NgTableParams', '$location','util', 'CONFIG',
+        function($http, $scope, $state, $filter, $stateParams, NgTableParams,$location, util, CONFIG) {
             console.log('projectsController')
             
             var self = this;
@@ -94,7 +106,15 @@
                 self.defaultLang = util.getDefaultLangCode();
                 self.getInfo();
             }
-
+            //添加项目
+            self.add = function () {
+                $scope.app.showHideMask(true,'pages/addProject.html');
+            }
+            //编辑项目
+            self.edit = function (projectInfo) {
+                $scope.app.maskParams = {'projectInfo': projectInfo};
+                $scope.app.showHideMask(true,'pages/editProject.html');
+            }
             // 获取项目列表信息
             self.getInfo = function () {
                 self.noData = false;
@@ -125,7 +145,7 @@
                                 }
                                 params.total(data.data.total);
                                 return data.data.data;
-                            } else if (msg.rescode == '401') {
+                            } else if (data.data.rescode == '401') {
                                 alert('访问超时，请重新登录');
                                 $location.path("pages/login.html");
                             } else {
@@ -141,10 +161,123 @@
                 });
             }
         }
-    ])  
+    ])
 
-    .controller('videosController', ['$http', '$scope', '$state', '$filter', '$stateParams', 'NgTableParams', 'util', 'CONFIG',
-        function($http, $scope, $state, $filter, $stateParams, NgTableParams, util, CONFIG) {
+    .controller('addProjectController', ['$scope','$location','$http','util','$state',
+        function($scope,$location,$http,util,$state) {
+            var self = this;
+            self.init = function() {
+
+            }
+            self.cancel = function() {
+                $scope.app.showHideMask(false);
+            }
+
+            self.save = function () {
+                var data = {
+                    "action":"create",
+                    "token":util.getParams("token"),
+                    "ProjectName":self.loginName,
+                    "ProjectNameCHZ":self.name,
+                    "WXAppID":self.appID,
+                    "WXName":self.appName
+                }
+                data = JSON.stringify(data);
+                self.saving = true;
+                $http({
+                    method:'POST',
+                    url:util.getApiUrl('project', '', 'server'),
+                    data:data
+                }).then(function successCallback(response) {
+                    var data = response.data;
+                    if (data.rescode == '200') {
+                        alert('添加成功');
+                        $state.reload();
+                    } else if(data.rescode == '401'){
+                        alert('访问超时，请重新登录');
+                        $state.go('login');
+                    } else{
+                        alert('添加失败，' + data.errInfo);
+                    }
+                },function errorCallback(response) {
+                    alert('连接服务器出错');
+                }).finally(function (value) {
+                    self.saving = false;
+                });
+            }
+        }
+    ])
+
+    .controller('editProjectController', ['$scope','$location','$http','util','$state',
+            function($scope,$location,$http,util,$state) {
+                var self = this;
+                self.init = function() {
+                    self.cache = $scope.app.maskParams.projectInfo;
+                    self.ID = self.cache.ID;
+                    self.loginName = self.cache.ProjectName;
+                    self.name = self.cache.ProjectNameCHZ;
+                    self.appID = self.cache.WXAppID;
+                    self.appName = self.cache.WXName
+                }
+                self.cancel = function() {
+                    $scope.app.showHideMask(false);
+                }
+
+                self.save = function () {
+                    var data = {
+                        "action":"Edit",
+                        "token":util.getParams("token"),
+                        "ID":self.ID
+                    }
+                    var flag = false;
+                    if(self.loginName != self.cache.ProjectName){
+                        data.ProjectName = self.loginName;
+                        flag = true
+                    }
+                    if(self.name != self.cache.ProjectNameCHZ){
+                        data.ProjectNameCHZ = self.name;
+                        flag = true
+                    }
+                    if(self.appID != self.cache.WXAppID){
+                        data.WXAppID = self.appID;
+                        flag = true
+                    }
+                    if(self.appName != self.cache.WXName){
+                        data.WXName = self.appName;
+                        flag = true
+                    }
+                    if(flag) {
+                        data = JSON.stringify(data);
+                        self.saving = true;
+                        $http({
+                            method: 'POST',
+                            url: util.getApiUrl('project', '', 'server'),
+                            data: data
+                        }).then(function successCallback(response) {
+                            var data = response.data;
+                            if (data.rescode == '200') {
+                                alert('修改成功');
+                                $state.reload();
+                            } else if (data.rescode == '401') {
+                                alert('访问超时，请重新登录');
+                                $state.go('login');
+                            } else {
+                                alert('修改失败，' + data.errInfo);
+                            }
+                        }, function errorCallback(response) {
+                            alert('连接服务器出错');
+                        }).finally(function (value) {
+                            self.saving = false;
+                        });
+                    }else{
+                        $scope.app.showHideMask(false);
+                    }
+                }
+            }
+    ])
+
+    .controller('videosController', ['$http', '$scope','$location', '$state', '$filter', '$stateParams', 'NgTableParams', 'util', 'CONFIG',
+        function($http, $scope, $location,$state, $filter, $stateParams, NgTableParams, util, CONFIG) {
             console.log('videosController')
             
             var self = this;
@@ -203,7 +336,7 @@
                 }).then(function successCallback(data, status, headers, config) {
                     if (data.data.rescode == '200') {
                         alert('发布成功');
-                    } else if (msg.rescode == '401') {
+                    } else if (data.data.rescode == '401') {
                         alert('访问超时，请重新登录');
                         $location.path("pages/login.html");
                     } else {
@@ -248,7 +381,7 @@
                                 params.total(data.data.total);
                                 self.tableData = data.data.data;
                                 return data.data.data;
-                            } else if (msg.rescode == '401') {
+                            } else if (data.data.rescode == '401') {
                                 alert('访问超时，请重新登录');
                                 $location.path("pages/login.html");
                             } else {
@@ -267,8 +400,8 @@
     ]) 
     
     // 音乐库
-    .controller('musicsController', ['$http', '$scope', '$state', '$filter', '$stateParams', 'NgTableParams', 'util', 'CONFIG',
-        function($http, $scope, $state, $filter, $stateParams, NgTableParams, util, CONFIG) {
+    .controller('musicsController', ['$http', '$scope', '$state', '$location','$filter', '$stateParams', 'NgTableParams', 'util', 'CONFIG',
+        function($http, $scope, $state,$location, $filter, $stateParams, NgTableParams, util, CONFIG) {
             console.log('musicsController')
             
             var self = this;
@@ -327,7 +460,7 @@
                 }).then(function successCallback(data, status, headers, config) {
                     if (data.data.rescode == '200') {
                         alert('发布成功');
-                    } else if (msg.rescode == '401') {
+                    } else if (data.data.rescode == '401') {
                         alert('访问超时，请重新登录');
                         $location.path("pages/login.html");
                     } else {
@@ -372,7 +505,7 @@
                                 params.total(data.data.total);
                                 self.tableData = data.data.data;
                                 return data.data.data;
-                            } else if (msg.rescode == '401') {
+                            } else if (data.data.rescode == '401') {
                                 alert('访问超时，请重新登录');
                                 $location.path("pages/login.html");
                             } else {
@@ -390,8 +523,8 @@
         }
     ])    
 
-    .controller('appsController', ['$http', '$scope', '$state', '$filter', '$stateParams', 'NgTableParams', 'util', 'CONFIG',
-        function($http, $scope, $state, $filter, $stateParams, NgTableParams, util, CONFIG) {
+    .controller('appsController', ['$http', '$scope', '$state', '$location','$filter', '$stateParams', 'NgTableParams', 'util', 'CONFIG',
+        function($http, $scope, $state,$location, $filter, $stateParams, NgTableParams, util, CONFIG) {
             console.log('appsController')
             
             var self = this;
@@ -450,7 +583,7 @@
                 }).then(function successCallback(data, status, headers, config) {
                     if (data.data.rescode == '200') {
                         alert('发布成功');
-                    } else if (msg.rescode == '401') {
+                    } else if (data.data.rescode == '401') {
                         alert('访问超时，请重新登录');
                         $location.path("pages/login.html");
                     } else {
@@ -495,7 +628,7 @@
                                 params.total(data.data.total);
                                 self.tableData = data.data.data;
                                 return data.data.data;
-                            } else if (msg.rescode == '401') {
+                            } else if (data.data.rescode == '401') {
                                 alert('访问超时，请重新登录');
                                 $location.path("pages/login.html");
                             } else {
@@ -513,8 +646,8 @@
         }
     ]) 
 
-    .controller('advsController', ['$http', '$scope', '$state', '$filter', '$stateParams', 'NgTableParams', 'util', 'CONFIG',
-        function($http, $scope, $state, $filter, $stateParams, NgTableParams, util, CONFIG) {
+    .controller('advsController', ['$http', '$scope', '$state','$location', '$filter', '$stateParams', 'NgTableParams', 'util', 'CONFIG',
+        function($http, $scope, $state,$location, $filter, $stateParams, NgTableParams, util, CONFIG) {
             console.log('advsController')
             
             var self = this;
@@ -573,7 +706,7 @@
                 }).then(function successCallback(data, status, headers, config) {
                     if (data.data.rescode == '200') {
                         alert('发布成功');
-                    } else if (msg.rescode == '401') {
+                    } else if (data.data.rescode == '401') {
                         alert('访问超时，请重新登录');
                         $location.path("pages/login.html");
                     } else {
@@ -618,7 +751,7 @@
                                 params.total(data.data.total);
                                 self.tableData = data.data.data;
                                 return data.data.data;
-                            } else if (msg.rescode == '401') {
+                            } else if (data.data.rescode == '401') {
                                 alert('访问超时，请重新登录');
                                 $location.path("pages/login.html");
                             } else {
