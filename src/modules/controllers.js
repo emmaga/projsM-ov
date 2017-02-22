@@ -769,4 +769,71 @@
         }
     ])  
     
+    .controller('onlineController', ['$http', '$scope', '$state', '$location','$filter', '$stateParams', 'NgTableParams', 'util', 'CONFIG',
+        function($http, $scope, $state,$location, $filter, $stateParams, NgTableParams, util, CONFIG) {
+            var self = this;
+
+            moment.locale('zh-cn');
+            $scope.startDateBeforeRender = startDateBeforeRender;
+            $scope.startDateOnSetTime = startDateOnSetTime;
+            $scope.dateRangeStart = '2017-02-23';
+            $scope.searchDate = '2017-02-13';
+
+            function startDateOnSetTime () {
+              // https://github.com/dalelotts/angular-bootstrap-datetimepicker/issues/111
+              // 在controller里操作dom会影响性能，但这样能解决问题
+              angular.element(document.querySelector('.dropdown-toggle')).click();  
+              $scope.$broadcast('start-date-changed');
+            }
+
+            function startDateBeforeRender ($dates) {
+              if ($scope.dateRangeStart) {
+                var activeDate = moment($scope.dateRangeStart);
+
+                $dates.filter(function (date) {
+                  return date.localDateValue() >= activeDate.valueOf()
+                }).forEach(function (date) {
+                  date.selectable = false;
+                })
+              }
+            }
+
+
+
+
+            $scope.myDataSource = {
+                chart: {
+                    caption: "Harry's SuperMart",
+                    subCaption: "Top 5 stores in last month by revenue",
+                    numberPrefix: "$",
+                    theme: "ocean"
+                },
+                data:[{
+                    label: "Bakersfield Central",
+                    value: "880000"
+                },
+                {
+                    label: "Garden Groove harbour",
+                    value: "730000"
+                },
+                {
+                    label: "Los Angeles Topanga",
+                    value: "590000"
+                },
+                {
+                    label: "Compton-Rancho Dom",
+                    value: "520000"
+                },
+                {
+                    label: "Daly City Serramonte",
+                    value: "330000"
+                }]
+            };
+
+
+            self.init = function() {
+                
+            }
+        }
+    ]) 
 })();

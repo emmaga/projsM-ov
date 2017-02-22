@@ -10,7 +10,10 @@
         'app.services',
         'angular-md5',
         'ngCookies',
-        'ngTable'
+        'ngTable',
+        'ui.bootstrap',
+        'ui.bootstrap.datetimepicker',
+        'ng-fusioncharts'
     ])
     
     .config(['$translateProvider', function ($translateProvider) {
@@ -53,6 +56,10 @@
             .state('app.apps', {
                 url: '/apps',
                 templateUrl: 'pages/apps.html'
+            })
+            .state('app.online', {
+                url: '/online',
+                templateUrl: 'pages/online.html'
             })
     }])
 

@@ -1,0 +1,62 @@
+<div ng-controller="onlineController as online" ng-init="online.init()" class="col-sm-9 page col-right">
+    <!--glyphicon-th-->
+    <a>
+        <strong>
+            <i class="glyphicon glyphicon-glass"></i>
+            在线情况
+        </strong>
+    </a>
+
+    <hr>
+    
+    [筛选]
+    <!--筛选条件 开始日期 开始-->
+    <div class="dropdown form-group">
+        <label>开始日期</label>
+        <a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target="#"
+           href="#">
+            <div class="input-group date">
+                <input type="text" class="form-control" data-ng-model="searchDate">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+            </div>
+        </a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <datetimepicker data-ng-model="searchDate"
+                            data-datetimepicker-config="{renderOn: 'start-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
+                            data-on-set-time="startDateOnSetTime()"
+                            data-before-render="startDateBeforeRender($dates)"></datetimepicker>
+        </ul>
+    </div>
+
+    
+
+
+    <!--筛选条件 开始日期 结束-->
+
+    <!--筛选条件 粒度 开始-->
+    每：
+    <!--筛选条件 粒度 结束-->
+
+    <!--筛选条件 项目 开始-->
+    项目：
+    <!--筛选条件 项目 结束-->
+
+    <hr>
+    <!--今天活跃数／在线数／总数 开始-->
+    <h5>［今天］总数：40，在线数：32，活跃数：10</h5>
+    <!--今天活跃数／在线数／总数 结束-->
+    
+
+    <!--test pic-->
+    <fusioncharts 
+    width="600" 
+    height="400"
+    type="column2d"
+    datasource="{{myDataSource}}"
+></fusioncharts>
+    <!--test pic-->  
+
+</div>
+<style type="text/css">
+    .datetimepicker {width: 400px;}
+</style>
