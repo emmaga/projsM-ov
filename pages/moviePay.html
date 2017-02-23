@@ -1,0 +1,168 @@
+<div ng-controller="moviePayController as moviePay" ng-init="moviePay.init()" class="col-sm-9 page col-right">
+    <!--glyphicon-th-->
+    <a>
+        <strong>
+            <i class="glyphicon glyphicon-glass"></i>
+            点播营收
+        </strong>
+    </a>
+
+    <hr>
+    
+    [筛选]
+    <!--筛选条件 开始日期 开始-->
+    <div class="dropdown form-group">
+        <label>开始日期</label>
+        <a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target="#"
+           href="#">
+            <div class="input-group date">
+                <input type="text" class="form-control" data-ng-model="searchStartDate">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+            </div>
+        </a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <datetimepicker data-ng-model="searchStartDate"
+                            data-datetimepicker-config="{renderOn: 'start-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
+                            data-on-set-time="startDateOnSetTime()"
+                            data-before-render="startDateBeforeRender($dates)"></datetimepicker>
+        </ul>
+    </div>
+    <!--筛选条件 开始日期 结束-->
+    
+    <!--筛选条件 结束日期 开始-->
+    <div class="dropdown form-group">
+        <label>结束日期</label>
+        <a class="dropdown-toggle" id="dropdownEnd" role="button" data-toggle="dropdown" data-target="#"
+           href="#">
+            <div class="input-group date">
+                <input type="text" class="form-control" data-ng-model="searchEndDate">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+            </div>
+        </a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <datetimepicker data-ng-model="searchEndDate"
+                            data-datetimepicker-config="{renderOn: 'end-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
+                            data-on-set-time="endDateOnSetTime()"
+                            data-before-render="startDateBeforeRender($dates)"></datetimepicker>
+        </ul>
+    </div>
+    <!--筛选条件 结束日期 结束-->
+
+    <!--筛选条件 项目 开始-->
+    项目：全部
+    <!--筛选条件 项目 结束-->
+
+    <hr>
+    <!--今天活跃数／上线数／总数 开始-->
+    <h5>总金额 4000（元）</h5>
+    <!--今天活跃数／上线数／总数 结束-->
+    
+
+    <!--各项目付费金额统计 chart 开始-->
+    <div fusioncharts
+        width="600" 
+        height="400"
+        type="mscolumn2d"
+        chart="{{attrs1}}"
+        categories="{{categories1}}"
+        dataset="{{dataset1}}"
+        ></div>    
+    <!--各项目付费金额统计 chart 结束-->  
+    
+    <!--各项目付费金额统计 table 开始-->
+    <table class="table">
+        <th>日期</th>
+        <th>总金额</th>
+        <th>单次支付金额</th>
+        <th>打包支付金额</th>
+        <tr>
+            <td>4.1</td>
+            <td>66</td>
+            <td>33</td>
+            <td>33</td>
+        </tr>
+    </table>
+    <!--各项目付费金额统计 table 结束-->  
+
+    <!--各项目付费次数统计 chart 开始-->
+    <div fusioncharts
+        width="600" 
+        height="400"
+        type="mscolumn2d"
+        chart="{{attrs2}}"
+        categories="{{categories2}}"
+        dataset="{{dataset2}}"
+        ></div>    
+    <!--各项目付费次数统计 chart 结束-->  
+    
+    <!--各项目付费次数统计 table 开始-->
+    <table class="table">
+        <th>日期</th>
+        <th>总次数</th>
+        <th>单次支付次数</th>
+        <th>打包支付次数</th>
+        <tr>
+            <td>4.1</td>
+            <td>66</td>
+            <td>33</td>
+            <td>33</td>
+        </tr>
+    </table>
+    <!--各项目付费次数统计 table 结束-->  
+    
+    <!--每日支付金额统计 chart 开始-->
+    <div fusioncharts
+        width="600" 
+        height="400"
+        type="msline"
+        chart="{{attrs3}}"
+        categories="{{categories3}}"
+        dataset="{{dataset3}}"
+        ></div>
+    <!--每日支付金额统计 chart 结束-->
+
+    <!--每日支付金额统计 table 开始-->
+    <table class="table">
+        <th>日期</th>
+        <th>总金额</th>
+        <th>单次支付金额</th>
+        <th>打包支付金额</th>
+        <tr>
+            <td>4.1</td>
+            <td>66</td>
+            <td>33</td>
+            <td>33</td>
+        </tr>
+    </table>
+    <!--每日支付金额统计 table 结束-->
+
+    <!--每日支付次数统计 chart 开始-->
+    <div fusioncharts
+        width="600" 
+        height="400"
+        type="msline"
+        chart="{{attrs4}}"
+        categories="{{categories4}}"
+        dataset="{{dataset4}}"
+        ></div>
+    <!--每日支付次数统计 chart 结束-->
+
+    <!--每日支付次数统计 table 开始-->
+    <table class="table">
+        <th>日期</th>
+        <th>总次数</th>
+        <th>单次支付次数</th>
+        <th>打包支付次数</th>
+        <tr>
+            <td>4.1</td>
+            <td>66</td>
+            <td>33</td>
+            <td>33</td>
+        </tr>
+    </table>
+    <!--每日支付次数统计 table 结束-->
+
+</div>
+<style type="text/css">
+    .datetimepicker {width: 400px;}
+</style>

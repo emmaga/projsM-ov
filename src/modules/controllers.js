@@ -399,7 +399,6 @@
         }
     ]) 
     
-    // 音乐库
     .controller('musicsController', ['$http', '$scope', '$state', '$location','$filter', '$stateParams', 'NgTableParams', 'util', 'CONFIG',
         function($http, $scope, $state,$location, $filter, $stateParams, NgTableParams, util, CONFIG) {
             console.log('musicsController')
@@ -799,40 +798,811 @@
             }
 
 
+            self.init = function() {
+              self.loadChart1();   
+            }
 
+            self.loadChart1 = function () {
+                $scope.attrs = {
+                    "caption": "上线情况统计",
+                    "numberprefix": "",
+                    "yAxisname": "终端数（个）",
+                    "xAxisName": "日期",
+                    "plotgradientcolor": "",
+                    "bgcolor": "FFFFFF",
+                    "showalternatehgridcolor": "0",
+                    "divlinecolor": "CCCCCC",
+                    "showvalues": "0",
+                    "showcanvasborder": "0",
+                    "canvasborderalpha": "0",
+                    "canvasbordercolor": "CCCCCC",
+                    "canvasborderthickness": "1",
+                    "yaxismaxvalue": "",
+                    "captionpadding": "30",
+                    "linethickness": "3",
+                    "yaxisvaluespadding": "15",
+                    "legendshadow": "0",
+                    "legendborderalpha": "0",
+                    "palettecolors": "#f8bd19,#008ee4,#33bdda,#e44a00,#6baa01,#583e78",
+                    "showborder": "0"
+                };
+                            
+                $scope.categories = [
+                    {
+                        "category": [
+                            {
+                                "label": "4.1"
+                            },
+                            {
+                                "label": "4.2"
+                            },
+                            {
+                                "label": "4.3"
+                            },
+                            {
+                                "label": "4.4"
+                            },
+                            {
+                                "label": "4.5"
+                            },
+                            {
+                                "label": "4.6"
+                            },
+                            {
+                                "label": "4.7"
+                            },
+                            {
+                                "label": "4.8"
+                            },
+                            {
+                                "label": "4.9"
+                            },
+                            {
+                                "label": "4.10"
+                            },
+                            {
+                                "label": "4.11"
+                            },
+                            {
+                                "label": "4.12"
+                            },
+                            {
+                                "label": "4.13"
+                            },
+                            {
+                                "label": "4.14"
+                            },
+                            {
+                                "label": "4.15"
+                            },
+                            {
+                                "label": "4.16"
+                            },
+                            {
+                                "label": "4.17"
+                            },
+                            {
+                                "label": "4.18"
+                            },
+                            {
+                                "label": "4.19"
+                            },
+                            {
+                                "label": "4.20"
+                            },
+                            {
+                                "label": "4.21"
+                            },
+                            {
+                                "label": "4.22"
+                            },
+                            {
+                                "label": "4.23"
+                            },
+                            {
+                                "label": "4.24"
+                            },
+                            {
+                                "label": "4.25"
+                            },
+                            {
+                                "label": "4.26"
+                            },
+                            {
+                                "label": "4.27"
+                            },
+                            {
+                                "label": "4.28"
+                            },
+                            {
+                                "label": "4.29"
+                            },
+                            {
+                                "label": "4.30"
+                            }
+                        ]
+                    }
+                ];
 
-            $scope.myDataSource = {
-                chart: {
-                    caption: "Harry's SuperMart",
-                    subCaption: "Top 5 stores in last month by revenue",
-                    numberPrefix: "$",
-                    theme: "ocean"
-                },
-                data:[{
-                    label: "Bakersfield Central",
-                    value: "880000"
-                },
-                {
-                    label: "Garden Groove harbour",
-                    value: "730000"
-                },
-                {
-                    label: "Los Angeles Topanga",
-                    value: "590000"
-                },
-                {
-                    label: "Compton-Rancho Dom",
-                    value: "520000"
-                },
-                {
-                    label: "Daly City Serramonte",
-                    value: "330000"
-                }]
-            };
+                $scope.dataset = [
+                    {
+                        "seriesname": "总数",
+                        "data": [
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "402"
+                            },
+                            {
+                                "value": "403"
+                            },
+                            {
+                                "value": "403"
+                            },
+                            {
+                                "value": "402"
+                            }
+                        ]
+                    },
+                    {
+                        "seriesname": "上线",
+                        "data": [
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "12"
+                            },
+                            {
+                                "value": "13"
+                            },
+                            {
+                                "value": "23"
+                            },
+                            {
+                                "value": "12"
+                            }
+                        ]
+                    }
+                ];
+            }
+        }
+    ]) 
+
+    .controller('moviePayController', ['$http', '$scope', '$state', '$location','$filter', '$stateParams', 'NgTableParams', 'util', 'CONFIG',
+        function($http, $scope, $state,$location, $filter, $stateParams, NgTableParams, util, CONFIG) {
+            var self = this;
+
+            // 日期选择初始化
+            moment.locale('zh-cn');
+            $scope.startDateBeforeRender = startDateBeforeRender;
+            $scope.startDateOnSetTime = startDateOnSetTime;
+            $scope.endDateOnSetTime = endDateOnSetTime;
+            $scope.dateRangeStart = '2017-02-23';
+            $scope.searchStartDate = '2017-02-13';
+            $scope.searchEndDate = '2017-02-15';
+
+            function startDateOnSetTime () {
+              // https://github.com/dalelotts/angular-bootstrap-datetimepicker/issues/111
+              // 在controller里操作dom会影响性能，但这样能解决问题
+              angular.element(document.querySelector('#dropdownStart')).click();  
+              $scope.$broadcast('start-date-changed');
+            }
+
+            function endDateOnSetTime () {
+              // https://github.com/dalelotts/angular-bootstrap-datetimepicker/issues/111
+              // 在controller里操作dom会影响性能，但这样能解决问题
+              angular.element(document.querySelector('#dropdownEnd')).click();  
+              $scope.$broadcast('end-date-changed');
+            }
+
+            function startDateBeforeRender ($dates) {
+              if ($scope.dateRangeStart) {
+                var activeDate = moment($scope.dateRangeStart);
+
+                $dates.filter(function (date) {
+                  return date.localDateValue() >= activeDate.valueOf()
+                }).forEach(function (date) {
+                  date.selectable = false;
+                })
+              }
+            }
 
 
             self.init = function() {
-                
+              self.loadChart1();
+              self.loadChart2();
+              self.loadChart3();
+              self.loadChart4();
+            }
+
+            self.loadChart1 = function () {
+                $scope.attrs1 = {
+                    "caption": "各项目付费金额统计",
+                    "xAxisname": "项目",
+                    "yAxisName": "金额 (元)",
+                    "numberPrefix": "RMB ",
+                    "plotFillAlpha" : "",
+
+                    //Cosmetics
+                    "paletteColors" : "#0075c2,#1aaf5d",
+                    "baseFontColor" : "#333333",
+                    "baseFont" : "Helvetica Neue,Arial",
+                    "captionFontSize" : "14",
+                    "subcaptionFontSize" : "14",
+                    "subcaptionFontBold" : "0",
+                    "showBorder" : "0",
+                    "bgColor" : "#ffffff",
+                    "showShadow" : "0",
+                    "canvasBgColor" : "#ffffff",
+                    "canvasBorderAlpha" : "0",
+                    "divlineAlpha" : "100",
+                    "divlineColor" : "#999999",
+                    "divlineThickness" : "1",
+                    "divLineIsDashed" : "1",
+                    "divLineDashLen" : "1",
+                    "divLineGapLen" : "1",
+                    "usePlotGradientColor" : "0",
+                    "showplotborder" : "0",
+                    "valueFontColor" : "#ffffff",
+                    "placeValuesInside" : "1",
+                    "showHoverEffect" : "1",
+                    "rotateValues" : "1",
+                    "showXAxisLine" : "1",
+                    "xAxisLineThickness" : "1",
+                    "xAxisLineColor" : "#999999",
+                    "showAlternateHGridColor" : "0",
+                    "legendBgAlpha" : "0",
+                    "legendBorderAlpha" : "0",
+                    "legendShadow" : "0",
+                    "legendItemFontSize" : "10",
+                    "legendItemFontColor" : "#666666"
+                };
+                            
+                $scope.categories1 = [
+                    {
+                        "category": [
+                            { "label": "书香世家" },
+                            { "label": "皇廷花园" },
+                            { "label": "皇廷世纪" }
+                        ]
+                    }
+                ];
+
+                $scope.dataset1 = [
+                    {
+                        "seriesname": "单次支付金额",
+                        "data": [
+                            { "value": "100" }, 
+                            { "value": "115" }, 
+                            { "value": "125" }
+                        ]
+                    }, 
+                    {
+                        "seriesname": "打包支付金额",
+                        "data": [
+                            { "value": "250" }, 
+                            { "value": "200" }, 
+                            { "value": "210" }
+                        ]
+                    }, 
+                    {
+                        "seriesname": "总数",
+                        "data": [
+                            { "value": "350" }, 
+                            { "value": "310" }, 
+                            { "value": "335" }
+                        ]
+                    }
+                ];
+            }
+
+            self.loadChart2 = function () {
+                $scope.attrs2 = {
+                    "caption": "各项目付费次数统计",
+                    "xAxisname": "项目",
+                    "yAxisName": "次数",
+                    "numberPrefix": "",
+                    "plotFillAlpha" : "",
+
+                    //Cosmetics
+                    "paletteColors" : "#0075c2,#1aaf5d",
+                    "baseFontColor" : "#333333",
+                    "baseFont" : "Helvetica Neue,Arial",
+                    "captionFontSize" : "14",
+                    "subcaptionFontSize" : "14",
+                    "subcaptionFontBold" : "0",
+                    "showBorder" : "0",
+                    "bgColor" : "#ffffff",
+                    "showShadow" : "0",
+                    "canvasBgColor" : "#ffffff",
+                    "canvasBorderAlpha" : "0",
+                    "divlineAlpha" : "100",
+                    "divlineColor" : "#999999",
+                    "divlineThickness" : "1",
+                    "divLineIsDashed" : "1",
+                    "divLineDashLen" : "1",
+                    "divLineGapLen" : "1",
+                    "usePlotGradientColor" : "0",
+                    "showplotborder" : "0",
+                    "valueFontColor" : "#ffffff",
+                    "placeValuesInside" : "1",
+                    "showHoverEffect" : "1",
+                    "rotateValues" : "1",
+                    "showXAxisLine" : "1",
+                    "xAxisLineThickness" : "1",
+                    "xAxisLineColor" : "#999999",
+                    "showAlternateHGridColor" : "0",
+                    "legendBgAlpha" : "0",
+                    "legendBorderAlpha" : "0",
+                    "legendShadow" : "0",
+                    "legendItemFontSize" : "10",
+                    "legendItemFontColor" : "#666666"
+                };
+                            
+                $scope.categories2 = [
+                    {
+                        "category": [
+                            { "label": "书香世家" },
+                            { "label": "皇廷花园" },
+                            { "label": "皇廷世纪" }
+                        ]
+                    }
+                ];
+
+                $scope.dataset2 = [
+                    {
+                        "seriesname": "单次支付次数",
+                        "data": [
+                            { "value": "10" }, 
+                            { "value": "115" }, 
+                            { "value": "125" }
+                        ]
+                    }, 
+                    {
+                        "seriesname": "打包支付次数",
+                        "data": [
+                            { "value": "250" }, 
+                            { "value": "200" }, 
+                            { "value": "210" }
+                        ]
+                    }, 
+                    {
+                        "seriesname": "总次数",
+                        "data": [
+                            { "value": "350" }, 
+                            { "value": "310" }, 
+                            { "value": "335" }
+                        ]
+                    }
+                ];
+            }
+
+            self.loadChart3 = function () {
+                $scope.attrs3 = {
+                    "caption": "每日支付金额统计",
+                    "numberprefix": "RMB ",
+                    "yAxisname": "金额（元）",
+                    "xAxisName": "日期",
+                    "plotgradientcolor": "",
+                    "bgcolor": "FFFFFF",
+                    "showalternatehgridcolor": "0",
+                    "divlinecolor": "CCCCCC",
+                    "showvalues": "0",
+                    "showcanvasborder": "0",
+                    "canvasborderalpha": "0",
+                    "canvasbordercolor": "CCCCCC",
+                    "canvasborderthickness": "1",
+                    "yaxismaxvalue": "",
+                    "captionpadding": "30",
+                    "linethickness": "3",
+                    "yaxisvaluespadding": "15",
+                    "legendshadow": "0",
+                    "legendborderalpha": "0",
+                    "palettecolors": "#f8bd19,#008ee4,#33bdda,#e44a00,#6baa01,#583e78",
+                    "showborder": "0"
+                };
+                            
+                $scope.categories3 = [
+                    {
+                        "category": [
+                            {
+                                "label": "4.1"
+                            },
+                            {
+                                "label": "4.2"
+                            },
+                            {
+                                "label": "4.3"
+                            },
+                            {
+                                "label": "4.4"
+                            },
+                            {
+                                "label": "4.5"
+                            },
+                            {
+                                "label": "4.6"
+                            },
+                            {
+                                "label": "4.7"
+                            }
+                        ]
+                    }
+                ];
+
+                $scope.dataset3 = [
+                    {
+                        "seriesname": "总金额",
+                        "data": [
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            }
+                        ]
+                    },
+                    {
+                        "seriesname": "单次支付金额",
+                        "data": [
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            }
+                        ]
+                    },
+                    {
+                        "seriesname": "打包支付金额",
+                        "data": [
+                            {
+                                "value": "180"
+                            },
+                            {
+                                "value": "180"
+                            },
+                            {
+                                "value": "180"
+                            },
+                            {
+                                "value": "180"
+                            },
+                            {
+                                "value": "180"
+                            },
+                            {
+                                "value": "180"
+                            },
+                            {
+                                "value": "180"
+                            }
+                        ]
+                    }
+                ];
+            }
+
+            self.loadChart4 = function () {
+                $scope.attrs4 = {
+                    "caption": "每日支付次数统计",
+                    "numberprefix": "",
+                    "yAxisname": "次数（次）",
+                    "xAxisName": "日期",
+                    "plotgradientcolor": "",
+                    "bgcolor": "FFFFFF",
+                    "showalternatehgridcolor": "0",
+                    "divlinecolor": "CCCCCC",
+                    "showvalues": "0",
+                    "showcanvasborder": "0",
+                    "canvasborderalpha": "0",
+                    "canvasbordercolor": "CCCCCC",
+                    "canvasborderthickness": "1",
+                    "yaxismaxvalue": "",
+                    "captionpadding": "30",
+                    "linethickness": "3",
+                    "yaxisvaluespadding": "15",
+                    "legendshadow": "0",
+                    "legendborderalpha": "0",
+                    "palettecolors": "#f8bd19,#008ee4,#33bdda,#e44a00,#6baa01,#583e78",
+                    "showborder": "0"
+                };
+                            
+                $scope.categories4 = [
+                    {
+                        "category": [
+                            {
+                                "label": "4.1"
+                            },
+                            {
+                                "label": "4.2"
+                            },
+                            {
+                                "label": "4.3"
+                            },
+                            {
+                                "label": "4.4"
+                            },
+                            {
+                                "label": "4.5"
+                            },
+                            {
+                                "label": "4.6"
+                            },
+                            {
+                                "label": "4.7"
+                            }
+                        ]
+                    }
+                ];
+
+                $scope.dataset4 = [
+                    {
+                        "seriesname": "总次数",
+                        "data": [
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            },
+                            {
+                                "value": "400"
+                            }
+                        ]
+                    },
+                    {
+                        "seriesname": "单次支付次数",
+                        "data": [
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            },
+                            {
+                                "value": "80"
+                            }
+                        ]
+                    },
+                    {
+                        "seriesname": "打包支付次数",
+                        "data": [
+                            {
+                                "value": "180"
+                            },
+                            {
+                                "value": "180"
+                            },
+                            {
+                                "value": "180"
+                            },
+                            {
+                                "value": "180"
+                            },
+                            {
+                                "value": "180"
+                            },
+                            {
+                                "value": "180"
+                            },
+                            {
+                                "value": "180"
+                            }
+                        ]
+                    }
+                ];
             }
         }
     ]) 

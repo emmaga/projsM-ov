@@ -44,7 +44,6 @@
                 url: '/videos',
                 templateUrl: 'pages/videos.html'
             })
-            // 音乐库
             .state('app.musics', {
                 url: '/musics',
                 templateUrl: 'pages/musics.html'
@@ -60,6 +59,10 @@
             .state('app.online', {
                 url: '/online',
                 templateUrl: 'pages/online.html'
+            })
+            .state('app.moviePay', {
+                url: '/moviePay',
+                templateUrl: 'pages/moviePay.html'
             })
     }])
 
