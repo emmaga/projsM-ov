@@ -1126,24 +1126,23 @@
         }
     ]) 
 
-    .controller('moviePayController', ['$http', '$scope', '$state', '$location','$filter', '$stateParams', 'NgTableParams', 'util', 'CONFIG',
-        function($http, $scope, $state,$location, $filter, $stateParams, NgTableParams, util, CONFIG) {
+    .controller('moviePayController', ['$http', '$scope', '$state', '$location','$filter', '$stateParams', '$q', 'util', 'CONFIG',
+        function($http, $scope, $state,$location, $filter, $stateParams, $q, util, CONFIG) {
             var self = this;
+            self.searchVal = {}; // 筛选内容
 
             // 日期选择初始化
             moment.locale('zh-cn');
             $scope.startDateBeforeRender = startDateBeforeRender;
             $scope.startDateOnSetTime = startDateOnSetTime;
             $scope.endDateOnSetTime = endDateOnSetTime;
-            $scope.dateRangeStart = '2017-02-23';
-            $scope.searchStartDate = '2017-02-13';
-            $scope.searchEndDate = '2017-02-15';
 
             function startDateOnSetTime () {
               // https://github.com/dalelotts/angular-bootstrap-datetimepicker/issues/111
               // 在controller里操作dom会影响性能，但这样能解决问题
               angular.element(document.querySelector('#dropdownStart')).click();  
               $scope.$broadcast('start-date-changed');
+              self.search();
             }
 
             function endDateOnSetTime () {
@@ -1151,6 +1150,7 @@
               // 在controller里操作dom会影响性能，但这样能解决问题
               angular.element(document.querySelector('#dropdownEnd')).click();  
               $scope.$broadcast('end-date-changed');
+              self.search();
             }
 
             function startDateBeforeRender ($dates) {
@@ -1167,14 +1167,19 @@
 
 
             self.init = function() {
-              self.loadChart1();
-              self.loadChart2();
-              self.loadChart3();
-              self.loadChart4();
+
+              self.loadProList().then(function() {
+                return self.search();
+              });
+              self.initCharts();
+              $scope.dateRangeStart = $filter('date')((new Date().getTime()), 'yyyy-MM-dd');
+              $scope.searchStartDate = $filter('date')((new Date().getTime() - 7*24*60*60*1000), 'yyyy-MM-dd');
+              $scope.searchEndDate = $filter('date')((new Date().getTime() - 1*24*60*60*1000), 'yyyy-MM-dd');
             }
 
-            self.loadChart1 = function () {
-                $scope.attrs1 = {
+            self.initCharts = function () {
+                // init chart1
+                self.attrs1 = {
                     "caption": "各项目付费金额统计",
                     "xAxisname": "项目",
                     "yAxisName": "金额 (元)",
@@ -1215,46 +1220,15 @@
                     "legendItemFontSize" : "10",
                     "legendItemFontColor" : "#666666"
                 };
-                            
-                $scope.categories1 = [
+                self.categories1 = [
                     {
                         "category": [
-                            { "label": "书香世家" },
-                            { "label": "皇廷花园" },
-                            { "label": "皇廷世纪" }
                         ]
                     }
                 ];
+                self.dataset1 = [];
 
-                $scope.dataset1 = [
-                    {
-                        "seriesname": "单次支付金额",
-                        "data": [
-                            { "value": "100" }, 
-                            { "value": "115" }, 
-                            { "value": "125" }
-                        ]
-                    }, 
-                    {
-                        "seriesname": "打包支付金额",
-                        "data": [
-                            { "value": "250" }, 
-                            { "value": "200" }, 
-                            { "value": "210" }
-                        ]
-                    }, 
-                    {
-                        "seriesname": "总数",
-                        "data": [
-                            { "value": "350" }, 
-                            { "value": "310" }, 
-                            { "value": "335" }
-                        ]
-                    }
-                ];
-            }
-
-            self.loadChart2 = function () {
+                // init chart2
                 $scope.attrs2 = {
                     "caption": "各项目付费次数统计",
                     "xAxisname": "项目",
@@ -1296,46 +1270,14 @@
                     "legendItemFontSize" : "10",
                     "legendItemFontColor" : "#666666"
                 };
-                            
                 $scope.categories2 = [
                     {
-                        "category": [
-                            { "label": "书香世家" },
-                            { "label": "皇廷花园" },
-                            { "label": "皇廷世纪" }
-                        ]
+                        "category": []
                     }
                 ];
+                $scope.dataset2 = [];
 
-                $scope.dataset2 = [
-                    {
-                        "seriesname": "单次支付次数",
-                        "data": [
-                            { "value": "10" }, 
-                            { "value": "115" }, 
-                            { "value": "125" }
-                        ]
-                    }, 
-                    {
-                        "seriesname": "打包支付次数",
-                        "data": [
-                            { "value": "250" }, 
-                            { "value": "200" }, 
-                            { "value": "210" }
-                        ]
-                    }, 
-                    {
-                        "seriesname": "总次数",
-                        "data": [
-                            { "value": "350" }, 
-                            { "value": "310" }, 
-                            { "value": "335" }
-                        ]
-                    }
-                ];
-            }
-
-            self.loadChart3 = function () {
+                // init chart3
                 $scope.attrs3 = {
                     "caption": "每日支付金额统计",
                     "numberprefix": "RMB ",
@@ -1359,118 +1301,14 @@
                     "palettecolors": "#f8bd19,#008ee4,#33bdda,#e44a00,#6baa01,#583e78",
                     "showborder": "0"
                 };
-                            
                 $scope.categories3 = [
                     {
-                        "category": [
-                            {
-                                "label": "4.1"
-                            },
-                            {
-                                "label": "4.2"
-                            },
-                            {
-                                "label": "4.3"
-                            },
-                            {
-                                "label": "4.4"
-                            },
-                            {
-                                "label": "4.5"
-                            },
-                            {
-                                "label": "4.6"
-                            },
-                            {
-                                "label": "4.7"
-                            }
-                        ]
+                        "category": []
                     }
                 ];
+                $scope.dataset3 = [];
 
-                $scope.dataset3 = [
-                    {
-                        "seriesname": "总金额",
-                        "data": [
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            }
-                        ]
-                    },
-                    {
-                        "seriesname": "单次支付金额",
-                        "data": [
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            }
-                        ]
-                    },
-                    {
-                        "seriesname": "打包支付金额",
-                        "data": [
-                            {
-                                "value": "180"
-                            },
-                            {
-                                "value": "180"
-                            },
-                            {
-                                "value": "180"
-                            },
-                            {
-                                "value": "180"
-                            },
-                            {
-                                "value": "180"
-                            },
-                            {
-                                "value": "180"
-                            },
-                            {
-                                "value": "180"
-                            }
-                        ]
-                    }
-                ];
-            }
-
-            self.loadChart4 = function () {
+                // init chart4
                 $scope.attrs4 = {
                     "caption": "每日支付次数统计",
                     "numberprefix": "",
@@ -1494,115 +1332,257 @@
                     "palettecolors": "#f8bd19,#008ee4,#33bdda,#e44a00,#6baa01,#583e78",
                     "showborder": "0"
                 };
-                            
                 $scope.categories4 = [
                     {
-                        "category": [
-                            {
-                                "label": "4.1"
-                            },
-                            {
-                                "label": "4.2"
-                            },
-                            {
-                                "label": "4.3"
-                            },
-                            {
-                                "label": "4.4"
-                            },
-                            {
-                                "label": "4.5"
-                            },
-                            {
-                                "label": "4.6"
-                            },
-                            {
-                                "label": "4.7"
-                            }
-                        ]
+                        "category": []
                     }
                 ];
+                $scope.dataset4 = [];
+            }
 
-                $scope.dataset4 = [
-                    {
-                        "seriesname": "总次数",
-                        "data": [
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            }
-                        ]
-                    },
-                    {
-                        "seriesname": "单次支付次数",
-                        "data": [
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            }
-                        ]
-                    },
-                    {
-                        "seriesname": "打包支付次数",
-                        "data": [
-                            {
-                                "value": "180"
-                            },
-                            {
-                                "value": "180"
-                            },
-                            {
-                                "value": "180"
-                            },
-                            {
-                                "value": "180"
-                            },
-                            {
-                                "value": "180"
-                            },
-                            {
-                                "value": "180"
-                            },
-                            {
-                                "value": "180"
-                            }
-                        ]
+            self.search = function () {
+                self.loadChart1();
+                self.loadChart2();
+                self.loadChart3();
+                self.loadChart4();
+            }
+
+            self.loadProList = function () {
+                var deferred = $q.defer();
+                var data = JSON.stringify({
+                    token: util.getParams("token"),
+                    action: 'projectList'
+                })
+                self.loadingProList = true;
+                $http({
+                    method: 'POST',
+                    url: util.getApiUrl('project', '', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var data = response.data;
+                    if (data.rescode == '200') {
+                        self.searchVal.projects = [];
+                        self.searchVal.projects[0] = {value: 'all', name: '全部项目'};
+                        data.data.forEach(function(item, index, array) {
+                            self.searchVal.projects.push({ value:item.ProjectName , name: item.ProjectNameCHZ });
+                            self.searchVal.project = 'all';
+                        })
+                        deferred.resolve();
+                    } 
+                    else {
+                        alert(data.rescode + ' ' + data.errInfo);
+                        deferred.reject();
                     }
-                ];
+                }, function errorCallback(response) {
+                    alert('连接服务器出错');
+                    deferred.reject();
+                }).finally(function(value) {
+                    self.loadingProList = false;
+                });
+                return deferred.promise;
+            }
+
+            self.loadChart1 = function () {
+
+                self.categories1[0].category = [];
+                self.dataset1  = [];
+                self.dataset1.total = 0;
+
+                var data = JSON.stringify({
+                    token: util.getParams("token"),
+                    action: 'getProjectPurchasePrice',
+                    startDate: $scope.searchStartDate + ' 00:00:00',
+                    endDate: $scope.searchEndDate + ' 00:00:00',
+                    projectList: [self.searchVal.project]
+                })
+                self.loadingChart1 = true;
+                $http({
+                    method: 'POST',
+                    url: util.getApiUrl('statistics', '', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var data = response.data;
+                    if (data.rescode == '200') {
+                        data.projectList.forEach(function(item, index, array) {
+                            self.categories1[0].category.push({label: item});
+                        });
+
+                        self.dataset1.push({seriesname: "单次支付金额", data:[]});
+                        data.onlyPPrice.forEach(function(item, index, array) {
+                            self.dataset1[0].data.push({ value: item });
+                        });
+
+                        self.dataset1.push({seriesname: "打包支付金额", data:[]});
+                        data.packagePPrice.forEach(function(item, index, array) {
+                            self.dataset1[1].data.push({ value: item });
+                        });
+
+                        self.dataset1.push({seriesname: "总金额", data:[]});
+                        data.sumPPrice.forEach(function(item, index, array) {
+                            self.dataset1[2].data.push({ value: item });
+                            self.dataset1.total += Number(item);
+                        });
+                        self.dataset1.total = self.dataset1.total.toFixed(2);
+
+                    } 
+                    else {
+                        alert(data.errInfo);
+                    }
+                }, function errorCallback(response) {
+                    alert('连接服务器出错');
+                }).finally(function(value) {
+                    self.loadingChart1 = false;
+                });
+            }
+
+            self.loadChart2 = function () {
+                
+                $scope.categories2[0].category = [];
+                $scope.dataset2 = [];
+                $scope.dataset2.total = 0;
+
+                var data = JSON.stringify({
+                    token: util.getParams("token"),
+                    action: 'getProjectPurchaseCount',
+                    startDate: $scope.searchStartDate + ' 00:00:00',
+                    endDate: $scope.searchEndDate + ' 00:00:00',
+                    projectList: [self.searchVal.project]
+                })
+                self.loadingChart2 = true;
+                $http({
+                    method: 'POST',
+                    url: util.getApiUrl('statistics', '', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var data = response.data;
+                    if (data.rescode == '200') {
+                        data.projectList.forEach(function(item, index, array) {
+                            $scope.categories2[0].category.push({label: item});
+                        });
+
+                        $scope.dataset2.push({seriesname: "单次支付次数", data:[]});
+                        data.onlyPCount.forEach(function(item, index, array) {
+                            $scope.dataset2[0].data.push({ value: item });
+                        });
+
+                        $scope.dataset2.push({seriesname: "打包支付次数", data:[]});
+                        data.packagePCount.forEach(function(item, index, array) {
+                            $scope.dataset2[1].data.push({ value: item });
+                        });
+
+                        $scope.dataset2.push({seriesname: "总次数", data:[]});
+                        data.sumPCount.forEach(function(item, index, array) {
+                            $scope.dataset2[2].data.push({ value: item });
+                            $scope.dataset2.total += Number(item);
+                        });
+                        $scope.dataset2.total = $scope.dataset2.total.toFixed(2);
+
+                    } 
+                    else {
+                        alert(data.errInfo);
+                    }
+                }, function errorCallback(response) {
+                    alert('连接服务器出错');
+                }).finally(function(value) {
+                    self.loadingChart2 = false;
+                });
+            }
+
+            self.loadChart3 = function () {
+                $scope.categories3[0].category = [];
+                $scope.dataset3 = [];
+
+                var data = JSON.stringify({
+                    token: util.getParams("token"),
+                    action: 'getDatePurchasePrice',
+                    startDate: $scope.searchStartDate + ' 00:00:00',
+                    endDate: $scope.searchEndDate + ' 00:00:00',
+                    projectList: [self.searchVal.project]
+                })
+                self.loadingChart3 = true;
+                $http({
+                    method: 'POST',
+                    url: util.getApiUrl('statistics', '', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var data = response.data;
+                    if (data.rescode == '200') {
+                        data.dateList.forEach(function(item, index, array) {
+                            $scope.categories3[0].category.push({label: item.substring(5, 10)});
+                        });
+
+                        $scope.dataset3.push({seriesname: "总金额", data:[]});
+                        data.sumPPrice.forEach(function(item, index, array) {
+                            $scope.dataset3[0].data.push({ value: item });
+                        });
+
+                        $scope.dataset3.push({seriesname: "单次支付金额", data:[]});
+                        data.onlyPPrice.forEach(function(item, index, array) {
+                            $scope.dataset3[1].data.push({ value: item });
+                        });
+
+                        $scope.dataset3.push({seriesname: "打包支付金额", data:[]});
+                        data.sumPPrice.forEach(function(item, index, array) {
+                            $scope.dataset3[2].data.push({ value: item });
+                        });
+                    } 
+                    else {
+                        alert(data.errInfo);
+                    }
+                }, function errorCallback(response) {
+                    alert('连接服务器出错');
+                }).finally(function(value) {
+                    self.loadingChart3 = false;
+                });
+            }
+
+            self.loadChart4 = function () {
+                
+                $scope.categories4[0].category = [];
+                $scope.dataset4 = [];
+
+                var data = JSON.stringify({
+                    token: util.getParams("token"),
+                    action: 'getDatePurchaseCount',
+                    startDate: $scope.searchStartDate + ' 00:00:00',
+                    endDate: $scope.searchEndDate + ' 00:00:00',
+                    projectList: [self.searchVal.project]
+                })
+                self.loadingChart4 = true;
+                $http({
+                    method: 'POST',
+                    url: util.getApiUrl('statistics', '', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var data = response.data;
+                    if (data.rescode == '200') {
+                        data.dateList.forEach(function(item, index, array) {
+                            $scope.categories4[0].category.push({label: item.substring(5, 10)});
+                        });
+
+                        $scope.dataset4.push({seriesname: "总次数", data:[]});
+                        data.sumPCount.forEach(function(item, index, array) {
+                            $scope.dataset4[0].data.push({ value: item });
+                        });
+
+                        $scope.dataset4.push({seriesname: "单次支付次数", data:[]});
+                        data.onlyPCount.forEach(function(item, index, array) {
+                            $scope.dataset4[1].data.push({ value: item });
+                        });
+
+                        $scope.dataset4.push({seriesname: "打包支付次数", data:[]});
+                        data.sumPCount.forEach(function(item, index, array) {
+                            $scope.dataset4[2].data.push({ value: item });
+                        });
+                    } 
+                    else {
+                        alert(data.errInfo);
+                    }
+                }, function errorCallback(response) {
+                    alert('连接服务器出错');
+                }).finally(function(value) {
+                    self.loadingChart4 = false;
+                });
             }
         }
     ]) 
