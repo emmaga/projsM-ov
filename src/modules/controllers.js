@@ -768,21 +768,20 @@
         }
     ])  
     
-    .controller('onlineController', ['$http', '$scope', '$state', '$location','$filter', '$stateParams', 'NgTableParams', 'util', 'CONFIG',
-        function($http, $scope, $state,$location, $filter, $stateParams, NgTableParams, util, CONFIG) {
+    .controller('onlineController', ['$http', '$scope', '$state', '$location','$filter', '$stateParams', '$q', 'util', 'CONFIG',
+        function($http, $scope, $state,$location, $filter, $stateParams, $q, util, CONFIG) {
             var self = this;
 
             moment.locale('zh-cn');
             $scope.startDateBeforeRender = startDateBeforeRender;
             $scope.startDateOnSetTime = startDateOnSetTime;
-            $scope.dateRangeStart = '2017-02-23';
-            $scope.searchDate = '2017-02-13';
 
             function startDateOnSetTime () {
               // https://github.com/dalelotts/angular-bootstrap-datetimepicker/issues/111
               // 在controller里操作dom会影响性能，但这样能解决问题
               angular.element(document.querySelector('.dropdown-toggle')).click();  
               $scope.$broadcast('start-date-changed');
+              self.search();
             }
 
             function startDateBeforeRender ($dates) {
@@ -799,10 +798,18 @@
 
 
             self.init = function() {
-              self.loadChart1();   
+                self.searchVal = {};
+                $scope.dateRangeStart = $filter('date')(new Date(), 'yyyy-MM-dd');
+                $scope.searchDate = $filter('date')((new Date().getTime() - 1*24*60*60*1000), 'yyyy-MM-dd');
+                self.duration = "7";
+                self.initChart();
+                self.loadOnline();
+                self.loadProList().then(function() {
+                    return self.search();
+                  });
             }
 
-            self.loadChart1 = function () {
+            self.initChart = function () {
                 $scope.attrs = {
                     "caption": "上线情况统计",
                     "numberprefix": "",
@@ -826,302 +833,118 @@
                     "palettecolors": "#f8bd19,#008ee4,#33bdda,#e44a00,#6baa01,#583e78",
                     "showborder": "0"
                 };
-                            
                 $scope.categories = [
                     {
                         "category": [
-                            {
-                                "label": "4.1"
-                            },
-                            {
-                                "label": "4.2"
-                            },
-                            {
-                                "label": "4.3"
-                            },
-                            {
-                                "label": "4.4"
-                            },
-                            {
-                                "label": "4.5"
-                            },
-                            {
-                                "label": "4.6"
-                            },
-                            {
-                                "label": "4.7"
-                            },
-                            {
-                                "label": "4.8"
-                            },
-                            {
-                                "label": "4.9"
-                            },
-                            {
-                                "label": "4.10"
-                            },
-                            {
-                                "label": "4.11"
-                            },
-                            {
-                                "label": "4.12"
-                            },
-                            {
-                                "label": "4.13"
-                            },
-                            {
-                                "label": "4.14"
-                            },
-                            {
-                                "label": "4.15"
-                            },
-                            {
-                                "label": "4.16"
-                            },
-                            {
-                                "label": "4.17"
-                            },
-                            {
-                                "label": "4.18"
-                            },
-                            {
-                                "label": "4.19"
-                            },
-                            {
-                                "label": "4.20"
-                            },
-                            {
-                                "label": "4.21"
-                            },
-                            {
-                                "label": "4.22"
-                            },
-                            {
-                                "label": "4.23"
-                            },
-                            {
-                                "label": "4.24"
-                            },
-                            {
-                                "label": "4.25"
-                            },
-                            {
-                                "label": "4.26"
-                            },
-                            {
-                                "label": "4.27"
-                            },
-                            {
-                                "label": "4.28"
-                            },
-                            {
-                                "label": "4.29"
-                            },
-                            {
-                                "label": "4.30"
-                            }
                         ]
                     }
                 ];
+                $scope.dataset = [];
+            }
 
-                $scope.dataset = [
-                    {
-                        "seriesname": "总数",
-                        "data": [
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "400"
-                            },
-                            {
-                                "value": "402"
-                            },
-                            {
-                                "value": "403"
-                            },
-                            {
-                                "value": "403"
-                            },
-                            {
-                                "value": "402"
-                            }
-                        ]
-                    },
-                    {
-                        "seriesname": "上线",
-                        "data": [
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "80"
-                            },
-                            {
-                                "value": "12"
-                            },
-                            {
-                                "value": "13"
-                            },
-                            {
-                                "value": "23"
-                            },
-                            {
-                                "value": "12"
-                            }
-                        ]
+            self.loadProList = function () {
+                var deferred = $q.defer();
+                var data = JSON.stringify({
+                    token: util.getParams("token"),
+                    action: 'projectList'
+                })
+                self.loadingProList = true;
+                $http({
+                    method: 'POST',
+                    url: util.getApiUrl('project', '', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var data = response.data;
+                    if (data.rescode == '200') {
+                        self.searchVal.projects = [];
+                        self.searchVal.projects[0] = {value: 'all', name: '全部项目'};
+                        data.data.forEach(function(item, index, array) {
+                            self.searchVal.projects.push({ value:item.ProjectName , name: item.ProjectNameCHZ });
+                            self.searchVal.project = 'all';
+                        })
+                        deferred.resolve();
+                    } 
+                    else {
+                        alert(data.rescode + ' ' + data.errInfo);
+                        deferred.reject();
                     }
-                ];
+                }, function errorCallback(response) {
+                    alert('连接服务器出错');
+                    deferred.reject();
+                }).finally(function(value) {
+                    self.loadingProList = false;
+                });
+                return deferred.promise;
+            }
+
+            self.loadOnline = function () {
+                var data = JSON.stringify({
+                    token: util.getParams("token"),
+                    action: 'getTermOnlineInfo'
+                })
+                self.loadingOnline = true;
+                $http({
+                    method: 'POST',
+                    url: util.getApiUrl('statistics', '', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var data = response.data;
+                    if (data.rescode == '200') {
+                        self.onlineCount = data.onlineCount;
+                        self.totalCount = data.totalCount;
+                    } 
+                    else {
+                        alert(data.errInfo);
+                    }
+                }, function errorCallback(response) {
+                    alert('连接服务器出错');
+                }).finally(function(value) {
+                    self.loadingOnline = false;
+                });
+            }
+
+            self.search = function () {
+                $scope.categories[0].category = [];
+                $scope.dataset = [];
+
+                var data = JSON.stringify({
+                    token: util.getParams("token"),
+                    action: 'getTermLoginInfo',
+                    endDate: $scope.searchDate + ' 00:00:00',
+                    project: self.searchVal.project,
+                    days: Number(self.duration)
+                })
+                self.loadingChart = true;
+                $http({
+                    method: 'POST',
+                    url: util.getApiUrl('statistics', '', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var data = response.data;
+                    if (data.rescode == '200') {
+                        data.dateList.forEach(function(item, index, array) {
+                            $scope.categories[0].category.push({label: item.substring(5, 10)});
+                        });
+
+                        /*$scope.dataset.push({seriesname: "总数", data:[]});
+                        data.total.forEach(function(item, index, array) {
+                            $scope.dataset[1].data.push({ value: item });
+                        });*/
+
+                        $scope.dataset.push({seriesname: "上线", data:[]});
+                        data.count.forEach(function(item, index, array) {
+                            $scope.dataset[0].data.push({ value: item });
+                        });
+
+                    } 
+                    else {
+                        alert(data.errInfo);
+                    }
+                }, function errorCallback(response) {
+                    alert('连接服务器出错');
+                }).finally(function(value) {
+                    self.loadingChart = false;
+                });
             }
         }
     ]) 

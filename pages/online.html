@@ -9,8 +9,20 @@
 
     <hr>
     
+    <!--loading online-->
+    <div ng-show="online.loadingOnline">loadingOnline...</div>
+    <!--loading online-->
+
+    <!--loading 筛选条件 项目列表-->
+    <div ng-show="online.loadingProList">loadingProList...</div>
+    <!--loading 筛选条件 项目列表-->
+    
+    <!--loading 图表-->
+    <div ng-show="online.loadingChart">loadingChart...</div>
+    <!--loading 图表-->
+
     <!--当前 上线数／总数 开始-->
-    <h5>［当前］总数：40，在线数：32</h5>
+    <h5>［当前］总数：{{online.totalCount}}，在线数：{{online.onlineCount}}</h5>
     <!--当前 上线数／总数 结束-->
     
     <hr>
@@ -40,11 +52,27 @@
     <!--筛选条件 开始日期 结束-->
 
     <!--筛选条件 粒度 开始-->
-    过去 1日 1周 1月
+    过去 
+    <div class="form-group">
+            <label>
+                <input ng-change="online.search()" type="radio" name="duration" value="1" ng-model="online.duration">
+                一日
+            </label>
+            <label>
+                <input ng-change="online.search()" type="radio" name="duration" value="7" ng-model="online.duration">
+                一周
+            </label>
+            <label>
+                <input ng-change="online.search()" type="radio" name="duration" value="31" ng-model="online.duration">
+                一月
+            </label>
+    </div>
     <!--筛选条件 粒度 结束-->
 
     <!--筛选条件 项目 开始-->
-    项目：全部
+    <select ng-model="online.searchVal.project" ng-change="online.search()">
+      <option ng-repeat="item in online.searchVal.projects" value="{{item.value}}">{{item.name}}</option>
+    </select>
     <!--筛选条件 项目 结束-->
 
 
@@ -66,10 +94,10 @@
         <th>日期</th>
         <th>总数</th>
         <th>上线</th>
-        <tr>
-            <td>4.1</td>
-            <td>33</td>
-            <td>33</td>
+        <tr ng-repeat="n in categories[0].category track by $index">
+            <td>{{categories[0].category[$index].label}}</td>
+            <!-- <td>{{dataset[1].data[$index].value}}</td> -->
+            <td>{{dataset[0].data[$index].value}}</td>
         </tr>
     </table>
     <!--online table 结束-->  
