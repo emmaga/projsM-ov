@@ -24,7 +24,20 @@
     <!--loading 图表-->
 
     <!--当前 上线数／总数 开始-->
-    <h5>［当前］总数：{{online.totalCount}}，在线数：{{online.onlineCount}}</h5>
+    <div class="row">
+        <div class="col-xs-3">
+            <div class="panel panel-info scoreboard">
+                <div class="panel-heading">总数</div>
+                <div class="panel-body">{{online.totalCount}}</div>
+            </div>
+        </div>
+        <div class="col-xs-3">
+            <div class="panel panel-success scoreboard">
+                <div class="panel-heading">在线数</div>
+                <div class="panel-body">{{online.onlineCount}}</div>
+            </div>
+        </div>
+    </div>
     <!--当前 上线数／总数 结束-->
     
     <hr>

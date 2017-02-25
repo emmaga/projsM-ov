@@ -306,3 +306,14 @@ background-color:#f5f5f5
 .form-control[required]:placeholder-shown {
   background-color: rgb(255,221,128)
 }
+
+/*score board*/
+.panel.scoreboard {
+  text-align: center;
+  font-weight: bold;
+}
+.panel.scoreboard>.panel-body{
+  font-weight: bolder;
+  padding: 8px;
+  font-size: 24px;
+}
