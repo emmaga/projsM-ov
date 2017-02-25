@@ -8,198 +8,166 @@
             点播营收
         </strong>
     </a>
-
     <hr>
     <!--loading 筛选条件 项目列表-->
     <div ng-show="moviePay.loadingProList">loadingProList...</div>
     <!--loading 筛选条件 项目列表-->
-
     <!--loading 筛选条件 图1-->
     <div ng-show="moviePay.loadingChart1">loadingChart1...</div>
     <!--loading 筛选条件 图1-->
-
     <!--loading 筛选条件 图2-->
     <div ng-show="moviePay.loadingChart2">loadingChart2...</div>
     <!--loading 筛选条件 图2-->
-
     <!--loading 筛选条件 图3-->
     <div ng-show="moviePay.loadingChart3">loadingChart3...</div>
     <!--loading 筛选条件 图3-->
-
     <!--loading 筛选条件 图4-->
     <div ng-show="moviePay.loadingChart4">loadingChart4...</div>
     <!--loading 筛选条件 图4-->
-
     <!--筛选 开始-->
     <div class="row">
-      <div class="col-md-2">[筛选]</div>
-      <div class="col-md-4">
-        <!--筛选条件 开始日期 开始-->
-        <div class="dropdown form-group">
-            <label>开始日期</label>
-            <a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target="#"
-               href="#">
-                <div class="input-group date">
-                    <input type="text" class="form-control" data-ng-model="searchStartDate">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                </div>
-            </a>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                <datetimepicker data-ng-model="searchStartDate"
-                                data-datetimepicker-config="{renderOn: 'start-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
-                                data-on-set-time="startDateOnSetTime()"
-                                data-before-render="startDateBeforeRender($dates)"></datetimepicker>
-            </ul>
+        <div class="col-xs-4">
+            <!--筛选条件 开始日期 开始-->
+            <div class="dropdown form-group">
+                <a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target="#" href="#">
+                    <div class="input-group date">
+                        <span class="input-group-addon" id="basic-addon1">开始</span>
+                        <input type="text" class="form-control" data-ng-model="searchStartDate">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                    </div>
+                </a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <datetimepicker data-ng-model="searchStartDate" data-datetimepicker-config="{renderOn: 'start-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}" data-on-set-time="startDateOnSetTime()" data-before-render="startDateBeforeRender($dates)"></datetimepicker>
+                </ul>
+            </div>
+            <!--筛选条件 开始日期 结束-->
         </div>
-        <!--筛选条件 开始日期 结束-->
-      </div>
-      <div class="col-md-4">
-        <!--筛选条件 结束日期 开始-->
-        <div class="dropdown form-group">
-            <label>结束日期</label>
-            <a class="dropdown-toggle" id="dropdownEnd" role="button" data-toggle="dropdown" data-target="#"
-               href="#">
-                <div class="input-group date">
-                    <input type="text" class="form-control" data-ng-model="searchEndDate">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                </div>
-            </a>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                <datetimepicker data-ng-model="searchEndDate"
-                                data-datetimepicker-config="{renderOn: 'end-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
-                                data-on-set-time="endDateOnSetTime()"
-                                data-before-render="startDateBeforeRender($dates)"></datetimepicker>
-            </ul>
+        <div class="col-xs-4">
+            <!--筛选条件 结束日期 开始-->
+            <div class="dropdown form-group">
+                <a class="dropdown-toggle" id="dropdownEnd" role="button" data-toggle="dropdown" data-target="#" href="#">
+                    <div class="input-group date">
+                        <span class="input-group-addon" id="basic-addon1">结束</span>
+                        <input type="text" class="form-control" data-ng-model="searchEndDate">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                    </div>
+                </a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <datetimepicker data-ng-model="searchEndDate" data-datetimepicker-config="{renderOn: 'end-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}" data-on-set-time="endDateOnSetTime()" data-before-render="startDateBeforeRender($dates)"></datetimepicker>
+                </ul>
+            </div>
+            <!--筛选条件 结束日期 结束-->
         </div>
-        <!--筛选条件 结束日期 结束-->
-      </div>
-      <div class="col-md-2">
-        <!--筛选条件 项目 开始-->
-        <select ng-model="moviePay.searchVal.project" ng-change="moviePay.search()">
-          <option ng-repeat="item in moviePay.searchVal.projects" value="{{item.value}}">{{item.name}}</option>
-        </select>
-        <!--筛选条件 项目 结束-->
-      </div>
+        <div class="col-xs-4">
+            <!--筛选条件 项目 开始-->
+            <select ng-model="moviePay.searchVal.project" ng-change="moviePay.search()" class="form-control">
+                <option ng-repeat="item in moviePay.searchVal.projects" value="{{item.value}}">{{item.name}}</option>
+            </select>
+            <!--筛选条件 项目 结束-->
+        </div>
     </div>
     <!--筛选 结束-->
-
-
     <hr>
-    <!--总金额 开始-->
-    <h5>总金额 {{moviePay.dataset1.total}}（元）</h5>
-    <!--总金额 结束-->
-    
-
-    <!--各项目付费金额统计 chart 开始-->
-    <div fusioncharts
-        width="600" 
-        height="400"
-        type="mscolumn2d"
-        chart="{{moviePay.attrs1}}"
-        categories="{{moviePay.categories1}}"
-        dataset="{{moviePay.dataset1}}"
-        ></div>    
-    <!--各项目付费金额统计 chart 结束-->  
-    
-    <!--各项目付费金额统计 table 开始-->
-    <table class="table">
-        <th>项目</th>
-        <th>总金额</th>
-        <th>单次支付金额</th>
-        <th>打包支付金额</th>
-        <tr ng-repeat="n in moviePay.categories1[0].category track by $index">
-            <td>{{moviePay.categories1[0].category[$index].label}}</td>
-            <td>{{moviePay.dataset1[2].data[$index].value}}</td>
-            <td>{{moviePay.dataset1[0].data[$index].value}}</td>
-            <td>{{moviePay.dataset1[1].data[$index].value}}</td>
-        </tr>
-    </table>
-    <!--各项目付费金额统计 table 结束-->  
-    
-    <!--总次数／上线数／总数 开始-->
-    <h5>总次数 {{dataset2.total}}（次）</h5>
-    <!--总次数／上线数／总数 结束-->
-
-    <!--各项目付费次数统计 chart 开始-->
-    <div fusioncharts
-        width="600" 
-        height="400"
-        type="mscolumn2d"
-        chart="{{attrs2}}"
-        categories="{{categories2}}"
-        dataset="{{dataset2}}"
-        ></div>    
-    <!--各项目付费次数统计 chart 结束-->  
-
-    <!--各项目付费次数统计 table 开始-->
-    <table class="table">
-        <th>项目</th>
-        <th>总次数</th>
-        <th>单次支付次数</th>
-        <th>打包支付次数</th>
-        <tr ng-repeat="n in categories2[0].category track by $index">
-            <td>{{categories2[0].category[$index].label}}</td>
-            <td>{{dataset2[2].data[$index].value}}</td>
-            <td>{{dataset2[0].data[$index].value}}</td>
-            <td>{{dataset2[1].data[$index].value}}</td>
-        </tr>
-    </table>
-    <!--各项目付费次数统计 table 结束-->  
-    
-    <!--每日支付金额统计 chart 开始-->
-    <div fusioncharts
-        width="600" 
-        height="400"
-        type="msline"
-        chart="{{attrs3}}"
-        categories="{{categories3}}"
-        dataset="{{dataset3}}"
-        ></div>
-    <!--每日支付金额统计 chart 结束-->
-
-    <!--每日支付金额统计 table 开始-->
-    <table class="table">
-        <th>日期</th>
-        <th>总金额</th>
-        <th>单次支付金额</th>
-        <th>打包支付金额</th>
-        <tr ng-repeat="n in categories3[0].category track by $index">
-            <td>{{categories3[0].category[$index].label}}</td>
-            <td>{{dataset3[0].data[$index].value}}</td>
-            <td>{{dataset3[1].data[$index].value}}</td>
-            <td>{{dataset3[2].data[$index].value}}</td>
-        </tr>
-    </table>
-    <!--每日支付金额统计 table 结束-->
-
-    <!--每日支付次数统计 chart 开始-->
-    <div fusioncharts
-        width="600" 
-        height="400"
-        type="msline"
-        chart="{{attrs4}}"
-        categories="{{categories4}}"
-        dataset="{{dataset4}}"
-        ></div>
-    <!--每日支付次数统计 chart 结束-->
-
-    <!--每日支付次数统计 table 开始-->
-    <table class="table">
-        <th>日期</th>
-        <th>总次数</th>
-        <th>单次支付次数</th>
-        <th>打包支付次数</th>
-        <tr ng-repeat="n in categories4[0].category track by $index">
-            <td>{{categories4[0].category[$index].label}}</td>
-            <td>{{dataset4[0].data[$index].value}}</td>
-            <td>{{dataset4[1].data[$index].value}}</td>
-            <td>{{dataset4[2].data[$index].value}}</td>
-        </tr>
-    </table>
-    <!--每日支付次数统计 table 结束-->
-
+    <div class="row">
+        <!--每日支付金额统计 chart 开始-->
+        <div class="col-xs-6">
+            <div fusioncharts width="100%" height="400" type="msline" chart="{{attrs3}}" categories="{{categories3}}" dataset="{{dataset3}}"></div>
+        </div>
+        <!--每日支付金额统计 chart 结束-->
+        <!--每日支付次数统计 chart 开始-->
+        <div class="col-xs-6">
+            <div fusioncharts width="100%" height="400" type="msline" chart="{{attrs4}}" categories="{{categories4}}" dataset="{{dataset4}}"></div>
+        </div>
+        <!--每日支付次数统计 chart 结束-->
+    </div>
+    <div class="row">
+        <!--每日支付金额统计 table 开始-->
+        <div class="col-xs-6">
+            <table class="table">
+                <th>日期</th>
+                <th>总金额</th>
+                <th>单次支付金额</th>
+                <th>打包支付金额</th>
+                <tr ng-repeat="n in categories3[0].category track by $index">
+                    <td>{{categories3[0].category[$index].label}}</td>
+                    <td>{{dataset3[0].data[$index].value}}</td>
+                    <td>{{dataset3[1].data[$index].value}}</td>
+                    <td>{{dataset3[2].data[$index].value}}</td>
+                </tr>
+            </table>
+        </div>
+        <!--每日支付金额统计 table 结束-->
+        <!--每日支付次数统计 table 开始-->
+        <div class="col-xs-6">
+            <table class="table">
+                <th>日期</th>
+                <th>总次数</th>
+                <th>单次支付次数</th>
+                <th>打包支付次数</th>
+                <tr ng-repeat="n in categories4[0].category track by $index">
+                    <td>{{categories4[0].category[$index].label}}</td>
+                    <td>{{dataset4[0].data[$index].value}}</td>
+                    <td>{{dataset4[1].data[$index].value}}</td>
+                    <td>{{dataset4[2].data[$index].value}}</td>
+                </tr>
+            </table>
+        </div>
+        <!--每日支付次数统计 table 结束-->
+    </div>
+    <hr>
+    <div class="row">
+        <!--各项目付费金额统计 chart 开始-->
+        <div class="col-xs-6">
+            <h5>总金额 {{moviePay.dataset1.total}}（元）</h5>
+            <div fusioncharts width="100%" height="400" type="mscolumn2d" chart="{{moviePay.attrs1}}" categories="{{moviePay.categories1}}" dataset="{{moviePay.dataset1}}"></div>
+        </div>
+        <!--各项目付费金额统计 chart 结束-->
+        <!--各项目付费次数统计 chart 开始-->
+        <div class="col-xs-6">
+            <h5>总次数 {{dataset2.total}}（次）</h5>
+            <div fusioncharts width="100%" height="400" type="mscolumn2d" chart="{{attrs2}}" categories="{{categories2}}" dataset="{{dataset2}}"></div>
+        </div>
+        <!--各项目付费次数统计 chart 结束-->
+    </div>
+    <div class="row">
+        <!--各项目付费金额统计 table 开始-->
+        <div class="col-xs-6">
+            <table class="table">
+                <th>项目</th>
+                <th>总金额</th>
+                <th>单次支付金额</th>
+                <th>打包支付金额</th>
+                <tr ng-repeat="n in moviePay.categories1[0].category track by $index">
+                    <td>{{moviePay.categories1[0].category[$index].label}}</td>
+                    <td>{{moviePay.dataset1[2].data[$index].value}}</td>
+                    <td>{{moviePay.dataset1[0].data[$index].value}}</td>
+                    <td>{{moviePay.dataset1[1].data[$index].value}}</td>
+                </tr>
+            </table>
+        </div>
+        <!--各项目付费金额统计 table 结束-->
+        <!--各项目付费次数统计 table 开始-->
+        <div class="col-xs-6">
+            <table class="table">
+                <th>项目</th>
+                <th>总次数</th>
+                <th>单次支付次数</th>
+                <th>打包支付次数</th>
+                <tr ng-repeat="n in categories2[0].category track by $index">
+                    <td>{{categories2[0].category[$index].label}}</td>
+                    <td>{{dataset2[2].data[$index].value}}</td>
+                    <td>{{dataset2[0].data[$index].value}}</td>
+                    <td>{{dataset2[1].data[$index].value}}</td>
+                </tr>
+            </table>
+        </div>
+        <!--各项目付费次数统计 table 结束-->
+    </div>
 </div>
 <style type="text/css">
-    /*日期选择下拉框宽度*/
-    .datetimepicker {width: 400px;}
+/*日期选择下拉框宽度*/
+
+.datetimepicker {
+    width: 400px;
+}
 </style>
