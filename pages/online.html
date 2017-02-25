@@ -42,60 +42,62 @@
     
     <hr>
     
-    [筛选]
-    <!--筛选条件 开始日期 开始-->
-    <div class="dropdown form-group">
-        <label>日期</label>
-        <a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target="#"
-           href="#">
-            <div class="input-group date">
-                <input type="text" class="form-control" data-ng-model="searchDate">
-                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+    <!-- 筛选 -->
+    <div class="row">
+        <!--筛选条件 项目 开始-->
+        <div class="col-xs-3">
+            <select ng-model="online.searchVal.project" ng-change="online.search()" class="form-control">
+              <option ng-repeat="item in online.searchVal.projects" value="{{item.value}}">{{item.name}}</option>
+            </select>
+        </div>
+        <!--筛选条件 项目 结束-->
+        <!--筛选条件 开始日期 开始-->
+        <div class="col-xs-3">
+            <div class="dropdown form-group">
+                <a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target="#"
+                   href="#">
+                    <div class="input-group date">
+                        <input type="text" class="form-control" data-ng-model="searchDate">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                    </div>
+                </a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <datetimepicker data-ng-model="searchDate"
+                                    data-datetimepicker-config="{renderOn: 'start-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
+                                    data-on-set-time="startDateOnSetTime()"
+                                    data-before-render="startDateBeforeRender($dates)"></datetimepicker>
+                </ul>
             </div>
-        </a>
-        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-            <datetimepicker data-ng-model="searchDate"
-                            data-datetimepicker-config="{renderOn: 'start-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
-                            data-on-set-time="startDateOnSetTime()"
-                            data-before-render="startDateBeforeRender($dates)"></datetimepicker>
-        </ul>
+        </div>
+        <!--筛选条件 开始日期 结束-->
+        
+
+        <!--筛选条件 粒度 开始-->
+        <div class="col-xs-6">
+            <div class="btn-group condition">
+                <div class="btn btn-default">
+                    <input ng-change="online.search()" type="radio" name="duration" value="1" ng-model="online.duration"> 最近一天
+                </div>
+                <div class="btn btn-default">
+                    <input ng-change="online.search()" type="radio" name="duration" value="7" ng-model="online.duration"> 最近一周
+                </div>
+                <div class="btn btn-default">
+                    <input ng-change="online.search()" type="radio" name="duration" value="31" ng-model="online.duration"> 最近一月
+                </div>
+
+            </div>
+        </div>
+        <!--筛选条件 粒度 结束-->
     </div>
 
-    
 
-
-    <!--筛选条件 开始日期 结束-->
-
-    <!--筛选条件 粒度 开始-->
-    过去 
-    <div class="form-group">
-            <label>
-                <input ng-change="online.search()" type="radio" name="duration" value="1" ng-model="online.duration">
-                一日
-            </label>
-            <label>
-                <input ng-change="online.search()" type="radio" name="duration" value="7" ng-model="online.duration">
-                一周
-            </label>
-            <label>
-                <input ng-change="online.search()" type="radio" name="duration" value="31" ng-model="online.duration">
-                一月
-            </label>
-    </div>
-    <!--筛选条件 粒度 结束-->
-
-    <!--筛选条件 项目 开始-->
-    <select ng-model="online.searchVal.project" ng-change="online.search()">
-      <option ng-repeat="item in online.searchVal.projects" value="{{item.value}}">{{item.name}}</option>
-    </select>
-    <!--筛选条件 项目 结束-->
 
 
     
 
     <!--online chart 开始-->
     <div fusioncharts
-        width="600" 
+        width="100%" 
         height="400"
         type="msline"
         chart="{{attrs}}"
