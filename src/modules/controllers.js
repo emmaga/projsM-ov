@@ -799,8 +799,8 @@
 
             self.init = function() {
                 self.searchVal = {};
-                $scope.dateRangeStart = $filter('date')(new Date(), 'yyyy-MM-dd');
-                $scope.searchDate = $filter('date')((new Date().getTime() - 1*24*60*60*1000), 'yyyy-MM-dd');
+                $scope.dateRangeStart = $filter('date')(new Date() + 1*24*60*60*1000, 'yyyy-MM-dd');
+                $scope.searchDate = $filter('date')((new Date().getTime()), 'yyyy-MM-dd');
                 self.duration = "7";
                 self.initChart();
                 self.loadOnline();
@@ -994,9 +994,9 @@
                 return self.search();
               });
               self.initCharts();
-              $scope.dateRangeStart = $filter('date')((new Date().getTime()), 'yyyy-MM-dd');
-              $scope.searchStartDate = $filter('date')((new Date().getTime() - 7*24*60*60*1000), 'yyyy-MM-dd');
-              $scope.searchEndDate = $filter('date')((new Date().getTime() - 1*24*60*60*1000), 'yyyy-MM-dd');
+              $scope.dateRangeStart = $filter('date')((new Date().getTime()) + 1*24*60*60*1000, 'yyyy-MM-dd');
+              $scope.searchStartDate = $filter('date')((new Date().getTime() - 6*24*60*60*1000), 'yyyy-MM-dd');
+              $scope.searchEndDate = $filter('date')((new Date().getTime()), 'yyyy-MM-dd');
             }
 
             self.initCharts = function () {
