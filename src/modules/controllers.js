@@ -846,7 +846,7 @@
                 var deferred = $q.defer();
                 var data = JSON.stringify({
                     token: util.getParams("token"),
-                    action: 'projectList'
+                    action: 'projectNameList'
                 })
                 self.loadingProList = true;
                 $http({
@@ -904,8 +904,6 @@
             }
 
             self.search = function () {
-                $scope.categories[0].category = [];
-                $scope.dataset = [];
 
                 var data = JSON.stringify({
                     token: util.getParams("token"),
@@ -922,6 +920,9 @@
                 }).then(function successCallback(response) {
                     var data = response.data;
                     if (data.rescode == '200') {
+                        $scope.categories[0].category = [];
+                        $scope.dataset = [];
+                        
                         data.dateList.forEach(function(item, index, array) {
                             $scope.categories[0].category.push({label: item.substring(5, 10)});
                         });
@@ -989,7 +990,7 @@
 
 
             self.init = function() {
-
+              self.searchVal = {};
               self.loadProList().then(function() {
                 return self.search();
               });
@@ -1163,17 +1164,20 @@
             }
 
             self.search = function () {
-                self.loadChart1();
-                self.loadChart2();
-                self.loadChart3();
-                self.loadChart4();
+                self.loadChart3().then(function() {
+                    return self.loadChart4();
+                }).then(function() {
+                    return self.loadChart1();
+                }).then(function() {
+                    return self.loadChart2();
+                })
             }
 
             self.loadProList = function () {
                 var deferred = $q.defer();
                 var data = JSON.stringify({
                     token: util.getParams("token"),
-                    action: 'projectList'
+                    action: 'projectNameList'
                 })
                 self.loadingProList = true;
                 $http({
@@ -1205,10 +1209,7 @@
             }
 
             self.loadChart1 = function () {
-
-                self.categories1[0].category = [];
-                self.dataset1  = [];
-                self.dataset1.total = 0;
+                var deferred = $q.defer();
 
                 var data = JSON.stringify({
                     token: util.getParams("token"),
@@ -1225,13 +1226,18 @@
                 }).then(function successCallback(response) {
                     var data = response.data;
                     if (data.rescode == '200') {
+
+                        self.categories1[0].category = [];
+                        self.dataset1  = [];
+                        self.dataset1.total = 0;
+                        
                         data.projectList.forEach(function(item, index, array) {
                             self.categories1[0].category.push({label: item});
                         });
 
                         self.dataset1.push({seriesname: "单次支付金额", data:[]});
                         data.onlyPPrice.forEach(function(item, index, array) {
-                            self.dataset1[0].data.push({ value: item });
+                            self.dataset1[0].data.push({ value: item/100 });
                         });
 
                         self.dataset1.push({seriesname: "打包支付金额", data:[]});
@@ -1241,27 +1247,27 @@
 
                         self.dataset1.push({seriesname: "总金额", data:[]});
                         data.sumPPrice.forEach(function(item, index, array) {
-                            self.dataset1[2].data.push({ value: item });
                             self.dataset1.total += Number(item);
+                            self.dataset1[2].data.push({ value: item/100 });
                         });
-                        self.dataset1.total = self.dataset1.total.toFixed(2);
-
+                        self.dataset1.total = self.dataset1.total/100;
+                        deferred.resolve();
                     } 
                     else {
                         alert(data.errInfo);
+                        deferred.reject();
                     }
                 }, function errorCallback(response) {
                     alert('连接服务器出错');
+                    deferred.reject();
                 }).finally(function(value) {
                     self.loadingChart1 = false;
                 });
+                return deferred.promise;
             }
 
             self.loadChart2 = function () {
-                
-                $scope.categories2[0].category = [];
-                $scope.dataset2 = [];
-                $scope.dataset2.total = 0;
+                var deferred = $q.defer();
 
                 var data = JSON.stringify({
                     token: util.getParams("token"),
@@ -1278,6 +1284,10 @@
                 }).then(function successCallback(response) {
                     var data = response.data;
                     if (data.rescode == '200') {
+                        $scope.categories2[0].category = [];
+                        $scope.dataset2 = [];
+                        $scope.dataset2.total = 0;
+
                         data.projectList.forEach(function(item, index, array) {
                             $scope.categories2[0].category.push({label: item});
                         });
@@ -1297,22 +1307,23 @@
                             $scope.dataset2[2].data.push({ value: item });
                             $scope.dataset2.total += Number(item);
                         });
-                        $scope.dataset2.total = $scope.dataset2.total.toFixed(2);
-
+                        deferred.resolve();
                     } 
                     else {
                         alert(data.errInfo);
+                        deferred.reject();
                     }
                 }, function errorCallback(response) {
                     alert('连接服务器出错');
+                    deferred.reject();
                 }).finally(function(value) {
                     self.loadingChart2 = false;
                 });
+                return deferred.promise;
             }
 
             self.loadChart3 = function () {
-                $scope.categories3[0].category = [];
-                $scope.dataset3 = [];
+                var deferred = $q.defer();
 
                 var data = JSON.stringify({
                     token: util.getParams("token"),
@@ -1329,39 +1340,44 @@
                 }).then(function successCallback(response) {
                     var data = response.data;
                     if (data.rescode == '200') {
+                        $scope.categories3[0].category = [];
+                        $scope.dataset3 = [];
+
                         data.dateList.forEach(function(item, index, array) {
                             $scope.categories3[0].category.push({label: item.substring(5, 10)});
                         });
 
                         $scope.dataset3.push({seriesname: "总金额", data:[]});
                         data.sumPPrice.forEach(function(item, index, array) {
-                            $scope.dataset3[0].data.push({ value: item });
+                            $scope.dataset3[0].data.push({ value: item/100 });
                         });
 
                         $scope.dataset3.push({seriesname: "单次支付金额", data:[]});
                         data.onlyPPrice.forEach(function(item, index, array) {
-                            $scope.dataset3[1].data.push({ value: item });
+                            $scope.dataset3[1].data.push({ value: item/100 });
                         });
 
                         $scope.dataset3.push({seriesname: "打包支付金额", data:[]});
-                        data.sumPPrice.forEach(function(item, index, array) {
-                            $scope.dataset3[2].data.push({ value: item });
+                        data.packagePPrice.forEach(function(item, index, array) {
+                            $scope.dataset3[2].data.push({ value: item/100 });
                         });
+                        deferred.resolve();
                     } 
                     else {
                         alert(data.errInfo);
+                        deferred.reject();
                     }
                 }, function errorCallback(response) {
                     alert('连接服务器出错');
+                    deferred.reject();
                 }).finally(function(value) {
                     self.loadingChart3 = false;
                 });
+                return deferred.promise;
             }
 
             self.loadChart4 = function () {
-                
-                $scope.categories4[0].category = [];
-                $scope.dataset4 = [];
+                var deferred = $q.defer();
 
                 var data = JSON.stringify({
                     token: util.getParams("token"),
@@ -1378,6 +1394,9 @@
                 }).then(function successCallback(response) {
                     var data = response.data;
                     if (data.rescode == '200') {
+                        $scope.categories4[0].category = [];
+                        $scope.dataset4 = [];
+
                         data.dateList.forEach(function(item, index, array) {
                             $scope.categories4[0].category.push({label: item.substring(5, 10)});
                         });
@@ -1393,18 +1412,22 @@
                         });
 
                         $scope.dataset4.push({seriesname: "打包支付次数", data:[]});
-                        data.sumPCount.forEach(function(item, index, array) {
+                        data.packagePCount.forEach(function(item, index, array) {
                             $scope.dataset4[2].data.push({ value: item });
                         });
+                        deferred.resolve();
                     } 
                     else {
                         alert(data.errInfo);
+                        deferred.reject();
                     }
                 }, function errorCallback(response) {
                     alert('连接服务器出错');
+                    deferred.reject();
                 }).finally(function(value) {
                     self.loadingChart4 = false;
                 });
+                return deferred.promise;
             }
         }
     ]) 

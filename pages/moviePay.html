@@ -1,4 +1,4 @@
-<div ng-controller="moviePayController as moviePay" ng-init="moviePay.init()" class="col-sm-9 page col-right">
+<div ng-controller="moviePayController as moviePay" ng-init="moviePay.init()" class="col-sm-9 page col-right"><button ng-click="moviePay.search()">self.search</button>
     <!--glyphicon-th-->
     <a>
         <strong>
@@ -69,99 +69,112 @@
     <!--筛选 结束-->
     
     <div class="row">
-        <!--每日支付金额统计 chart 开始-->
-        <div class="col-xs-6">
-            <div fusioncharts width="100%" height="400" type="msline" chart="{{attrs3}}" categories="{{categories3}}" dataset="{{dataset3}}"></div>
+        <div class="col-lg-6 col-md-12">
+            <div class="row">
+                <div class="col-xs-12">
+                    <!--每日支付金额统计 chart 开始-->
+                    <div fusioncharts width="100%" height="400" type="msline" chart="{{attrs3}}" categories="{{categories3}}" dataset="{{dataset3}}"></div>
+                    <!--每日支付金额统计 chart 结束-->
+                </div>
+                <!--每日支付金额统计 table 开始-->
+                <div class="col-xs-12">
+                    <table class="table">
+                        <th>日期</th>
+                        <th>总金额</th>
+                        <th>单次支付金额</th>
+                        <th>打包支付金额</th>
+                        <tr ng-repeat="n in categories3[0].category track by $index">
+                            <td>{{categories3[0].category[$index].label}}</td>
+                            <td>{{dataset3[0].data[$index].value}}</td>
+                            <td>{{dataset3[1].data[$index].value}}</td>
+                            <td>{{dataset3[2].data[$index].value}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <!--每日支付金额统计 table 结束-->
+            </div>
         </div>
-        <!--每日支付金额统计 chart 结束-->
-        <!--每日支付次数统计 chart 开始-->
-        <div class="col-xs-6">
-            <div fusioncharts width="100%" height="400" type="msline" chart="{{attrs4}}" categories="{{categories4}}" dataset="{{dataset4}}"></div>
+        <div class="col-lg-6 col-md-12">
+            <div class="row">
+                <div class="col-xs-12">
+                    <!--每日支付次数统计 chart 开始-->
+                    <div fusioncharts width="100%" height="400" type="msline" chart="{{attrs4}}" categories="{{categories4}}" dataset="{{dataset4}}"></div>
+                    <!--每日支付次数统计 chart 结束-->
+                </div>
+                <!--每日支付次数统计 table 开始-->
+                <div class="col-xs-12">
+                    <table class="table">
+                        <th>日期</th>
+                        <th>总次数</th>
+                        <th>单次支付次数</th>
+                        <th>打包支付次数</th>
+                        <tr ng-repeat="n in categories4[0].category track by $index">
+                            <td>{{categories4[0].category[$index].label}}</td>
+                            <td>{{dataset4[0].data[$index].value}}</td>
+                            <td>{{dataset4[1].data[$index].value}}</td>
+                            <td>{{dataset4[2].data[$index].value}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <!--每日支付次数统计 table 结束-->
+            </div>
         </div>
-        <!--每日支付次数统计 chart 结束-->
-    </div>
-    <div class="row">
-        <!--每日支付金额统计 table 开始-->
-        <div class="col-xs-6">
-            <table class="table">
-                <th>日期</th>
-                <th>总金额</th>
-                <th>单次支付金额</th>
-                <th>打包支付金额</th>
-                <tr ng-repeat="n in categories3[0].category track by $index">
-                    <td>{{categories3[0].category[$index].label}}</td>
-                    <td>{{dataset3[0].data[$index].value}}</td>
-                    <td>{{dataset3[1].data[$index].value}}</td>
-                    <td>{{dataset3[2].data[$index].value}}</td>
-                </tr>
-            </table>
-        </div>
-        <!--每日支付金额统计 table 结束-->
-        <!--每日支付次数统计 table 开始-->
-        <div class="col-xs-6">
-            <table class="table">
-                <th>日期</th>
-                <th>总次数</th>
-                <th>单次支付次数</th>
-                <th>打包支付次数</th>
-                <tr ng-repeat="n in categories4[0].category track by $index">
-                    <td>{{categories4[0].category[$index].label}}</td>
-                    <td>{{dataset4[0].data[$index].value}}</td>
-                    <td>{{dataset4[1].data[$index].value}}</td>
-                    <td>{{dataset4[2].data[$index].value}}</td>
-                </tr>
-            </table>
-        </div>
-        <!--每日支付次数统计 table 结束-->
     </div>
     <hr>
     <div class="row">
-        <!--各项目付费金额统计 chart 开始-->
-        <div class="col-xs-6">
-            <h5>总金额 {{moviePay.dataset1.total}}（元）</h5>
-            <div fusioncharts width="100%" height="400" type="mscolumn2d" chart="{{moviePay.attrs1}}" categories="{{moviePay.categories1}}" dataset="{{moviePay.dataset1}}"></div>
+        <div class="col-lg-6 col-md-12">
+            <div class="row">
+                <!--各项目付费金额统计 chart 开始-->
+                <div class="col-xs-12">
+                    <h5>总金额 {{moviePay.dataset1.total}}（元）</h5>
+                    <div fusioncharts width="100%" height="400" type="mscolumn2d" chart="{{moviePay.attrs1}}" categories="{{moviePay.categories1}}" dataset="{{moviePay.dataset1}}"></div>
+                </div>
+                <!--各项目付费金额统计 chart 结束-->
+                <!--各项目付费金额统计 table 开始-->
+                <div class="col-xs-12">
+                    <table class="table">
+                        <th>项目</th>
+                        <th>总金额</th>
+                        <th>单次支付金额</th>
+                        <th>打包支付金额</th>
+                        <tr ng-repeat="n in moviePay.categories1[0].category track by $index">
+                            <td>{{moviePay.categories1[0].category[$index].label}}</td>
+                            <td>{{moviePay.dataset1[2].data[$index].value}}</td>
+                            <td>{{moviePay.dataset1[0].data[$index].value}}</td>
+                            <td>{{moviePay.dataset1[1].data[$index].value}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <!--各项目付费金额统计 table 结束-->
+            </div>
         </div>
-        <!--各项目付费金额统计 chart 结束-->
-        <!--各项目付费次数统计 chart 开始-->
-        <div class="col-xs-6">
-            <h5>总次数 {{dataset2.total}}（次）</h5>
-            <div fusioncharts width="100%" height="400" type="mscolumn2d" chart="{{attrs2}}" categories="{{categories2}}" dataset="{{dataset2}}"></div>
+
+        <div class="col-lg-6 col-md-12">
+            <div class="row">
+                <!--各项目付费次数统计 chart 开始-->
+                <div class="col-xs-12">
+                    <h5>总次数 {{dataset2.total}}（次）</h5>
+                    <div fusioncharts width="100%" height="400" type="mscolumn2d" chart="{{attrs2}}" categories="{{categories2}}" dataset="{{dataset2}}"></div>
+                </div>
+                <!--各项目付费次数统计 chart 结束-->
+                <!--各项目付费次数统计 table 开始-->
+                <div class="col-xs-12">
+                    <table class="table">
+                        <th>项目</th>
+                        <th>总次数</th>
+                        <th>单次支付次数</th>
+                        <th>打包支付次数</th>
+                        <tr ng-repeat="n in categories2[0].category track by $index">
+                            <td>{{categories2[0].category[$index].label}}</td>
+                            <td>{{dataset2[2].data[$index].value}}</td>
+                            <td>{{dataset2[0].data[$index].value}}</td>
+                            <td>{{dataset2[1].data[$index].value}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <!--各项目付费次数统计 table 结束-->
+            </div>
         </div>
-        <!--各项目付费次数统计 chart 结束-->
-    </div>
-    <div class="row">
-        <!--各项目付费金额统计 table 开始-->
-        <div class="col-xs-6">
-            <table class="table">
-                <th>项目</th>
-                <th>总金额</th>
-                <th>单次支付金额</th>
-                <th>打包支付金额</th>
-                <tr ng-repeat="n in moviePay.categories1[0].category track by $index">
-                    <td>{{moviePay.categories1[0].category[$index].label}}</td>
-                    <td>{{moviePay.dataset1[2].data[$index].value}}</td>
-                    <td>{{moviePay.dataset1[0].data[$index].value}}</td>
-                    <td>{{moviePay.dataset1[1].data[$index].value}}</td>
-                </tr>
-            </table>
-        </div>
-        <!--各项目付费金额统计 table 结束-->
-        <!--各项目付费次数统计 table 开始-->
-        <div class="col-xs-6">
-            <table class="table">
-                <th>项目</th>
-                <th>总次数</th>
-                <th>单次支付次数</th>
-                <th>打包支付次数</th>
-                <tr ng-repeat="n in categories2[0].category track by $index">
-                    <td>{{categories2[0].category[$index].label}}</td>
-                    <td>{{dataset2[2].data[$index].value}}</td>
-                    <td>{{dataset2[0].data[$index].value}}</td>
-                    <td>{{dataset2[1].data[$index].value}}</td>
-                </tr>
-            </table>
-        </div>
-        <!--各项目付费次数统计 table 结束-->
     </div>
 </div>
 <style type="text/css">
