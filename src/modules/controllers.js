@@ -925,15 +925,14 @@
                         data.dateList.forEach(function(item, index, array) {
                             $scope.categories[0].category.push({label: item.substring(5, 10)});
                         });
-
-                        /*$scope.dataset.push({seriesname: "总数", data:[]});
-                        data.total.forEach(function(item, index, array) {
-                            $scope.dataset[1].data.push({ value: item });
-                        });*/
+                        $scope.dataset.push({seriesname: "总数", data:[]});
+                        data.totalCount.forEach(function(item, index, array) {
+                            $scope.dataset[0].data.push({ value: item });
+                        });
 
                         $scope.dataset.push({seriesname: "上线", data:[]});
-                        data.count.forEach(function(item, index, array) {
-                            $scope.dataset[0].data.push({ value: item });
+                        data.loginCount.forEach(function(item, index, array) {
+                            $scope.dataset[1].data.push({ value: item });
                         });
 
                     } 
