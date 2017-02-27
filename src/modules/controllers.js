@@ -54,7 +54,7 @@
                     url: util.getApiUrl('', 'editLangs.json', 'local')
                 }).then(function successCallback(response) {
                     util.setParams('editLangs', response.data.editLangs);
-                    $state.go('app.projects');
+                    $state.go('app.online');
                 }, function errorCallback(response) {
 
                 });
