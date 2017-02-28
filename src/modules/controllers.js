@@ -1242,7 +1242,7 @@
 
                         self.dataset1.push({seriesname: "打包支付金额", data:[]});
                         data.packagePPrice.forEach(function(item, index, array) {
-                            self.dataset1[1].data.push({ value: item });
+                            self.dataset1[1].data.push({ value: item/100 });
                         });
 
                         self.dataset1.push({seriesname: "总金额", data:[]});
