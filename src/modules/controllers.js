@@ -805,7 +805,7 @@
                 self.searchVal.hours = '7';
                 $scope.dateRangeStart = $filter('date')(new Date() + 1*24*60*60*1000, 'yyyy-MM-dd');
                 self.searchDate = $filter('date')((new Date().getTime()), 'yyyy-MM-dd');
-                self.searchDateTime = $filter('date')((new Date().getTime()), 'yyyy-MM-dd hh:mm');
+                self.searchDateTime = $filter('date')((new Date().getTime()), 'yyyy-MM-dd HH') + ":00";
                 self.duration = "7";
                 self.initChart();
                 self.loadOnline();
