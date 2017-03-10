@@ -799,8 +799,13 @@
 
             self.init = function() {
                 self.searchVal = {};
+                self.queryType = [{value: '0', name: '按日查询'}, {value: '1', name: '按小时查询'}];
+                self.searchVal.queryType = '0'
+                self.hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+                self.searchVal.hours = '7';
                 $scope.dateRangeStart = $filter('date')(new Date() + 1*24*60*60*1000, 'yyyy-MM-dd');
-                $scope.searchDate = $filter('date')((new Date().getTime()), 'yyyy-MM-dd');
+                self.searchDate = $filter('date')((new Date().getTime()), 'yyyy-MM-dd');
+                self.searchDateTime = $filter('date')((new Date().getTime()), 'yyyy-MM-dd hh:mm');
                 self.duration = "7";
                 self.initChart();
                 self.loadOnline();
@@ -810,11 +815,16 @@
             }
 
             self.initChart = function () {
+                switch (self.searchVal.queryType) {
+                    case '0': self.xAxisName = "日期"; break;
+                    case '1': self.xAxisName = "时"; break;
+                    default: self.xAxisName = "日期"; break;
+                }
                 $scope.attrs = {
                     "caption": "上线情况统计",
                     "numberprefix": "",
                     "yAxisname": "终端数（个）",
-                    "xAxisName": "日期",
+                    "xAxisName": self.xAxisName,
                     "plotgradientcolor": "",
                     "bgcolor": "FFFFFF",
                     "showalternatehgridcolor": "0",
@@ -892,6 +902,7 @@
                     if (data.rescode == '200') {
                         self.onlineCount = data.onlineCount;
                         self.totalCount = data.totalCount;
+                        self.totalProjectCount = data.totalProjectCount == undefined? 0: data.totalProjectCount;
                     } 
                     else {
                         alert(data.errInfo);
@@ -904,14 +915,32 @@
             }
 
             self.search = function () {
+                switch (self.searchVal.queryType) {
+                    case '0': var data = JSON.stringify({
+                        token: util.getParams("token"),
+                        action: 'getTermLoginInfo',
+                        endDate: self.searchDate + ' 00:00:00',
+                        project: self.searchVal.project,
+                        days: Number(self.duration)
+                    })
+                    break;
+                    case '1': var data = JSON.stringify({
+                        token: util.getParams("token"),
+                        action: 'getTermHourLoginInfo',
+                        endTime: self.searchDateTime + ':00',
+                        project: self.searchVal.project,
+                        hours: Number(self.searchVal.hours)
+                    });
+                    break;
 
-                var data = JSON.stringify({
-                    token: util.getParams("token"),
-                    action: 'getTermLoginInfo',
-                    endDate: $scope.searchDate + ' 00:00:00',
-                    project: self.searchVal.project,
-                    days: Number(self.duration)
-                })
+                }
+                // var data = JSON.stringify({
+                //     token: util.getParams("token"),
+                //     action: 'getTermLoginInfo',
+                //     endDate: $scope.searchDate + ' 00:00:00',
+                //     project: self.searchVal.project,
+                //     days: Number(self.duration)
+                // })
                 self.loadingChart = true;
                 $http({
                     method: 'POST',
@@ -922,10 +951,21 @@
                     if (data.rescode == '200') {
                         $scope.categories[0].category = [];
                         $scope.dataset = [];
-                        
-                        data.dateList.forEach(function(item, index, array) {
-                            $scope.categories[0].category.push({label: item.substring(5, 10)});
-                        });
+
+                        switch (self.searchVal.queryType) {
+                            case '0': data.dateList.forEach(function(item, index, array) {
+                                $scope.categories[0].category.push({label: item.substring(5, 10)});
+                            });
+                                break;
+                            case '1': data.hourList.forEach(function(item, index, array) {
+                                $scope.categories[0].category.push({label: item});
+                            });
+                                break;
+
+                        }
+                        // data.dateList.forEach(function(item, index, array) {
+                        //     $scope.categories[0].category.push({label: item.substring(5, 10)});
+                        // });
                         $scope.dataset.push({seriesname: "总数", data:[]});
                         data.totalCount.forEach(function(item, index, array) {
                             $scope.dataset[0].data.push({ value: item });
@@ -945,6 +985,20 @@
                 }).finally(function(value) {
                     self.loadingChart = false;
                 });
+            }
+
+            /**
+             * 查询类型选择
+             */
+            self.selectType = function () {
+                if (self.searchVal.queryType == "1") {
+                    self.slTime = true;
+
+                } else {
+                    self.slTime = false;
+                }
+                self.initChart();
+                self.search();
             }
         }
     ]) 
@@ -1231,7 +1285,7 @@
                         self.dataset1  = [];
                         self.dataset1.total = 0;
                         
-                        data.projectList.forEach(function(item, index, array) {
+                        data.projectListCHZ.forEach(function(item, index, array) {
                             self.categories1[0].category.push({label: item});
                         });
 
@@ -1288,7 +1342,7 @@
                         $scope.dataset2 = [];
                         $scope.dataset2.total = 0;
 
-                        data.projectList.forEach(function(item, index, array) {
+                        data.projectListCHZ.forEach(function(item, index, array) {
                             $scope.categories2[0].category.push({label: item});
                         });
 
