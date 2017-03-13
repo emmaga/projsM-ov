@@ -1104,6 +1104,13 @@
                     }
                 ];
                 self.dataset1 = [];
+                self.orderby = [
+                    {desc: true},
+                    {desc: true},
+                    {desc: true},
+                    {desc: true}
+                ];
+
 
                 // init chart2
                 $scope.attrs2 = {
@@ -1282,29 +1289,36 @@
                     if (data.rescode == '200') {
 
                         self.categories1[0].category = [];
-                        self.dataset1  = [];
+                        self.dataset1 = [];
+                        self.dataSet1 = [];
                         self.dataset1.total = 0;
-                        
+
                         data.projectListCHZ.forEach(function(item, index, array) {
-                            self.categories1[0].category.push({label: item});
+                            if (index < 5) self.categories1[0].category.push({label: item});
+                            self.dataSet1.push({'projectListCHZ': item});
                         });
 
                         self.dataset1.push({seriesname: "单次支付金额", data:[]});
                         data.onlyPPrice.forEach(function(item, index, array) {
-                            self.dataset1[0].data.push({ value: item/100 });
+                            if (index < 5) self.dataset1[0].data.push({ value: item/100 });
+                            self.dataSet1[index].onlyPPrice = item/100;
                         });
 
                         self.dataset1.push({seriesname: "打包支付金额", data:[]});
                         data.packagePPrice.forEach(function(item, index, array) {
-                            self.dataset1[1].data.push({ value: item/100 });
+                            if (index < 5) self.dataset1[1].data.push({ value: item/100 });
+                            self.dataSet1[index].packagePPrice = item/100;
                         });
 
                         self.dataset1.push({seriesname: "总金额", data:[]});
                         data.sumPPrice.forEach(function(item, index, array) {
-                            self.dataset1.total += Number(item);
+                            if (index < 5) self.dataset1.total += Number(item);
                             self.dataset1[2].data.push({ value: item/100 });
+                            self.dataSet1[index].sumPPrice = item/100;
                         });
                         self.dataset1.total = self.dataset1.total/100;
+
+
                         deferred.resolve();
                     } 
                     else {
@@ -1340,26 +1354,31 @@
                     if (data.rescode == '200') {
                         $scope.categories2[0].category = [];
                         $scope.dataset2 = [];
+                        self.dataSet2 = [];
                         $scope.dataset2.total = 0;
 
                         data.projectListCHZ.forEach(function(item, index, array) {
-                            $scope.categories2[0].category.push({label: item});
+                            if (index < 5) $scope.categories2[0].category.push({label: item});
+                            self.dataSet2.push({'projectListCHZ': item});
                         });
 
                         $scope.dataset2.push({seriesname: "单次支付次数", data:[]});
                         data.onlyPCount.forEach(function(item, index, array) {
-                            $scope.dataset2[0].data.push({ value: item });
+                            if (index < 5) $scope.dataset2[0].data.push({ value: item });
+                            self.dataSet2[index].onlyPCount = item;
                         });
 
                         $scope.dataset2.push({seriesname: "打包支付次数", data:[]});
                         data.packagePCount.forEach(function(item, index, array) {
-                            $scope.dataset2[1].data.push({ value: item });
+                            if (index < 5) $scope.dataset2[1].data.push({ value: item });
+                            self.dataSet2[index].packagePCount = item;
                         });
 
                         $scope.dataset2.push({seriesname: "总次数", data:[]});
                         data.sumPCount.forEach(function(item, index, array) {
-                            $scope.dataset2[2].data.push({ value: item });
+                            if (index < 5) $scope.dataset2[2].data.push({ value: item });
                             $scope.dataset2.total += Number(item);
+                            self.dataSet2[index].sumPCount = item;
                         });
                         deferred.resolve();
                     } 
@@ -1396,24 +1415,29 @@
                     if (data.rescode == '200') {
                         $scope.categories3[0].category = [];
                         $scope.dataset3 = [];
+                        self.dataSet3 = [];
 
                         data.dateList.forEach(function(item, index, array) {
                             $scope.categories3[0].category.push({label: item.substring(5, 10)});
+                            self.dataSet3.push({'date': item.substring(5, 10)});
                         });
 
                         $scope.dataset3.push({seriesname: "总金额", data:[]});
                         data.sumPPrice.forEach(function(item, index, array) {
                             $scope.dataset3[0].data.push({ value: item/100 });
+                            self.dataSet3[index].sumPPrice = item/100;
                         });
 
                         $scope.dataset3.push({seriesname: "单次支付金额", data:[]});
                         data.onlyPPrice.forEach(function(item, index, array) {
                             $scope.dataset3[1].data.push({ value: item/100 });
+                            self.dataSet3[index].onlyPPrice = item/100;
                         });
 
                         $scope.dataset3.push({seriesname: "打包支付金额", data:[]});
                         data.packagePPrice.forEach(function(item, index, array) {
                             $scope.dataset3[2].data.push({ value: item/100 });
+                            self.dataSet3[index].packagePPrice = item/100;
                         });
                         deferred.resolve();
                     } 
@@ -1450,24 +1474,29 @@
                     if (data.rescode == '200') {
                         $scope.categories4[0].category = [];
                         $scope.dataset4 = [];
+                        self.dataSet4 = [];
 
                         data.dateList.forEach(function(item, index, array) {
                             $scope.categories4[0].category.push({label: item.substring(5, 10)});
+                            self.dataSet4.push({'date': item.substring(5, 10)});
                         });
 
                         $scope.dataset4.push({seriesname: "总次数", data:[]});
                         data.sumPCount.forEach(function(item, index, array) {
                             $scope.dataset4[0].data.push({ value: item });
+                            self.dataSet4[index].sumPCount = item;
                         });
 
                         $scope.dataset4.push({seriesname: "单次支付次数", data:[]});
                         data.onlyPCount.forEach(function(item, index, array) {
                             $scope.dataset4[1].data.push({ value: item });
+                            self.dataSet4[index].onlyPCount = item;
                         });
 
                         $scope.dataset4.push({seriesname: "打包支付次数", data:[]});
                         data.packagePCount.forEach(function(item, index, array) {
                             $scope.dataset4[2].data.push({ value: item });
+                            self.dataSet4[index].packagePCount = item;
                         });
                         deferred.resolve();
                     } 
@@ -1482,6 +1511,11 @@
                     self.loadingChart4 = false;
                 });
                 return deferred.promise;
+            }
+
+            self.changeOrderby = function (index, orderby) {
+                self.orderby[index].sort = orderby;
+                self.orderby[index].desc = !self.orderby[index].desc;
             }
         }
     ]) 

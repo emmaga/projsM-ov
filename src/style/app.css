@@ -115,6 +115,7 @@ footer {
 
 a{
   text-decoration: none !important;
+  cursor: default;
 }
 .btn-sm>.glyphicon{
   font-size: 12px;
