@@ -1076,7 +1076,7 @@
                     "caption": "各项目付费金额统计",
                     "xAxisname": "项目",
                     "yAxisName": "金额 (元)",
-                    "numberPrefix": "RMB ",
+                    "numberPrefix": "¥ ",
                     "plotFillAlpha" : "",
 
                     //Cosmetics
@@ -1180,7 +1180,7 @@
                 // init chart3
                 $scope.attrs3 = {
                     "caption": "每日支付金额统计",
-                    "numberprefix": "RMB ",
+                    "numberprefix": "¥ ",
                     "yAxisname": "金额（元）",
                     "xAxisName": "日期",
                     "plotgradientcolor": "",
@@ -1314,16 +1314,16 @@
                             self.dataSet1.push({'projectListCHZ': item});
                         });
 
-                        self.dataset1.push({seriesname: "单次支付金额", data:[]});
-                        data.onlyPPrice.forEach(function(item, index, array) {
-                            if (index < 5) self.dataset1[0].data.push({ value: item/100 });
-                            self.dataSet1[index].onlyPPrice = item/100;
-                        });
-
                         self.dataset1.push({seriesname: "打包支付金额", data:[]});
                         data.packagePPrice.forEach(function(item, index, array) {
-                            if (index < 5) self.dataset1[1].data.push({ value: item/100 });
+                            if (index < 5) self.dataset1[0].data.push({ value: item/100 });
                             self.dataSet1[index].packagePPrice = item/100;
+                        });
+
+                        self.dataset1.push({seriesname: "单次支付金额", data:[]});
+                        data.onlyPPrice.forEach(function(item, index, array) {
+                            if (index < 5) self.dataset1[1].data.push({ value: item/100 });
+                            self.dataSet1[index].onlyPPrice = item/100;
                         });
 
                         self.dataset1.push({seriesname: "总金额", data:[]});
@@ -1378,16 +1378,16 @@
                             self.dataSet2.push({'projectListCHZ': item});
                         });
 
-                        $scope.dataset2.push({seriesname: "单次支付次数", data:[]});
-                        data.onlyPCount.forEach(function(item, index, array) {
-                            if (index < 5) $scope.dataset2[0].data.push({ value: item });
-                            self.dataSet2[index].onlyPCount = item;
-                        });
-
                         $scope.dataset2.push({seriesname: "打包支付次数", data:[]});
                         data.packagePCount.forEach(function(item, index, array) {
-                            if (index < 5) $scope.dataset2[1].data.push({ value: item });
+                            if (index < 5) $scope.dataset2[0].data.push({ value: item });
                             self.dataSet2[index].packagePCount = item;
+                        });
+
+                        $scope.dataset2.push({seriesname: "单次支付次数", data:[]});
+                        data.onlyPCount.forEach(function(item, index, array) {
+                            if (index < 5) $scope.dataset2[1].data.push({ value: item });
+                            self.dataSet2[index].onlyPCount = item;
                         });
 
                         $scope.dataset2.push({seriesname: "总次数", data:[]});
