@@ -148,14 +148,14 @@
     
     <!--online table 开始-->
     <table class="table">
-        <th ng-if="!online.slTime">日期</th>
-        <th ng-if="online.slTime">时间</th>
-        <th>总数</th>
-        <th>上线</th>
-        <tr ng-repeat="n in categories[0].category track by $index">
-            <td>{{categories[0].category[$index].label}}</td>
-            <td>{{dataset[0].data[$index].value}}</td>
-            <td>{{dataset[1].data[$index].value}}</td>
+        <th ng-if="!online.slTime"><a ng-click="online.changeOrderby('datetime')">日期</a></th>
+        <th ng-if="online.slTime"><a ng-click="online.changeOrderby('datetime')">时间</a></th>
+        <th><a ng-click="online.changeOrderby('totalCount')">总数</a></th>
+        <th><a ng-click="online.changeOrderby('loginCount')">上线</a></th>
+        <tr ng-repeat="n in online.dataSet | orderBy: online.orderby.sort : online.orderby.desc">
+            <td>{{n.datetime}}</td>
+            <td>{{n.totalCount}}</td>
+            <td>{{n.loginCount}}</td>
         </tr>
     </table>
     <!--online table 结束-->  

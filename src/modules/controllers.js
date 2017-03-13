@@ -812,6 +812,8 @@
                 self.loadProList().then(function() {
                     return self.search();
                   });
+                self.orderby = {};
+                self.orderby.desc = false;
             }
 
             self.initChart = function () {
@@ -951,14 +953,17 @@
                     if (data.rescode == '200') {
                         $scope.categories[0].category = [];
                         $scope.dataset = [];
+                        self.dataSet = [];
 
                         switch (self.searchVal.queryType) {
                             case '0': data.dateList.forEach(function(item, index, array) {
                                 $scope.categories[0].category.push({label: item.substring(5, 10)});
+                                self.dataSet.push({'datetime': item.substring(5, 10)});
                             });
                                 break;
                             case '1': data.hourList.forEach(function(item, index, array) {
                                 $scope.categories[0].category.push({label: item});
+                                self.dataSet.push({'datetime': item});
                             });
                                 break;
 
@@ -969,11 +974,13 @@
                         $scope.dataset.push({seriesname: "总数", data:[]});
                         data.totalCount.forEach(function(item, index, array) {
                             $scope.dataset[0].data.push({ value: item });
+                            self.dataSet[index].totalCount = item;
                         });
 
                         $scope.dataset.push({seriesname: "上线", data:[]});
                         data.loginCount.forEach(function(item, index, array) {
                             $scope.dataset[1].data.push({ value: item });
+                            self.dataSet[index].loginCount = item;
                         });
 
                     } 
@@ -999,6 +1006,15 @@
                 }
                 self.initChart();
                 self.search();
+            }
+
+            /**
+             * 列表排序
+             * @param orderby
+             */
+            self.changeOrderby = function (orderby) {
+                self.orderby.sort = orderby;
+                self.orderby.desc = !self.orderby.desc;
             }
         }
     ]) 
@@ -1513,6 +1529,11 @@
                 return deferred.promise;
             }
 
+            /**
+             * 列表排序
+             * @param index
+             * @param orderby
+             */
             self.changeOrderby = function (index, orderby) {
                 self.orderby[index].sort = orderby;
                 self.orderby[index].desc = !self.orderby[index].desc;
