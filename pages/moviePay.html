@@ -139,8 +139,8 @@
                         <th><a ng-click="moviePay.changeOrderby(0, 'sumPPrice')">总金额</a></th>
                         <tr ng-repeat="n in moviePay.dataSet1 | orderBy: moviePay.orderby[0].sort : moviePay.orderby[0].desc">
                             <td>{{n.projectListCHZ}}</td>
-                            <td>{{n.onlyPPrice}}</td>
                             <td>{{n.packagePPrice}}</td>
+                            <td>{{n.onlyPPrice}}</td>
                             <td>{{n.sumPPrice}}</td>
                         </tr>
                     </table>
@@ -166,8 +166,8 @@
                         <th><a ng-click="moviePay.changeOrderby(1, 'sumPPrice')">总次数</a></th>
                         <tr ng-repeat="n in moviePay.dataSet2 | orderBy: moviePay.orderby[1].sort : moviePay.orderby[1].desc">
                             <td>{{n.projectListCHZ}}</td>
-                            <td>{{n.onlyPCount}}</td>
                             <td>{{n.packagePCount}}</td>
+                            <td>{{n.onlyPCount}}</td>
                             <td>{{n.sumPCount}}</td>
                         </tr>
                     </table>
