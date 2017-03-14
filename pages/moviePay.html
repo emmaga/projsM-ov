@@ -47,7 +47,7 @@
             <div class="dropdown form-group">
                 <a class="dropdown-toggle" id="dropdownEnd" role="button" data-toggle="dropdown" data-target="#" href="#">
                     <div class="input-group date">
-                        <span class="input-group-addon" id="basic-addon1">结束</span>
+                        <span class="input-group-addon" id="basic-addon2">结束</span>
                         <input type="text" class="form-control" data-ng-model="searchEndDate">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                     </div>
@@ -79,15 +79,15 @@
                 <!--每日支付金额统计 table 开始-->
                 <div class="col-xs-12">
                     <table class="table">
-                        <th>日期</th>
-                        <th>总金额</th>
-                        <th>单次支付金额</th>
-                        <th>打包支付金额</th>
-                        <tr ng-repeat="n in categories3[0].category track by $index">
-                            <td>{{categories3[0].category[$index].label}}</td>
-                            <td>{{dataset3[0].data[$index].value}}</td>
-                            <td>{{dataset3[1].data[$index].value}}</td>
-                            <td>{{dataset3[2].data[$index].value}}</td>
+                        <th><a ng-click="moviePay.changeOrderby(2, 'date')">日期</a></th>
+                        <th><a ng-click="moviePay.changeOrderby(2, 'packagePPrice')">打包支付金额</a></th>
+                        <th><a ng-click="moviePay.changeOrderby(2, 'onlyPPrice')">单次支付金额</a></th>
+                        <th><a ng-click="moviePay.changeOrderby(2, 'sumPPrice')">总金额</a></th>
+                        <tr ng-repeat="n in moviePay.dataSet3 | orderBy: moviePay.orderby[2].sort : moviePay.orderby[2].desc">
+                            <td>{{n.date}}</td>
+                            <td>{{n.packagePPrice}}</td>
+                            <td>{{n.onlyPPrice}}</td>
+                            <td>{{n.sumPPrice}}</td>
                         </tr>
                     </table>
                 </div>
@@ -104,15 +104,15 @@
                 <!--每日支付次数统计 table 开始-->
                 <div class="col-xs-12">
                     <table class="table">
-                        <th>日期</th>
-                        <th>总次数</th>
-                        <th>单次支付次数</th>
-                        <th>打包支付次数</th>
-                        <tr ng-repeat="n in categories4[0].category track by $index">
-                            <td>{{categories4[0].category[$index].label}}</td>
-                            <td>{{dataset4[0].data[$index].value}}</td>
-                            <td>{{dataset4[1].data[$index].value}}</td>
-                            <td>{{dataset4[2].data[$index].value}}</td>
+                        <th><a ng-click="moviePay.changeOrderby(3, 'date')">日期</a></th>
+                        <th><a ng-click="moviePay.changeOrderby(3, 'packagePCount')">打包支付次数</a></th>
+                        <th><a ng-click="moviePay.changeOrderby(3, 'onlyPCount')">单次支付次数</a></th>
+                        <th><a ng-click="moviePay.changeOrderby(3, 'sumPCount')">总次数</a></th>
+                        <tr ng-repeat="n in moviePay.dataSet4 | orderBy: moviePay.orderby[3].sort : moviePay.orderby[3].desc">
+                            <td>{{n.date}}</td>
+                            <td>{{n.packagePCount}}</td>
+                            <td>{{n.onlyPCount}}</td>
+                            <td>{{n.sumPCount}}</td>
                         </tr>
                     </table>
                 </div>
@@ -133,15 +133,15 @@
                 <!--各项目付费金额统计 table 开始-->
                 <div class="col-xs-12">
                     <table class="table">
-                        <th>项目</th>
-                        <th>总金额</th>
-                        <th>单次支付金额</th>
-                        <th>打包支付金额</th>
-                        <tr ng-repeat="n in moviePay.categories1[0].category track by $index">
-                            <td>{{moviePay.categories1[0].category[$index].label}}</td>
-                            <td>{{moviePay.dataset1[2].data[$index].value}}</td>
-                            <td>{{moviePay.dataset1[0].data[$index].value}}</td>
-                            <td>{{moviePay.dataset1[1].data[$index].value}}</td>
+                        <th><a ng-click="moviePay.changeOrderby(0, 'projectListCHZ')">项目</a></th>
+                        <th><a ng-click="moviePay.changeOrderby(0, 'packagePPrice')">打包支付金额</a></th>
+                        <th><a ng-click="moviePay.changeOrderby(0, 'onlyPPrice')">单次支付金额</a></th>
+                        <th><a ng-click="moviePay.changeOrderby(0, 'sumPPrice')">总金额</a></th>
+                        <tr ng-repeat="n in moviePay.dataSet1 | orderBy: moviePay.orderby[0].sort : moviePay.orderby[0].desc">
+                            <td>{{n.projectListCHZ}}</td>
+                            <td>{{n.onlyPPrice}}</td>
+                            <td>{{n.packagePPrice}}</td>
+                            <td>{{n.sumPPrice}}</td>
                         </tr>
                     </table>
                 </div>
@@ -160,15 +160,15 @@
                 <!--各项目付费次数统计 table 开始-->
                 <div class="col-xs-12">
                     <table class="table">
-                        <th>项目</th>
-                        <th>总次数</th>
-                        <th>单次支付次数</th>
-                        <th>打包支付次数</th>
-                        <tr ng-repeat="n in categories2[0].category track by $index">
-                            <td>{{categories2[0].category[$index].label}}</td>
-                            <td>{{dataset2[2].data[$index].value}}</td>
-                            <td>{{dataset2[0].data[$index].value}}</td>
-                            <td>{{dataset2[1].data[$index].value}}</td>
+                        <th><a ng-click="moviePay.changeOrderby(1, 'projectListCHZ')">项目</a></th>
+                        <th><a ng-click="moviePay.changeOrderby(1, 'packagePCount')">打包支付次数</a></th>
+                        <th><a ng-click="moviePay.changeOrderby(1, 'onlyPCount')">单次支付次数</a></th>
+                        <th><a ng-click="moviePay.changeOrderby(1, 'sumPPrice')">总次数</a></th>
+                        <tr ng-repeat="n in moviePay.dataSet2 | orderBy: moviePay.orderby[1].sort : moviePay.orderby[1].desc">
+                            <td>{{n.projectListCHZ}}</td>
+                            <td>{{n.onlyPCount}}</td>
+                            <td>{{n.packagePCount}}</td>
+                            <td>{{n.sumPCount}}</td>
                         </tr>
                     </table>
                 </div>

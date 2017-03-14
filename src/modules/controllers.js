@@ -799,22 +799,34 @@
 
             self.init = function() {
                 self.searchVal = {};
+                self.queryType = [{value: '0', name: '按日查询'}, {value: '1', name: '按小时查询'}];
+                self.searchVal.queryType = '0'
+                self.hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24];
+                self.searchVal.hours = '7';
                 $scope.dateRangeStart = $filter('date')(new Date() + 1*24*60*60*1000, 'yyyy-MM-dd');
-                $scope.searchDate = $filter('date')((new Date().getTime()), 'yyyy-MM-dd');
+                self.searchDate = $filter('date')((new Date().getTime()), 'yyyy-MM-dd');
+                self.searchDateTime = $filter('date')((new Date().getTime()), 'yyyy-MM-dd HH') + ":00";
                 self.duration = "7";
                 self.initChart();
                 self.loadOnline();
                 self.loadProList().then(function() {
                     return self.search();
                   });
+                self.orderby = {};
+                self.orderby.desc = false;
             }
 
             self.initChart = function () {
+                switch (self.searchVal.queryType) {
+                    case '0': self.xAxisName = "日期"; break;
+                    case '1': self.xAxisName = "时"; break;
+                    default: self.xAxisName = "日期"; break;
+                }
                 $scope.attrs = {
                     "caption": "上线情况统计",
                     "numberprefix": "",
                     "yAxisname": "终端数（个）",
-                    "xAxisName": "日期",
+                    "xAxisName": self.xAxisName,
                     "plotgradientcolor": "",
                     "bgcolor": "FFFFFF",
                     "showalternatehgridcolor": "0",
@@ -892,6 +904,7 @@
                     if (data.rescode == '200') {
                         self.onlineCount = data.onlineCount;
                         self.totalCount = data.totalCount;
+                        self.totalProjectCount = data.totalProjectCount == undefined? 0: data.totalProjectCount;
                     } 
                     else {
                         alert(data.errInfo);
@@ -904,14 +917,32 @@
             }
 
             self.search = function () {
+                switch (self.searchVal.queryType) {
+                    case '0': var data = JSON.stringify({
+                        token: util.getParams("token"),
+                        action: 'getTermLoginInfo',
+                        endDate: self.searchDate + ' 00:00:00',
+                        project: self.searchVal.project,
+                        days: Number(self.duration)
+                    })
+                    break;
+                    case '1': var data = JSON.stringify({
+                        token: util.getParams("token"),
+                        action: 'getTermHourLoginInfo',
+                        endTime: self.searchDateTime + ':00',
+                        project: self.searchVal.project,
+                        hours: Number(self.searchVal.hours)
+                    });
+                    break;
 
-                var data = JSON.stringify({
-                    token: util.getParams("token"),
-                    action: 'getTermLoginInfo',
-                    endDate: $scope.searchDate + ' 00:00:00',
-                    project: self.searchVal.project,
-                    days: Number(self.duration)
-                })
+                }
+                // var data = JSON.stringify({
+                //     token: util.getParams("token"),
+                //     action: 'getTermLoginInfo',
+                //     endDate: $scope.searchDate + ' 00:00:00',
+                //     project: self.searchVal.project,
+                //     days: Number(self.duration)
+                // })
                 self.loadingChart = true;
                 $http({
                     method: 'POST',
@@ -922,18 +953,34 @@
                     if (data.rescode == '200') {
                         $scope.categories[0].category = [];
                         $scope.dataset = [];
-                        
-                        data.dateList.forEach(function(item, index, array) {
-                            $scope.categories[0].category.push({label: item.substring(5, 10)});
-                        });
+                        self.dataSet = [];
+
+                        switch (self.searchVal.queryType) {
+                            case '0': data.dateList.forEach(function(item, index, array) {
+                                $scope.categories[0].category.push({label: item.substring(5, 10)});
+                                self.dataSet.push({'datetime': item.substring(5, 10)});
+                            });
+                                break;
+                            case '1': data.hourList.forEach(function(item, index, array) {
+                                $scope.categories[0].category.push({label: item});
+                                self.dataSet.push({'datetime': item});
+                            });
+                                break;
+
+                        }
+                        // data.dateList.forEach(function(item, index, array) {
+                        //     $scope.categories[0].category.push({label: item.substring(5, 10)});
+                        // });
                         $scope.dataset.push({seriesname: "总数", data:[]});
                         data.totalCount.forEach(function(item, index, array) {
                             $scope.dataset[0].data.push({ value: item });
+                            self.dataSet[index].totalCount = item;
                         });
 
                         $scope.dataset.push({seriesname: "上线", data:[]});
                         data.loginCount.forEach(function(item, index, array) {
                             $scope.dataset[1].data.push({ value: item });
+                            self.dataSet[index].loginCount = item;
                         });
 
                     } 
@@ -945,6 +992,29 @@
                 }).finally(function(value) {
                     self.loadingChart = false;
                 });
+            }
+
+            /**
+             * 查询类型选择
+             */
+            self.selectType = function () {
+                if (self.searchVal.queryType == "1") {
+                    self.slTime = true;
+
+                } else {
+                    self.slTime = false;
+                }
+                self.initChart();
+                self.search();
+            }
+
+            /**
+             * 列表排序
+             * @param orderby
+             */
+            self.changeOrderby = function (orderby) {
+                self.orderby.sort = orderby;
+                self.orderby.desc = !self.orderby.desc;
             }
         }
     ]) 
@@ -1006,7 +1076,7 @@
                     "caption": "各项目付费金额统计",
                     "xAxisname": "项目",
                     "yAxisName": "金额 (元)",
-                    "numberPrefix": "RMB ",
+                    "numberPrefix": "¥ ",
                     "plotFillAlpha" : "",
 
                     //Cosmetics
@@ -1050,6 +1120,13 @@
                     }
                 ];
                 self.dataset1 = [];
+                self.orderby = [
+                    {desc: true},
+                    {desc: true},
+                    {desc: true},
+                    {desc: true}
+                ];
+
 
                 // init chart2
                 $scope.attrs2 = {
@@ -1103,7 +1180,7 @@
                 // init chart3
                 $scope.attrs3 = {
                     "caption": "每日支付金额统计",
-                    "numberprefix": "RMB ",
+                    "numberprefix": "¥ ",
                     "yAxisname": "金额（元）",
                     "xAxisName": "日期",
                     "plotgradientcolor": "",
@@ -1228,29 +1305,36 @@
                     if (data.rescode == '200') {
 
                         self.categories1[0].category = [];
-                        self.dataset1  = [];
+                        self.dataset1 = [];
+                        self.dataSet1 = [];
                         self.dataset1.total = 0;
-                        
-                        data.projectList.forEach(function(item, index, array) {
-                            self.categories1[0].category.push({label: item});
-                        });
 
-                        self.dataset1.push({seriesname: "单次支付金额", data:[]});
-                        data.onlyPPrice.forEach(function(item, index, array) {
-                            self.dataset1[0].data.push({ value: item/100 });
+                        data.projectListCHZ.forEach(function(item, index, array) {
+                            if (index < 5) self.categories1[0].category.push({label: item});
+                            self.dataSet1.push({'projectListCHZ': item});
                         });
 
                         self.dataset1.push({seriesname: "打包支付金额", data:[]});
                         data.packagePPrice.forEach(function(item, index, array) {
-                            self.dataset1[1].data.push({ value: item/100 });
+                            if (index < 5) self.dataset1[0].data.push({ value: item/100 });
+                            self.dataSet1[index].packagePPrice = item/100;
+                        });
+
+                        self.dataset1.push({seriesname: "单次支付金额", data:[]});
+                        data.onlyPPrice.forEach(function(item, index, array) {
+                            if (index < 5) self.dataset1[1].data.push({ value: item/100 });
+                            self.dataSet1[index].onlyPPrice = item/100;
                         });
 
                         self.dataset1.push({seriesname: "总金额", data:[]});
                         data.sumPPrice.forEach(function(item, index, array) {
-                            self.dataset1.total += Number(item);
+                            if (index < 5) self.dataset1.total += Number(item);
                             self.dataset1[2].data.push({ value: item/100 });
+                            self.dataSet1[index].sumPPrice = item/100;
                         });
                         self.dataset1.total = self.dataset1.total/100;
+
+
                         deferred.resolve();
                     } 
                     else {
@@ -1286,26 +1370,31 @@
                     if (data.rescode == '200') {
                         $scope.categories2[0].category = [];
                         $scope.dataset2 = [];
+                        self.dataSet2 = [];
                         $scope.dataset2.total = 0;
 
-                        data.projectList.forEach(function(item, index, array) {
-                            $scope.categories2[0].category.push({label: item});
-                        });
-
-                        $scope.dataset2.push({seriesname: "单次支付次数", data:[]});
-                        data.onlyPCount.forEach(function(item, index, array) {
-                            $scope.dataset2[0].data.push({ value: item });
+                        data.projectListCHZ.forEach(function(item, index, array) {
+                            if (index < 5) $scope.categories2[0].category.push({label: item});
+                            self.dataSet2.push({'projectListCHZ': item});
                         });
 
                         $scope.dataset2.push({seriesname: "打包支付次数", data:[]});
                         data.packagePCount.forEach(function(item, index, array) {
-                            $scope.dataset2[1].data.push({ value: item });
+                            if (index < 5) $scope.dataset2[0].data.push({ value: item });
+                            self.dataSet2[index].packagePCount = item;
+                        });
+
+                        $scope.dataset2.push({seriesname: "单次支付次数", data:[]});
+                        data.onlyPCount.forEach(function(item, index, array) {
+                            if (index < 5) $scope.dataset2[1].data.push({ value: item });
+                            self.dataSet2[index].onlyPCount = item;
                         });
 
                         $scope.dataset2.push({seriesname: "总次数", data:[]});
                         data.sumPCount.forEach(function(item, index, array) {
-                            $scope.dataset2[2].data.push({ value: item });
+                            if (index < 5) $scope.dataset2[2].data.push({ value: item });
                             $scope.dataset2.total += Number(item);
+                            self.dataSet2[index].sumPCount = item;
                         });
                         deferred.resolve();
                     } 
@@ -1342,24 +1431,29 @@
                     if (data.rescode == '200') {
                         $scope.categories3[0].category = [];
                         $scope.dataset3 = [];
+                        self.dataSet3 = [];
 
                         data.dateList.forEach(function(item, index, array) {
                             $scope.categories3[0].category.push({label: item.substring(5, 10)});
+                            self.dataSet3.push({'date': item.substring(5, 10)});
                         });
 
                         $scope.dataset3.push({seriesname: "总金额", data:[]});
                         data.sumPPrice.forEach(function(item, index, array) {
                             $scope.dataset3[0].data.push({ value: item/100 });
+                            self.dataSet3[index].sumPPrice = item/100;
                         });
 
                         $scope.dataset3.push({seriesname: "单次支付金额", data:[]});
                         data.onlyPPrice.forEach(function(item, index, array) {
                             $scope.dataset3[1].data.push({ value: item/100 });
+                            self.dataSet3[index].onlyPPrice = item/100;
                         });
 
                         $scope.dataset3.push({seriesname: "打包支付金额", data:[]});
                         data.packagePPrice.forEach(function(item, index, array) {
                             $scope.dataset3[2].data.push({ value: item/100 });
+                            self.dataSet3[index].packagePPrice = item/100;
                         });
                         deferred.resolve();
                     } 
@@ -1396,24 +1490,29 @@
                     if (data.rescode == '200') {
                         $scope.categories4[0].category = [];
                         $scope.dataset4 = [];
+                        self.dataSet4 = [];
 
                         data.dateList.forEach(function(item, index, array) {
                             $scope.categories4[0].category.push({label: item.substring(5, 10)});
+                            self.dataSet4.push({'date': item.substring(5, 10)});
                         });
 
                         $scope.dataset4.push({seriesname: "总次数", data:[]});
                         data.sumPCount.forEach(function(item, index, array) {
                             $scope.dataset4[0].data.push({ value: item });
+                            self.dataSet4[index].sumPCount = item;
                         });
 
                         $scope.dataset4.push({seriesname: "单次支付次数", data:[]});
                         data.onlyPCount.forEach(function(item, index, array) {
                             $scope.dataset4[1].data.push({ value: item });
+                            self.dataSet4[index].onlyPCount = item;
                         });
 
                         $scope.dataset4.push({seriesname: "打包支付次数", data:[]});
                         data.packagePCount.forEach(function(item, index, array) {
                             $scope.dataset4[2].data.push({ value: item });
+                            self.dataSet4[index].packagePCount = item;
                         });
                         deferred.resolve();
                     } 
@@ -1428,6 +1527,16 @@
                     self.loadingChart4 = false;
                 });
                 return deferred.promise;
+            }
+
+            /**
+             * 列表排序
+             * @param index
+             * @param orderby
+             */
+            self.changeOrderby = function (index, orderby) {
+                self.orderby[index].sort = orderby;
+                self.orderby[index].desc = !self.orderby[index].desc;
             }
         }
     ]) 

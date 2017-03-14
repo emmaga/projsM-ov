@@ -25,16 +25,22 @@
 
     <!--当前 上线数／总数 开始-->
     <div class="row">
-        <div class="col-xs-3">
+        <div class="col-xs-4">
             <div class="panel panel-info scoreboard">
                 <div class="panel-heading">总数</div>
                 <div class="panel-body">{{online.totalCount}}</div>
             </div>
         </div>
-        <div class="col-xs-3">
+        <div class="col-xs-4">
             <div class="panel panel-success scoreboard">
                 <div class="panel-heading">在线数</div>
                 <div class="panel-body">{{online.onlineCount}}</div>
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="panel panel-warning scoreboard">
+                <div class="panel-heading">项目数</div>
+                <div class="panel-body">{{online.totalProjectCount}}</div>
             </div>
         </div>
     </div>
@@ -44,6 +50,14 @@
     
     <!-- 筛选 -->
     <div class="row">
+        <!--筛选条件 查询方式 开始-->
+        <div class="col-xs-3">
+            <select ng-model="online.searchVal.queryType" ng-change="online.selectType()" class="form-control">
+                <option ng-repeat="item in online.queryType" value="{{item.value}}">{{item.name}}</option>
+            </select>
+        </div>
+        <!--筛选条件 查询方式 结束-->
+
         <!--筛选条件 项目 开始-->
         <div class="col-xs-3">
             <select ng-model="online.searchVal.project" ng-change="online.search()" class="form-control">
@@ -52,29 +66,55 @@
         </div>
         <!--筛选条件 项目 结束-->
         <!--筛选条件 开始日期 开始-->
-        <div class="col-xs-3">
+        <div class="col-xs-3" ng-if="!online.slTime">
             <div class="dropdown form-group">
                 <a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target="#"
                    href="#">
                     <div class="input-group date">
-                        <input type="text" class="form-control" data-ng-model="searchDate">
+                        <input type="text" class="form-control" ng-model="online.searchDate">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                     </div>
                 </a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                    <datetimepicker data-ng-model="searchDate"
+                    <datetimepicker ng-model="online.searchDate"
                                     data-datetimepicker-config="{renderOn: 'start-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
                                     data-on-set-time="startDateOnSetTime()"
-                                    data-before-render="startDateBeforeRender($dates)"></datetimepicker>
+                                    data-before-render="startDateBeforeRender($dates)"
+                                    ng-change="online.search()"></datetimepicker>
+                </ul>
+            </div>
+        </div>
+        <div class="col-xs-3" ng-if="online.slTime">
+            <div class="dropdown form-group">
+                <a class="dropdown-toggle" role="button" data-toggle="dropdown" data-target="#"
+                   href="#">
+                    <div class="input-group date">
+                        <input type="text" class="form-control" ng-model="online.searchDateTime">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                    </div>
+                </a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <datetimepicker ng-model="online.searchDateTime"
+                                    data-datetimepicker-config="{renderOn: 'start-date-changed', minView: 'hour', modelType: 'YYYY-MM-DD HH:mm'}"
+                                    data-on-set-time="startDateOnSetTime()"
+                                    data-before-render="startDateBeforeRender($dates)"
+                                    ng-change="online.search()"></datetimepicker>
                 </ul>
             </div>
         </div>
         <!--筛选条件 开始日期 结束-->
-        
+        <!--筛选条件 小时 开始-->
+        <div class="col-xs-3">
+            <select ng-model="online.searchVal.hours" ng-change="online.search()" class="form-control" ng-if="online.slTime">
+                <option ng-repeat="item in online.hours" value="{{item}}">{{item}}小时</option>
+            </select>
+        </div>
+        <!--筛选条件 小时 结束-->
+
 
         <!--筛选条件 粒度 开始-->
         <div class="col-xs-6">
-            <div class="btn-group condition">
+            <div class="btn-group condition" ng-if="!online.slTime">
                 <div class="btn btn-default">
                     <input ng-change="online.search()" type="radio" name="duration" value="1" ng-model="online.duration"> 前一天
                 </div>
@@ -108,13 +148,14 @@
     
     <!--online table 开始-->
     <table class="table">
-        <th>日期</th>
-        <th>总数</th>
-        <th>上线</th>
-        <tr ng-repeat="n in categories[0].category track by $index">
-            <td>{{categories[0].category[$index].label}}</td>
-            <td>{{dataset[0].data[$index].value}}</td>
-            <td>{{dataset[1].data[$index].value}}</td>
+        <th ng-if="!online.slTime"><a ng-click="online.changeOrderby('datetime')">日期</a></th>
+        <th ng-if="online.slTime"><a ng-click="online.changeOrderby('datetime')">时间</a></th>
+        <th><a ng-click="online.changeOrderby('totalCount')">总数</a></th>
+        <th><a ng-click="online.changeOrderby('loginCount')">上线</a></th>
+        <tr ng-repeat="n in online.dataSet | orderBy: online.orderby.sort : online.orderby.desc">
+            <td>{{n.datetime}}</td>
+            <td>{{n.totalCount}}</td>
+            <td>{{n.loginCount}}</td>
         </tr>
     </table>
     <!--online table 结束-->  
