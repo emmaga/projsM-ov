@@ -801,7 +801,7 @@
                 self.searchVal = {};
                 self.queryType = [{value: '0', name: '按日查询'}, {value: '1', name: '按小时查询'}];
                 self.searchVal.queryType = '0'
-                self.hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+                self.hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24];
                 self.searchVal.hours = '7';
                 $scope.dateRangeStart = $filter('date')(new Date() + 1*24*60*60*1000, 'yyyy-MM-dd');
                 self.searchDate = $filter('date')((new Date().getTime()), 'yyyy-MM-dd');
