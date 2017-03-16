@@ -80,14 +80,14 @@
                 <div class="col-xs-12">
                     <table class="table">
                         <th><a ng-click="moviePay.changeOrderby(2, 'date')">日期</a></th>
-                        <th><a ng-click="moviePay.changeOrderby(2, 'packagePPrice')">打包支付金额</a></th>
-                        <th><a ng-click="moviePay.changeOrderby(2, 'onlyPPrice')">单次支付金额</a></th>
                         <th><a ng-click="moviePay.changeOrderby(2, 'sumPPrice')">总金额</a></th>
+                        <th><a ng-click="moviePay.changeOrderby(2, 'onlyPPrice')">单次支付金额</a></th>
+                        <th><a ng-click="moviePay.changeOrderby(2, 'packagePPrice')">打包支付金额</a></th>
                         <tr ng-repeat="n in moviePay.dataSet3 | orderBy: moviePay.orderby[2].sort : moviePay.orderby[2].desc">
                             <td>{{n.date}}</td>
-                            <td>{{n.packagePPrice}}</td>
-                            <td>{{n.onlyPPrice}}</td>
                             <td>{{n.sumPPrice}}</td>
+                            <td>{{n.onlyPPrice}}</td>
+                            <td>{{n.packagePPrice}}</td>
                         </tr>
                     </table>
                 </div>
@@ -105,14 +105,14 @@
                 <div class="col-xs-12">
                     <table class="table">
                         <th><a ng-click="moviePay.changeOrderby(3, 'date')">日期</a></th>
-                        <th><a ng-click="moviePay.changeOrderby(3, 'packagePCount')">打包支付次数</a></th>
-                        <th><a ng-click="moviePay.changeOrderby(3, 'onlyPCount')">单次支付次数</a></th>
                         <th><a ng-click="moviePay.changeOrderby(3, 'sumPCount')">总次数</a></th>
+                        <th><a ng-click="moviePay.changeOrderby(3, 'onlyPCount')">单次支付次数</a></th>
+                        <th><a ng-click="moviePay.changeOrderby(3, 'packagePCount')">打包支付次数</a></th>
                         <tr ng-repeat="n in moviePay.dataSet4 | orderBy: moviePay.orderby[3].sort : moviePay.orderby[3].desc">
                             <td>{{n.date}}</td>
-                            <td>{{n.packagePCount}}</td>
-                            <td>{{n.onlyPCount}}</td>
                             <td>{{n.sumPCount}}</td>
+                            <td>{{n.onlyPCount}}</td>
+                            <td>{{n.packagePCount}}</td>
                         </tr>
                     </table>
                 </div>
@@ -134,14 +134,14 @@
                 <div class="col-xs-12">
                     <table class="table">
                         <th><a ng-click="moviePay.changeOrderby(0, 'projectListCHZ')">项目</a></th>
-                        <th><a ng-click="moviePay.changeOrderby(0, 'packagePPrice')">打包支付金额</a></th>
-                        <th><a ng-click="moviePay.changeOrderby(0, 'onlyPPrice')">单次支付金额</a></th>
                         <th><a ng-click="moviePay.changeOrderby(0, 'sumPPrice')">总金额</a></th>
+                        <th><a ng-click="moviePay.changeOrderby(0, 'onlyPPrice')">单次支付金额</a></th>
+                        <th><a ng-click="moviePay.changeOrderby(0, 'packagePPrice')">打包支付金额</a></th>
                         <tr ng-repeat="n in moviePay.dataSet1 | orderBy: moviePay.orderby[0].sort : moviePay.orderby[0].desc">
                             <td>{{n.projectListCHZ}}</td>
-                            <td>{{n.packagePPrice}}</td>
-                            <td>{{n.onlyPPrice}}</td>
                             <td>{{n.sumPPrice}}</td>
+                            <td>{{n.onlyPPrice}}</td>
+                            <td>{{n.packagePPrice}}</td>
                         </tr>
                     </table>
                 </div>
@@ -161,14 +161,14 @@
                 <div class="col-xs-12">
                     <table class="table">
                         <th><a ng-click="moviePay.changeOrderby(1, 'projectListCHZ')">项目</a></th>
-                        <th><a ng-click="moviePay.changeOrderby(1, 'packagePCount')">打包支付次数</a></th>
-                        <th><a ng-click="moviePay.changeOrderby(1, 'onlyPCount')">单次支付次数</a></th>
                         <th><a ng-click="moviePay.changeOrderby(1, 'sumPPrice')">总次数</a></th>
+                        <th><a ng-click="moviePay.changeOrderby(1, 'onlyPCount')">单次支付次数</a></th>
+                        <th><a ng-click="moviePay.changeOrderby(1, 'packagePCount')">打包支付次数</a></th>
                         <tr ng-repeat="n in moviePay.dataSet2 | orderBy: moviePay.orderby[1].sort : moviePay.orderby[1].desc">
                             <td>{{n.projectListCHZ}}</td>
-                            <td>{{n.packagePCount}}</td>
-                            <td>{{n.onlyPCount}}</td>
                             <td>{{n.sumPCount}}</td>
+                            <td>{{n.onlyPCount}}</td>
+                            <td>{{n.packagePCount}}</td>
                         </tr>
                     </table>
                 </div>
