@@ -816,12 +816,7 @@
                 self.orderby.desc = false;
             }
 
-            self.initChart = function () {
-                switch (self.searchVal.queryType) {
-                    case '0': self.xAxisName = "日期"; break;
-                    case '1': self.xAxisName = "时"; break;
-                    default: self.xAxisName = "日期"; break;
-                }
+            self.initAttrs = function () {
                 $scope.attrs = {
                     "caption": "上线情况统计",
                     "numberprefix": "",
@@ -845,6 +840,12 @@
                     "palettecolors": "#f8bd19,#008ee4,#33bdda,#e44a00,#6baa01,#583e78",
                     "showborder": "0"
                 };
+            }
+
+            self.initChart = function () {
+                self.xAxisName = "日期";
+                self.initAttrs();
+
                 $scope.categories = [
                     {
                         "category": [
@@ -962,8 +963,8 @@
                             });
                                 break;
                             case '1': data.hourList.forEach(function(item, index, array) {
-                                $scope.categories[0].category.push({label: item});
-                                self.dataSet.push({'datetime': item});
+                                $scope.categories[0].category.push({label: item.substring(5, 16)});
+                                self.dataSet.push({'datetime': item.substring(5, 16)});
                             });
                                 break;
 
@@ -1004,7 +1005,11 @@
                 } else {
                     self.slTime = false;
                 }
-                self.initChart();
+                switch (self.searchVal.queryType) {
+                    case '0': self.xAxisName = "日期"; break;
+                    case '1': self.xAxisName = "时"; break;
+                }
+                self.initAttrs();
                 self.search();
             }
 
