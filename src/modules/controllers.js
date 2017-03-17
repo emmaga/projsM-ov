@@ -816,12 +816,7 @@
                 self.orderby.desc = false;
             }
 
-            self.initChart = function () {
-                switch (self.searchVal.queryType) {
-                    case '0': self.xAxisName = "日期"; break;
-                    case '1': self.xAxisName = "时"; break;
-                    default: self.xAxisName = "日期"; break;
-                }
+            self.initAttrs = function () {
                 $scope.attrs = {
                     "caption": "上线情况统计",
                     "numberprefix": "",
@@ -845,6 +840,12 @@
                     "palettecolors": "#f8bd19,#008ee4,#33bdda,#e44a00,#6baa01,#583e78",
                     "showborder": "0"
                 };
+            }
+
+            self.initChart = function () {
+                self.xAxisName = "日期";
+                self.initAttrs();
+
                 $scope.categories = [
                     {
                         "category": [
@@ -962,8 +963,8 @@
                             });
                                 break;
                             case '1': data.hourList.forEach(function(item, index, array) {
-                                $scope.categories[0].category.push({label: item});
-                                self.dataSet.push({'datetime': item});
+                                $scope.categories[0].category.push({label: item.substring(5, 16)});
+                                self.dataSet.push({'datetime': item.substring(5, 16)});
                             });
                                 break;
 
@@ -1004,7 +1005,11 @@
                 } else {
                     self.slTime = false;
                 }
-                self.initChart();
+                switch (self.searchVal.queryType) {
+                    case '0': self.xAxisName = "日期"; break;
+                    case '1': self.xAxisName = "时"; break;
+                }
+                self.initAttrs();
                 self.search();
             }
 
@@ -1121,10 +1126,10 @@
                 ];
                 self.dataset1 = [];
                 self.orderby = [
-                    {desc: true},
-                    {desc: true},
-                    {desc: true},
-                    {desc: true}
+                    {sort: 'sumPPrice', desc: true},
+                    {sort: 'sumPCount', desc: true},
+                    {sort: '', desc: true},
+                    {sort: '', desc: true}
                 ];
 
 
@@ -1328,12 +1333,11 @@
 
                         self.dataset1.push({seriesname: "总金额", data:[]});
                         data.sumPPrice.forEach(function(item, index, array) {
-                            if (index < 5) self.dataset1.total += Number(item);
-                            self.dataset1[2].data.push({ value: item/100 });
+                            // self.dataset1.total += Number(item);
+                            if (index < 5) self.dataset1[2].data.push({ value: item/100 });
                             self.dataSet1[index].sumPPrice = item/100;
                         });
-                        self.dataset1.total = self.dataset1.total/100;
-
+                        self.dataset1.total = data.allProjectSumPrice/100;
 
                         deferred.resolve();
                     } 
@@ -1381,21 +1385,22 @@
                         $scope.dataset2.push({seriesname: "打包支付次数", data:[]});
                         data.packagePCount.forEach(function(item, index, array) {
                             if (index < 5) $scope.dataset2[0].data.push({ value: item });
-                            self.dataSet2[index].packagePCount = item;
+                            self.dataSet2[index].packagePCount = Number(item);
                         });
 
                         $scope.dataset2.push({seriesname: "单次支付次数", data:[]});
                         data.onlyPCount.forEach(function(item, index, array) {
                             if (index < 5) $scope.dataset2[1].data.push({ value: item });
-                            self.dataSet2[index].onlyPCount = item;
+                            self.dataSet2[index].onlyPCount = Number(item);
                         });
 
                         $scope.dataset2.push({seriesname: "总次数", data:[]});
                         data.sumPCount.forEach(function(item, index, array) {
                             if (index < 5) $scope.dataset2[2].data.push({ value: item });
-                            $scope.dataset2.total += Number(item);
-                            self.dataSet2[index].sumPCount = item;
+                            // $scope.dataset2.total += Number(item);
+                            self.dataSet2[index].sumPCount = Number(item);
                         });
+                        $scope.dataset2.total = data.allProjectSumCount;
                         deferred.resolve();
                     } 
                     else {
