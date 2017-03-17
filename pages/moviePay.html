@@ -161,7 +161,7 @@
                 <div class="col-xs-12">
                     <table class="table">
                         <th><a ng-click="moviePay.changeOrderby(1, 'projectListCHZ')">项目</a></th>
-                        <th><a ng-click="moviePay.changeOrderby(1, 'sumPPrice')">总次数</a></th>
+                        <th><a ng-click="moviePay.changeOrderby(1, 'sumPCount')">总次数</a></th>
                         <th><a ng-click="moviePay.changeOrderby(1, 'onlyPCount')">单次支付次数</a></th>
                         <th><a ng-click="moviePay.changeOrderby(1, 'packagePCount')">打包支付次数</a></th>
                         <tr ng-repeat="n in moviePay.dataSet2 | orderBy: moviePay.orderby[1].sort : moviePay.orderby[1].desc">

@@ -1121,10 +1121,10 @@
                 ];
                 self.dataset1 = [];
                 self.orderby = [
-                    {desc: true},
-                    {desc: true},
-                    {desc: true},
-                    {desc: true}
+                    {sort: 'sumPPrice', desc: true},
+                    {sort: 'sumPCount', desc: true},
+                    {sort: '', desc: true},
+                    {sort: '', desc: true}
                 ];
 
 
@@ -1328,12 +1328,11 @@
 
                         self.dataset1.push({seriesname: "总金额", data:[]});
                         data.sumPPrice.forEach(function(item, index, array) {
-                            if (index < 5) self.dataset1.total += Number(item);
-                            self.dataset1[2].data.push({ value: item/100 });
+                            // self.dataset1.total += Number(item);
+                            if (index < 5) self.dataset1[2].data.push({ value: item/100 });
                             self.dataSet1[index].sumPPrice = item/100;
                         });
-                        self.dataset1.total = self.dataset1.total/100;
-
+                        self.dataset1.total = data.allProjectSumPrice/100;
 
                         deferred.resolve();
                     } 
@@ -1381,21 +1380,22 @@
                         $scope.dataset2.push({seriesname: "打包支付次数", data:[]});
                         data.packagePCount.forEach(function(item, index, array) {
                             if (index < 5) $scope.dataset2[0].data.push({ value: item });
-                            self.dataSet2[index].packagePCount = item;
+                            self.dataSet2[index].packagePCount = Number(item);
                         });
 
                         $scope.dataset2.push({seriesname: "单次支付次数", data:[]});
                         data.onlyPCount.forEach(function(item, index, array) {
                             if (index < 5) $scope.dataset2[1].data.push({ value: item });
-                            self.dataSet2[index].onlyPCount = item;
+                            self.dataSet2[index].onlyPCount = Number(item);
                         });
 
                         $scope.dataset2.push({seriesname: "总次数", data:[]});
                         data.sumPCount.forEach(function(item, index, array) {
                             if (index < 5) $scope.dataset2[2].data.push({ value: item });
-                            $scope.dataset2.total += Number(item);
-                            self.dataSet2[index].sumPCount = item;
+                            // $scope.dataset2.total += Number(item);
+                            self.dataSet2[index].sumPCount = Number(item);
                         });
+                        $scope.dataset2.total = data.allProjectSumCount;
                         deferred.resolve();
                     } 
                     else {
