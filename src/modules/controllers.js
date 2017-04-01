@@ -808,10 +808,11 @@
                 self.searchDateTime = $filter('date')((new Date().getTime()), 'yyyy-MM-dd HH') + ":00";
                 self.duration = "7";
                 self.initChart();
-                self.loadOnline();
-                self.loadProList().then(function() {
+                self.loadOnline().then(function(){
+                    return self.loadProList()
+                }).then(function() {
                     return self.search();
-                  });
+                });
                 self.orderby = {};
                 self.orderby.desc = false;
             }
