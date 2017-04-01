@@ -895,6 +895,7 @@
             }
 
             self.loadOnline = function () {
+                var deferred = $q.defer();
                 var data = JSON.stringify({
                     token: util.getParams("token"),
                     action: 'getTermOnlineInfo'
@@ -910,18 +911,24 @@
                         self.onlineCount = data.onlineCount;
                         self.totalCount = data.totalCount;
                         self.totalProjectCount = data.totalProjectCount == undefined? 0: data.totalProjectCount;
+                        deferred.resolve();
                     } else if (data.rescode == '401') {
                         alert('访问超时，请重新登录');
                         $location.path("pages/login.html");
+                        deferred.reject();
                     }
                     else {
                         alert(data.errInfo);
+                        deferred.reject();
                     }
                 }, function errorCallback(response) {
                     alert('连接服务器出错');
+                    deferred.reject();
                 }).finally(function(value) {
                     self.loadingOnline = false;
+                    deferred.reject();
                 });
+                return deferred.promise;
             }
 
             self.search = function () {
