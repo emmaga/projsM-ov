@@ -876,11 +876,14 @@
                             self.searchVal.project = 'all';
                         })
                         deferred.resolve();
-                    } 
-                    else {
+                    } else if (data.rescode == '401') {
+                        alert('访问超时，请重新登录');
+                        $location.path("pages/login.html");
+                    } else {
                         alert(data.rescode + ' ' + data.errInfo);
                         deferred.reject();
                     }
+
                 }, function errorCallback(response) {
                     alert('连接服务器出错');
                     deferred.reject();
@@ -906,7 +909,10 @@
                         self.onlineCount = data.onlineCount;
                         self.totalCount = data.totalCount;
                         self.totalProjectCount = data.totalProjectCount == undefined? 0: data.totalProjectCount;
-                    } 
+                    } else if (data.rescode == '401') {
+                        alert('访问超时，请重新登录');
+                        $location.path("pages/login.html");
+                    }
                     else {
                         alert(data.errInfo);
                     }
@@ -984,10 +990,13 @@
                             self.dataSet[index].loginCount = item;
                         });
 
-                    } 
-                    else {
-                        alert(data.errInfo);
-                    }
+                   } else if (data.rescode == '401') {
+                       alert('访问超时，请重新登录');
+                       $location.path("pages/login.html");
+                   } else {
+                       alert(data.errInfo);
+                   }
+
                 }, function errorCallback(response) {
                     alert('连接服务器出错');
                 }).finally(function(value) {
