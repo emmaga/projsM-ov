@@ -1,5 +1,4 @@
 <div ng-controller="appController as app" ng-init="app.init()">
-    
     <!--头部-->
     <div id="top-nav" class="navbar navbar-inverse navbar-static-top">
         <div class="container-fluid">
@@ -16,12 +15,27 @@
         </div>
     </div>
     <!--头部-->
-    
     <!--body-->
     <div class="container-fluid">
         <div class="row">
             <!--左侧导航栏-->
             <div class="col-sm-3 col-left">
+                <a href ui-sref="app.online" ui-sref-active="active" class="font-bold no-underline cursor-default">
+                    <i class="glyphicon glyphicon-stats"></i>&nbsp&nbsp统计
+                </a>
+                <ul class="nav">
+                    <hr>
+                    <li class="nav-header">
+                        <a href ui-sref="app.online" ui-sref-active="active" class="cursor-default">上线情况</a>
+                    </li>
+                    <li class="nav-header">
+                        <a href ui-sref="app.moviePay" ui-sref-active="active" class="cursor-default">点播营收</a>
+                    </li>
+                    <li class="nav-header">
+                        <a href ui-sref="app.proxy" ui-sref-active="active" class="cursor-default">小前端情况</a>
+                    </li>
+                </ul>
+                <hr>
                 <a href ui-sref="app.projects" ui-sref-active="active" class="font-bold no-underline cursor-default">
                     <i class="glyphicon glyphicon-flag"></i>&nbsp&nbsp项目管理
                 </a>
@@ -30,7 +44,7 @@
                     <i class="glyphicon glyphicon-film" style="font-size:14px"></i>&nbsp&nbsp视频库发布
                 </a>
                 <hr>
-                <a href ui-sref="app.musics" ui-sref-active="active" ng-click="app.gotoPage('app.editedList')" class="font-bold no-underline cursor-default">
+                <a href ui-sref="app.musics" ui-sref-active="active" class="font-bold no-underline cursor-default">
                     <i class="glyphicon glyphicon-music"></i>&nbsp&nbsp音乐库发布
                 </a>
                 <hr>
@@ -38,22 +52,18 @@
                     <i class="glyphicon glyphicon-glass" style="font-size:14px"></i>&nbsp&nbsp广告库库发布
                 </a>
                 <hr>
-                <a href ui-sref="app.apps" ui-sref-active="active" ng-click="app.gotoPage('app.editedList')" class="font-bold no-underline cursor-default">
+                <a href ui-sref="app.apps" ui-sref-active="active" class="font-bold no-underline cursor-default">
                     <i class="glyphicon glyphicon-th"></i>&nbsp&nbsp应用库发布
                 </a>
                 <hr>
-
             </div>
             <!--左侧导航栏-->
-            
             <!--pages-->
             <ui-view></ui-view>
             <!--pages-->
-
         </div>
-    </div>    
-    <!--body-->  
-
+    </div>
+    <!--body-->
     <!--弹窗-->
     <div class="modal fade" ng-class="{'in':(app.showMaskClass)}">
         <!-- 弹窗背景 -->

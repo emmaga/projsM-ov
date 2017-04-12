@@ -10,7 +10,10 @@
         'app.services',
         'angular-md5',
         'ngCookies',
-        'ngTable'
+        'ngTable',
+        'ui.bootstrap',
+        'ui.bootstrap.datetimepicker',
+        'ng-fusioncharts'
     ])
     
     .config(['$translateProvider', function ($translateProvider) {
@@ -41,7 +44,6 @@
                 url: '/videos',
                 templateUrl: 'pages/videos.html'
             })
-            // 音乐库
             .state('app.musics', {
                 url: '/musics',
                 templateUrl: 'pages/musics.html'
@@ -54,12 +56,24 @@
                 url: '/apps',
                 templateUrl: 'pages/apps.html'
             })
+            .state('app.online', {
+                url: '/online',
+                templateUrl: 'pages/online.html'
+            })
+            .state('app.moviePay', {
+                url: '/moviePay',
+                templateUrl: 'pages/moviePay.html'
+            })
+            .state('app.proxy', {
+                url: '/proxy',
+                templateUrl: 'pages/proxy.html'
+            })
     }])
 
 
     .constant('CONFIG', {
-        // serverUrl: 'http://openvod.cleartv.cn/backend_clearmgt/v1/',
-        serverUrl: 'http://192.168.30.100/backend_clearmgt/v1/',
+        serverUrl: 'http://openvod.cleartv.cn/backend_clearmgt/v1/',
+        // serverUrl: 'http://172.16.1.21/backend_clearmgt/v1/',
         uploadImgUrl: 'http://mres.cleartv.cn/upload',
         uploadVideoUrl: 'http://movies.clearidc.com/upload',
         testUrl: 'test/',
