@@ -101,9 +101,15 @@
         function($http, $scope, $state, $filter, $stateParams, NgTableParams,$location, util, CONFIG) {
             var self = this;
             self.init = function() {
+                self.projectName = $scope.app.maskParams.ProjectName;
+                self.ProjectNameCHZ = $scope.app.maskParams.ProjectNameCHZ;
                 self.editLangs = util.getParams('editLangs')
                 self.defaultLang = util.getDefaultLangCode();
                 self.getInfo();
+            }
+
+            self.cancel = function() {
+                $scope.app.showHideMask(false);
             }
 
             // 获取小前端状态列表信息
@@ -113,7 +119,8 @@
 
                 var data = {
                     "action": "getProjectServerList",
-                    "token": util.getParams("token")
+                    "token": util.getParams("token"),
+                    "project": self.projectName
                 }
                 $http({
                     method: $filter('ajaxMethod')(),
@@ -161,6 +168,16 @@
                 $scope.app.maskParams = {'projectInfo': projectInfo};
                 $scope.app.showHideMask(true,'pages/editProject.html');
             }
+
+            /**
+             * 查询小前端
+             * @param project
+             */
+            self.queryProxy = function(ProjectName, ProjectNameCHZ) {
+                $scope.app.maskParams = {'ProjectName': ProjectName, 'ProjectNameCHZ': ProjectNameCHZ};
+                $scope.app.showHideMask(true, 'pages/proxy.html');
+            }
+
             // 获取项目列表信息
             self.getInfo = function () {
                 self.noData = false;

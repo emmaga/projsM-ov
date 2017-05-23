@@ -64,16 +64,16 @@
                 url: '/moviePay',
                 templateUrl: 'pages/moviePay.html'
             })
-            .state('app.proxy', {
-                url: '/proxy',
-                templateUrl: 'pages/proxy.html'
-            })
+            // .state('app.proxy', {
+            //     url: '/proxy',
+            //     templateUrl: 'pages/proxy.html'
+            // })
     }])
 
 
     .constant('CONFIG', {
-        serverUrl: 'http://openvod.cleartv.cn/backend_clearmgt/v1/',
-        // serverUrl: 'http://172.16.1.21/backend_clearmgt/v1/',
+        // serverUrl: 'http://openvod.cleartv.cn/backend_clearmgt/v1/',
+        serverUrl: 'http://172.16.1.21/backend_clearmgt/v1/',
         uploadImgUrl: 'http://mres.cleartv.cn/upload',
         uploadVideoUrl: 'http://movies.clearidc.com/upload',
         testUrl: 'test/',
