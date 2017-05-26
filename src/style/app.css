@@ -330,3 +330,14 @@ background-color:#f5f5f5
   padding-left: 7px;
   padding-right: 15px;
 }
+
+.proxy-table {
+  font-size: 12px;
+  table-layout: fixed;
+}
+
+td {
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow: ellipsis;
+}

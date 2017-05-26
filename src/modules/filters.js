@@ -40,6 +40,12 @@
             };
         })
 
+        .filter("leftTwoDecimal", function () {
+            return function (num) {
+                return num.toFixed(2);
+            };
+        })
+
         .filter("subtitlePercentComplete", function () {
             return function (subtitlePercentComplete) {
                 if (subtitlePercentComplete) {

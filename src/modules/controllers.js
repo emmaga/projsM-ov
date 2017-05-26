@@ -146,13 +146,44 @@
                     self.loading = false;
                 })
             }
+            
+            self.TypeChanged = function (type, $index) {
+                var data = JSON.stringify({
+                    action: "getProjectServerList",
+                    token: util.getParams("token"),
+                    project: self.projectName,
+                    type: type,
+                    ID: $index
+                })
+                $http({
+                    method: $filter('ajaxMethod')(),
+                    url: util.getApiUrl('project', '', 'server'),
+                    data: data
+                }).then(function successCallback(data, status, headers, config) {
+                    if (data.data.rescode == '200') {
+                        if (data.data.data.length == 0) {
+                            self.noData = true;
+                        }
+                        self.list = data.data.data;
+                        // return data.data.data;
+                    } else if (data.data.rescode == '401') {
+                        alert('访问超时，请重新登录');
+                        $location.path("pages/login.html");
+                    } else {
+                        alert('读取信息出错，'+data.errInfo);
+                    }
+
+                }, function errorCallback(data, status, headers, config) {
+                    alert('连接服务器出错');
+                }).finally(function(value) {
+                    self.loading = false;
+                })
+            }
         }
     ])
 
     .controller('projectsController', ['$http', '$scope', '$state', '$filter', '$stateParams', 'NgTableParams', '$location','util', 'CONFIG',
         function($http, $scope, $state, $filter, $stateParams, NgTableParams,$location, util, CONFIG) {
-            console.log('projectsController')
-            
             var self = this;
             self.init = function() {
                 self.editLangs = util.getParams('editLangs')

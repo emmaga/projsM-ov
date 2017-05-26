@@ -11,6 +11,7 @@
         'angular-md5',
         'ngCookies',
         'ngTable',
+        'ui.toggle',
         'ui.bootstrap',
         'ui.bootstrap.datetimepicker',
         'ng-fusioncharts'
