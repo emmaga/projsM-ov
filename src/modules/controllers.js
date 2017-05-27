@@ -108,6 +108,11 @@
                 self.getInfo();
             }
 
+            self.proTypeList = [
+                {id: 0, value: '测试项目'},
+                {id: 1, value: '正式项目'},
+            ]
+
             self.cancel = function() {
                 $scope.app.showHideMask(false);
             }
@@ -123,7 +128,7 @@
                     "project": self.projectName
                 }
                 $http({
-                    method: $filter('ajaxMethod')(),
+                    method: 'post',
                     url: util.getApiUrl('project', '', 'server'),
                     data: data
                 }).then(function successCallback(data, status, headers, config) {
@@ -147,25 +152,21 @@
                 })
             }
             
-            self.TypeChanged = function (type, $index) {
+            $scope.TypeChanged = function ($index) {
                 var data = JSON.stringify({
-                    action: "getProjectServerList",
+                    action: "setServerType",
                     token: util.getParams("token"),
                     project: self.projectName,
-                    type: type,
-                    ID: $index
+                    type: self.list[$index].Type,
+                    ID: self.list[$index].ID,
                 })
                 $http({
-                    method: $filter('ajaxMethod')(),
+                    method: 'post',
                     url: util.getApiUrl('project', '', 'server'),
                     data: data
                 }).then(function successCallback(data, status, headers, config) {
                     if (data.data.rescode == '200') {
-                        if (data.data.data.length == 0) {
-                            self.noData = true;
-                        }
-                        self.list = data.data.data;
-                        // return data.data.data;
+
                     } else if (data.data.rescode == '401') {
                         alert('访问超时，请重新登录');
                         $location.path("pages/login.html");
