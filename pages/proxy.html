@@ -19,9 +19,9 @@
                     <td data-title="'MAC'" >{{item.Mac}}</td>
                     <td data-title="'CPU'" >{{item.CPU | toPercent}}</td>
                     <td data-title="'MemFree'" >{{item.NoUsedMem | leftTwoDecimal}}G</td>
-                    <td data-title="'%'" >{{item.MemRate}}</td>
+                    <td data-title="'Mem占用%'" >{{item.MemRate}}</td>
                     <td data-title="'DiskFree'" >{{item.NoUsedDisk | leftTwoDecimal}}G</td>
-                    <td data-title="'%'" >{{item.DiskRate}}</td>
+                    <td data-title="'Disk占用%'" >{{item.DiskRate}}</td>
                     <td data-title="'版本'" >{{item.Version}}</td>
                     <td data-title="'更新时间'" >{{item.UpdateTime}}</td>
                     <!--<td data-title="'正式项目'"><toggle ng-model="proxy.Type" size="btn-xs" on="是" off="非" ng-change="TypeChanged(!proxy.Type, $index);"></toggle></td>-->
