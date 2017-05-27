@@ -55,13 +55,9 @@
         .filter("substring", function () {
             return function (string, length) {
                 if (string.length > length) {
-                    if (length == undefined) {
-                        var str = string.substr(0);
-                    } else {
-                        var str = string.substr(0, length)
-                    }
-                    return str + '...';
+                    var str = string.substr(0, length) + '...';
                 }
+                return str;
             };
         })
 
