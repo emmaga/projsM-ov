@@ -335,8 +335,10 @@ background-color:#f5f5f5
   font-size: 12px;
 }
 
-td {
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow: ellipsis;
+.proxy-proxyID {
+  width: 100px;
+  background: transparent;
+  border: none;
+  cursor: text !important;
+  vertical-align: top;
 }
