@@ -1,27 +1,47 @@
-<div ng-controller="proxyController as proxy" ng-init="proxy.init()" class="col-sm-9 page col-right">
-    <a>
-        <strong>
-            <i class="glyphicon glyphicon-flag"></i>
-            小前端状态
-        </strong>
-    </a>
-    <hr>
-    <!--<div class="btn-group">-->
-        <!--<button ng-click="proxy.add()" type="button" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-plus"></i> 添加项目</button>-->
-    <!--</div>-->
-    <hr class="break-space">
-    <table class="table table-hover table-condensed" ng-table="proxy.tableParams">
-        <div ng-show="proxy.loading">loading...</div>
-        <tr ng-repeat="proxy in proxy.list track by $index">
-            <td data-title="'项目名称'" >{{proxy.ProjectName}}</td>
-            <td data-title="'MAC'" >{{proxy.Mac}}</td>
-            <td data-title="'小前端ID'" >{{proxy.ProxyID}}</td>
-            <td data-title="'CPU'" >{{proxy.CPU | toPercent}}</td>
-            <td data-title="'内存剩余'" >{{proxy.Mem}}</td>
-            <td data-title="'硬盘剩余'" >{{proxy.Disk}}</td>
-            <td data-title="'版本'" >{{proxy.Version}}</td>
-            <td data-title="'更新时间'" >{{proxy.UpdateTime}}</td>
-        </tr>
-    </table>
-    <div ng-show="proxy.noData">查无数据</div>
+<div ng-controller="proxyController as proxy" ng-init="proxy.init()" class="modal-dialog modal-lg autoscroll font-normal">
+    <div class="modal-content">
+        <!-- loading -->
+        <!--header-->
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" ng-click="proxy.cancel()">
+                <span aria-hidden="true">&times;</span>
+                <span class="sr-only">Close</span>
+            </button>
+            <h5 class="modal-title"><b>{{proxy.ProjectNameCHZ}}</b> 小前端情况</h5>
+        </div>
+        <!--header end-->
+        <!--body-->
+        <div class="modal-body">
+            <div ng-show="proxy.loading" class="text-center">loading...</div>
+            <table class="table table-hover table-condensed proxy-table" ng-table="proxy.tableParams" ng-hide="proxy.loading || proxy.noData">
+                <tr ng-repeat="item in proxy.list track by $index">
+                    <td data-title="'小前端ID'">
+                        <i class="glyphicon glyphicon-warning-sign text-danger" ng-show="item.Notice"></i>
+                        <input class="proxy-proxyID" ng-model="item.ProxyID" disabled>
+                    </td>
+                    <td data-title="'MAC'" >{{item.Mac}}</td>
+                    <td data-title="'CPU'" >{{item.CPU | toPercent}}</td>
+                    <td data-title="'MemFree'" >{{item.NoUsedMem | leftTwoDecimal}}G</td>
+                    <td data-title="'Mem占用%'" >{{item.MemRate}}</td>
+                    <td data-title="'DiskFree'" >{{item.NoUsedDisk | leftTwoDecimal}}G</td>
+                    <td data-title="'Disk占用%'" >{{item.DiskRate}}</td>
+                    <td data-title="'版本'" >{{item.Version}}</td>
+                    <td data-title="'更新时间'" >{{item.UpdateTime}}</td>
+                    <!--<td data-title="'正式项目'"><toggle ng-model="proxy.Type" size="btn-xs" on="是" off="非" ng-change="TypeChanged(!proxy.Type, $index);"></toggle></td>-->
+                    <td data-title="'项目类型'">
+                        <select ng-model="item.Type" ng-change="TypeChanged($index)" ng-options="pro.id as pro.value for pro in proxy.proTypeList">
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <div ng-show="proxy.noData" class="text-center">查无数据</div>
+        </div>
+        <!--body end-->
+        <!--footer-->
+        <div class="modal-footer">
+            <!-- 关闭 -->
+            <button type="button" class="btn btn-default btn-sm" ng-click="proxy.cancel()">关闭</button>
+        </div>
+        <!--footer end-->
+    </div>
 </div>

@@ -40,6 +40,27 @@
             };
         })
 
+        /**
+         * 保留两位小数
+         */
+        .filter("leftTwoDecimal", function () {
+            return function (num) {
+                return num.toFixed(2);
+            };
+        })
+
+        /**
+         * 字符串超长截取
+         */
+        .filter("substring", function () {
+            return function (string, length) {
+                if (string.length > length) {
+                    var str = string.substr(0, length) + '...';
+                }
+                return str;
+            };
+        })
+
         .filter("subtitlePercentComplete", function () {
             return function (subtitlePercentComplete) {
                 if (subtitlePercentComplete) {

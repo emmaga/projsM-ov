@@ -18,7 +18,12 @@
             <td data-title="'在线情况'" >{{project.Online}}/{{project.Total}}</td>
             <td data-title="'微信 AppID'" >{{project.WXAppID}}</td>
             <td data-title="'微信名称'" >{{project.WXName}}</td>
-            <td data-title="'操作'" ng-click="projects.edit(project)"><a style="cursor: pointer">编辑</a></td>
+            <td data-title="'操作'">
+                <a ng-click="projects.edit(project)" style="cursor: pointer">编辑</a>
+                <a ng-click="projects.queryProxy(project.ProjectName, project.ProjectNameCHZ)" ng-class="{'text-danger':project.NoticeFlag}" style="cursor: pointer">
+                    小前端<i class="glyphicon glyphicon-warning-sign text-danger" ng-show="project.NoticeFlag"></i>
+                </a>
+            </td>
         </tr>
     </table>
     <div ng-show="projects.noData">查无数据</div>
