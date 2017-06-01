@@ -101,9 +101,20 @@
         function($http, $scope, $state, $filter, $stateParams, NgTableParams,$location, util, CONFIG) {
             var self = this;
             self.init = function() {
+                self.projectName = $scope.app.maskParams.ProjectName;
+                self.ProjectNameCHZ = $scope.app.maskParams.ProjectNameCHZ;
                 self.editLangs = util.getParams('editLangs')
                 self.defaultLang = util.getDefaultLangCode();
                 self.getInfo();
+            }
+
+            self.proTypeList = [
+                {id: 0, value: '测试项目'},
+                {id: 1, value: '正式项目'},
+            ]
+
+            self.cancel = function() {
+                $scope.app.showHideMask(false);
             }
 
             // 获取小前端状态列表信息
@@ -113,10 +124,11 @@
 
                 var data = {
                     "action": "getProjectServerList",
-                    "token": util.getParams("token")
+                    "token": util.getParams("token"),
+                    "project": self.projectName
                 }
                 $http({
-                    method: $filter('ajaxMethod')(),
+                    method: 'post',
                     url: util.getApiUrl('project', '', 'server'),
                     data: data
                 }).then(function successCallback(data, status, headers, config) {
@@ -139,13 +151,40 @@
                     self.loading = false;
                 })
             }
+            
+            $scope.TypeChanged = function ($index) {
+                var data = JSON.stringify({
+                    action: "setServerType",
+                    token: util.getParams("token"),
+                    project: self.projectName,
+                    type: self.list[$index].Type,
+                    ID: self.list[$index].ID,
+                })
+                $http({
+                    method: 'post',
+                    url: util.getApiUrl('project', '', 'server'),
+                    data: data
+                }).then(function successCallback(data, status, headers, config) {
+                    if (data.data.rescode == '200') {
+
+                    } else if (data.data.rescode == '401') {
+                        alert('访问超时，请重新登录');
+                        $location.path("pages/login.html");
+                    } else {
+                        alert('读取信息出错，'+data.errInfo);
+                    }
+
+                }, function errorCallback(data, status, headers, config) {
+                    alert('连接服务器出错');
+                }).finally(function(value) {
+                    self.loading = false;
+                })
+            }
         }
     ])
 
     .controller('projectsController', ['$http', '$scope', '$state', '$filter', '$stateParams', 'NgTableParams', '$location','util', 'CONFIG',
         function($http, $scope, $state, $filter, $stateParams, NgTableParams,$location, util, CONFIG) {
-            console.log('projectsController')
-            
             var self = this;
             self.init = function() {
                 self.editLangs = util.getParams('editLangs')
@@ -161,6 +200,16 @@
                 $scope.app.maskParams = {'projectInfo': projectInfo};
                 $scope.app.showHideMask(true,'pages/editProject.html');
             }
+
+            /**
+             * 查询小前端
+             * @param project
+             */
+            self.queryProxy = function(ProjectName, ProjectNameCHZ) {
+                $scope.app.maskParams = {'ProjectName': ProjectName, 'ProjectNameCHZ': ProjectNameCHZ};
+                $scope.app.showHideMask(true, 'pages/proxy.html');
+            }
+
             // 获取项目列表信息
             self.getInfo = function () {
                 self.noData = false;
