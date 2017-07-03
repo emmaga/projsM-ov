@@ -105,6 +105,12 @@
                 self.ProjectNameCHZ = $scope.app.maskParams.ProjectNameCHZ;
                 self.editLangs = util.getParams('editLangs')
                 self.defaultLang = util.getDefaultLangCode();
+                self.page = 1;
+                self.per_page = 5;
+                self.total = 0;
+                self.totalPage = 1;
+                self.noData = false;
+                self.loading = true;
                 self.getInfo();
             }
 
@@ -117,26 +123,44 @@
                 $scope.app.showHideMask(false);
             }
 
+            self.next = function(){
+                self.page = self.page + 1;
+                if(self.page > self.totalPage)
+                    self.page = self.totalPage;
+                self.getInfo(); 
+            }
+
+            self.back = function(){
+                self.page = (self.page - 1) <=1  ? 1 : (self.page - 1);
+                self.getInfo(); 
+            }
+
             // 获取小前端状态列表信息
             self.getInfo = function () {
-                self.noData = false;
-                self.loading = true;
-
                 var data = {
                     "action": "getProjectServerList",
                     "token": util.getParams("token"),
-                    "project": self.projectName
+                    "project": self.projectName,
+                    "per_page":self.per_page,
+                    "page":self.page
                 }
                 $http({
-                    method: 'post',
+                    method: $filter('ajaxMethod')(),
                     url: util.getApiUrl('project', '', 'server'),
                     data: data
                 }).then(function successCallback(data, status, headers, config) {
                     if (data.data.rescode == '200') {
-                        if (data.data.data.length == 0) {
+                        if (data.data.total == 0) {
                             self.noData = true;
                         }
+                        self.serverVersion = data.data.serverVersion;
+                        self.total = data.data.total;
+                        self.totalPage = parseInt(self.total/self.per_page) + 1;
                         self.list = data.data.data;
+                        self.listState = [];
+                        forEach(self.list,function(value,key){
+                            this.push(true)
+                        },self.listState)
                         // return data.data.data;
                     } else if (data.data.rescode == '401') {
                         alert('访问超时，请重新登录');
@@ -150,6 +174,10 @@
                 }).finally(function(value) {
                     self.loading = false;
                 })
+            }
+
+            $scope.toggleDetail = function(index) {  
+                self.listState[index] = !self.listState[index];
             }
             
             $scope.TypeChanged = function ($index) {
@@ -239,6 +267,7 @@
                                     self.noData = true;
                                 }
                                 params.total(data.data.total);
+                                self.list = data.data.data;
                                 return data.data.data;
                             } else if (data.data.rescode == '401') {
                                 alert('访问超时，请重新登录');
