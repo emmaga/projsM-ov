@@ -159,7 +159,7 @@
                         self.list = data.data.data;
                         self.listState = [];
                         self.list.forEach(function(value, index, array){
-                            self.listState.push(true)
+                            self.listState.push(false)
                         })
                     } else if (data.data.rescode == '401') {
                         alert('访问超时，请重新登录');
