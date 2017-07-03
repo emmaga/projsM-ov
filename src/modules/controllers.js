@@ -158,10 +158,9 @@
                         self.totalPage = parseInt(self.total/self.per_page) + 1;
                         self.list = data.data.data;
                         self.listState = [];
-                        forEach(self.list,function(value,key){
-                            this.push(true)
-                        },self.listState)
-                        // return data.data.data;
+                        self.list.forEach(function(value, index, array){
+                            self.listState.push(true)
+                        })
                     } else if (data.data.rescode == '401') {
                         alert('访问超时，请重新登录');
                         $location.path("pages/login.html");
