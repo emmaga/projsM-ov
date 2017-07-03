@@ -31,8 +31,8 @@
                         <select ng-model="item.Type" ng-change="TypeChanged($index)" ng-options="pro.id as pro.value for pro in proxy.proTypeList">
                         </select>
                     </td>
-                    <td data-title="'详情'">
-                        <button ng-click="toggleDetail($index)" >{{proxy.listState[$index] == true ? "隐藏" : "显示"}}</button>
+                    <td data-title="'详情'">  
+                        <a style="cursor: pointer" ng-click="toggleDetail($index)" >{{proxy.listState[$index] == true ? "隐藏" : "显示"}}</a>
                     </td>
                 </tr>
                 <tr ng-show='item.TaskList.length>0 && proxy.listState[$index]' ng-repeat-end>
@@ -55,9 +55,9 @@
         <!--footer-->
         <div class="modal-footer">
             <!-- 关闭 -->
-            <a ng-show="proxy.page > 1" ng-click="proxy.back()">back</a>
+            <a ng-show="proxy.page > 1" ng-click="proxy.back()">上一页</a>
               {{proxy.page}}/{{proxy.totalPage}}
-            <a ng-show="proxy.page < proxy.totalPage" ng-click="proxy.next()">next</a>
+            <a ng-show="proxy.page < proxy.totalPage" ng-click="proxy.next()">下一页</a>
         </div>
         <!--footer end-->
     </div>
