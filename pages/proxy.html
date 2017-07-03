@@ -7,14 +7,14 @@
                 <span aria-hidden="true">&times;</span>
                 <span class="sr-only">Close</span>
             </button>
-            <h5 class="modal-title"><b>{{proxy.ProjectNameCHZ}}</b> 小前端情况</h5>
+            <h5 class="modal-title"><b>{{proxy.ProjectNameCHZ}}</b> 小前端情况：<b>{{proxy.total}}</b></h5>
         </div>
         <!--header end-->
         <!--body-->
         <div class="modal-body">
             <div ng-show="proxy.loading" class="text-center">loading...</div>
-            <table class="table table-hover table-condensed proxy-table" ng-table="proxy.tableParams" ng-hide="proxy.loading || proxy.noData">
-                <tr ng-repeat="item in proxy.list track by $index">
+            <table ng-hide="proxy.loading || proxy.noData"  class="table table-hover table-condensed proxy-table" ng-table="proxy.tableParams">
+                <tr ng-repeat-start="item in proxy.list track by $index">
                     <td data-title="'小前端ID'">
                         <i class="glyphicon glyphicon-warning-sign text-danger" ng-show="item.Notice"></i>
                         <input class="proxy-proxyID" ng-model="item.ProxyID" disabled>
@@ -27,10 +27,25 @@
                     <td data-title="'Disk占用%'" >{{item.DiskRate}}</td>
                     <td data-title="'版本'" >{{item.Version}}</td>
                     <td data-title="'更新时间'" >{{item.UpdateTime}}</td>
-                    <!--<td data-title="'正式项目'"><toggle ng-model="proxy.Type" size="btn-xs" on="是" off="非" ng-change="TypeChanged(!proxy.Type, $index);"></toggle></td>-->
                     <td data-title="'项目类型'">
                         <select ng-model="item.Type" ng-change="TypeChanged($index)" ng-options="pro.id as pro.value for pro in proxy.proTypeList">
                         </select>
+                    </td>
+                    <td data-title="'详情'">
+                        <button ng-click="toggleDetail($index)" >{{proxy.listState[$index] == true ? "隐藏" : "显示"}}</button>
+                    </td>
+                </tr>
+                <tr ng-show='item.TaskList.length>0 && proxy.listState[$index]' ng-repeat-end>
+                    <td colspan="11">
+                        <table ng-show='proxy.listState[$index]' class="table table-hover table-condensed proxy-table" ng-table="proxy.tableParams">
+                            <tr ng-repeat="task in item.TaskList track by $index">
+                                <td data-title="'进程名称'" >{{task.TaskName}}</td>
+                                <td data-title="'是否存活'" >{{task.IsAlive == 1 ? "是" : "否"}}</td>
+                                <td data-title="'当前版本'" >{{task.CurVersion}}</td>
+                                <td data-title="'服务器版本'" >{{proxy.serverVersion[task.TaskName]}}</td>
+                                <td data-title="'剩余下载任务'" >{{task.LeftTask == 0 ? "无下载任务" : task.LeftTask}}</td>
+                            </tr>
+                        </table>
                     </td>
                 </tr>
             </table>
@@ -40,7 +55,9 @@
         <!--footer-->
         <div class="modal-footer">
             <!-- 关闭 -->
-            <button type="button" class="btn btn-default btn-sm" ng-click="proxy.cancel()">关闭</button>
+            <a ng-show="proxy.page > 1" ng-click="proxy.back()">back</a>
+              {{proxy.page}}/{{proxy.totalPage}}
+            <a ng-show="proxy.page < proxy.totalPage" ng-click="proxy.next()">next</a>
         </div>
         <!--footer end-->
     </div>
