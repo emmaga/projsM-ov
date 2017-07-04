@@ -342,3 +342,19 @@ background-color:#f5f5f5
   cursor: text !important;
   vertical-align: top;
 }
+
+.proxy-detail {
+  min-width: 800px;
+}
+
+.proxy-detail * span{
+  text-align:center; 
+  display:block; 
+  float:left;
+}
+
+.proxy-detail div{
+  color:#000;
+  text-align: center;
+  font-weight: bold;
+}

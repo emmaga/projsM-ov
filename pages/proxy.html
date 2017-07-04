@@ -31,21 +31,30 @@
                         <select ng-model="item.Type" ng-change="TypeChanged($index)" ng-options="pro.id as pro.value for pro in proxy.proTypeList">
                         </select>
                     </td>
-                    <td data-title="'详情'">  
+                    <td data-title="'详情'">
                         <a style="cursor: pointer" ng-click="toggleDetail($index)" >{{proxy.listState[$index] == true ? "隐藏" : "显示"}}</a>
                     </td>
                 </tr>
                 <tr ng-show='item.TaskList.length>0 && proxy.listState[$index]' ng-repeat-end>
                     <td colspan="11">
-                        <table ng-show='proxy.listState[$index]' class="table table-hover table-condensed proxy-table" ng-table="proxy.tableParams">
-                            <tr ng-repeat="task in item.TaskList track by $index">
-                                <td data-title="'进程名称'" >{{task.TaskName}}</td>
-                                <td data-title="'是否存活'" >{{task.IsAlive == 1 ? "是" : "否"}}</td>
-                                <td data-title="'当前版本'" >{{task.CurVersion}}</td>
-                                <td data-title="'服务器版本'" >{{proxy.serverVersion[task.TaskName]}}</td>
-                                <td data-title="'剩余下载任务'" >{{task.LeftTask == 0 ? "无下载任务" : task.LeftTask}}</td>
-                            </tr>
-                        </table>
+
+                        <ul class="proxy-detail">
+                            <div>
+                                <span style="width:200px">进程名称</span>
+                                <span style="width:100px">是否存活</span>
+                                <span style="width:100px">&nbsp;当前版本&nbsp;</span>
+                                <span style="width:100px">&nbsp;服务器版本&nbsp;</span>
+                                <span style="width:200px">剩余下载任务</span>
+                            </div><br/>
+                            <li ng-repeat="task in item.TaskList track by $index" style="padding-top:5px;list-style-type:decimal">
+                                <span style="width:200px">{{task.TaskName}}</span>
+                                <span style="width:100px">{{task.IsAlive == 1 ? "是" : "否"}}</span>
+                                <span style="width:100px">&nbsp;{{task.CurVersion}}&nbsp;</span>
+                                <span style="width:100px">&nbsp;{{proxy.serverVersion[task.TaskName]}}&nbsp;</span>
+                                <span style="width:200px">{{task.LeftTask == 0 ? "无下载任务" : task.LeftTask}}</span>
+                            </li>
+                            
+                        </ul>
                     </td>
                 </tr>
             </table>
