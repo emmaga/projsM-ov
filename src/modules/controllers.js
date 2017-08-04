@@ -1685,4 +1685,1022 @@
             }
         }
     ]) 
+
+    .controller('roomPayController', ['$http', '$scope', '$state', '$location','$filter', '$stateParams', '$q', 'util', 'CONFIG',
+        function($http, $scope, $state,$location, $filter, $stateParams, $q, util, CONFIG) {
+            var self = this;
+            self.searchVal = {}; // 筛选内容
+
+            // 日期选择初始化
+            moment.locale('zh-cn');
+            $scope.startDateBeforeRender = startDateBeforeRender;
+            $scope.startDateOnSetTime = startDateOnSetTime;
+            $scope.endDateOnSetTime = endDateOnSetTime;
+
+            function startDateOnSetTime () {
+              // https://github.com/dalelotts/angular-bootstrap-datetimepicker/issues/111
+              // 在controller里操作dom会影响性能，但这样能解决问题
+              angular.element(document.querySelector('#dropdownStart')).click();  
+              $scope.$broadcast('start-date-changed');
+              self.search();
+            }
+
+            function endDateOnSetTime () {
+              // https://github.com/dalelotts/angular-bootstrap-datetimepicker/issues/111
+              // 在controller里操作dom会影响性能，但这样能解决问题
+              angular.element(document.querySelector('#dropdownEnd')).click();  
+              $scope.$broadcast('end-date-changed');
+              self.search();
+            }
+
+            function startDateBeforeRender ($dates) {
+              if ($scope.dateRangeStart) {
+                var activeDate = moment($scope.dateRangeStart);
+
+                $dates.filter(function (date) {
+                  return date.localDateValue() >= activeDate.valueOf()
+                }).forEach(function (date) {
+                  date.selectable = false;
+                })
+              }
+            }
+
+
+            self.init = function() {
+              self.searchVal = {};
+              self.loadProList().then(function() {
+                return self.search();
+              });
+              self.initCharts();
+              $scope.dateRangeStart = $filter('date')((new Date().getTime()) + 1*24*60*60*1000, 'yyyy-MM-dd');
+              $scope.searchStartDate = $filter('date')((new Date().getTime() - 6*24*60*60*1000), 'yyyy-MM-dd');
+              $scope.searchEndDate = $filter('date')((new Date().getTime()), 'yyyy-MM-dd');
+            }
+
+            self.initCharts = function () {
+                // init chart1
+                self.attrs1 = {
+                    "caption": "各项目订单金额统计",
+                    "xAxisname": "项目",
+                    "yAxisName": "金额 (元)",
+                    "numberPrefix": "¥ ",
+                    "plotFillAlpha" : "",
+
+                    //Cosmetics
+                    "paletteColors" : "#0075c2,#1aaf5d",
+                    "baseFontColor" : "#333333",
+                    "baseFont" : "Helvetica Neue,Arial",
+                    "captionFontSize" : "14",
+                    "subcaptionFontSize" : "14",
+                    "subcaptionFontBold" : "0",
+                    "showBorder" : "0",
+                    "bgColor" : "#ffffff",
+                    "showShadow" : "0",
+                    "canvasBgColor" : "#ffffff",
+                    "canvasBorderAlpha" : "0",
+                    "divlineAlpha" : "100",
+                    "divlineColor" : "#999999",
+                    "divlineThickness" : "1",
+                    "divLineIsDashed" : "1",
+                    "divLineDashLen" : "1",
+                    "divLineGapLen" : "1",
+                    "usePlotGradientColor" : "0",
+                    "showplotborder" : "0",
+                    "valueFontColor" : "#ffffff",
+                    "placeValuesInside" : "1",
+                    "showHoverEffect" : "1",
+                    "rotateValues" : "1",
+                    "showXAxisLine" : "1",
+                    "xAxisLineThickness" : "1",
+                    "xAxisLineColor" : "#999999",
+                    "showAlternateHGridColor" : "0",
+                    "legendBgAlpha" : "0",
+                    "legendBorderAlpha" : "0",
+                    "legendShadow" : "0",
+                    "legendItemFontSize" : "10",
+                    "legendItemFontColor" : "#666666"
+                };
+                self.categories1 = [
+                    {
+                        "category": [
+                        ]
+                    }
+                ];
+                self.dataset1 = [];
+                self.orderby = [
+                    {sort: 'sumPPrice', desc: true},
+                    {sort: 'sumPCount', desc: true},
+                    {sort: '', desc: true},
+                    {sort: '', desc: true}
+                ];
+
+
+                // init chart2
+                $scope.attrs2 = {
+                    "caption": "各项目订单数量统计",
+                    "xAxisname": "项目",
+                    "yAxisName": "次数",
+                    "numberPrefix": "",
+                    "plotFillAlpha" : "",
+
+                    //Cosmetics
+                    "paletteColors" : "#0075c2,#1aaf5d",
+                    "baseFontColor" : "#333333",
+                    "baseFont" : "Helvetica Neue,Arial",
+                    "captionFontSize" : "14",
+                    "subcaptionFontSize" : "14",
+                    "subcaptionFontBold" : "0",
+                    "showBorder" : "0",
+                    "bgColor" : "#ffffff",
+                    "showShadow" : "0",
+                    "canvasBgColor" : "#ffffff",
+                    "canvasBorderAlpha" : "0",
+                    "divlineAlpha" : "100",
+                    "divlineColor" : "#999999",
+                    "divlineThickness" : "1",
+                    "divLineIsDashed" : "1",
+                    "divLineDashLen" : "1",
+                    "divLineGapLen" : "1",
+                    "usePlotGradientColor" : "0",
+                    "showplotborder" : "0",
+                    "valueFontColor" : "#ffffff",
+                    "placeValuesInside" : "1",
+                    "showHoverEffect" : "1",
+                    "rotateValues" : "1",
+                    "showXAxisLine" : "1",
+                    "xAxisLineThickness" : "1",
+                    "xAxisLineColor" : "#999999",
+                    "showAlternateHGridColor" : "0",
+                    "legendBgAlpha" : "0",
+                    "legendBorderAlpha" : "0",
+                    "legendShadow" : "0",
+                    "legendItemFontSize" : "10",
+                    "legendItemFontColor" : "#666666"
+                };
+                $scope.categories2 = [
+                    {
+                        "category": []
+                    }
+                ];
+                $scope.dataset2 = [];
+
+                // init chart3
+                $scope.attrs3 = {
+                    "caption": "每日订单金额统计",
+                    "numberprefix": "¥ ",
+                    "yAxisname": "金额（元）",
+                    "xAxisName": "日期",
+                    "plotgradientcolor": "",
+                    "bgcolor": "FFFFFF",
+                    "showalternatehgridcolor": "0",
+                    "divlinecolor": "CCCCCC",
+                    "showvalues": "0",
+                    "showcanvasborder": "0",
+                    "canvasborderalpha": "0",
+                    "canvasbordercolor": "CCCCCC",
+                    "canvasborderthickness": "1",
+                    "yaxismaxvalue": "",
+                    "captionpadding": "30",
+                    "linethickness": "3",
+                    "yaxisvaluespadding": "15",
+                    "legendshadow": "0",
+                    "legendborderalpha": "0",
+                    "palettecolors": "#f8bd19,#008ee4,#33bdda,#e44a00,#6baa01,#583e78",
+                    "showborder": "0"
+                };
+                $scope.categories3 = [
+                    {
+                        "category": []
+                    }
+                ];
+                $scope.dataset3 = [];
+
+                // init chart4
+                $scope.attrs4 = {
+                    "caption": "每日订单量统计",
+                    "numberprefix": "",
+                    "yAxisname": "次数（次）",
+                    "xAxisName": "日期",
+                    "plotgradientcolor": "",
+                    "bgcolor": "FFFFFF",
+                    "showalternatehgridcolor": "0",
+                    "divlinecolor": "CCCCCC",
+                    "showvalues": "0",
+                    "showcanvasborder": "0",
+                    "canvasborderalpha": "0",
+                    "canvasbordercolor": "CCCCCC",
+                    "canvasborderthickness": "1",
+                    "yaxismaxvalue": "",
+                    "captionpadding": "30",
+                    "linethickness": "3",
+                    "yaxisvaluespadding": "15",
+                    "legendshadow": "0",
+                    "legendborderalpha": "0",
+                    "palettecolors": "#f8bd19,#008ee4,#33bdda,#e44a00,#6baa01,#583e78",
+                    "showborder": "0"
+                };
+                $scope.categories4 = [
+                    {
+                        "category": []
+                    }
+                ];
+                $scope.dataset4 = [];
+            }
+
+            self.search = function () {
+                self.loadChart3().then(function() {
+                    return self.loadChart4();
+                }).then(function() {
+                    return self.loadChart1();
+                }).then(function() {
+                    return self.loadChart2();
+                })
+            }
+
+            self.loadProList = function () {
+                var deferred = $q.defer();
+                var data = JSON.stringify({
+                    token: util.getParams("token"),
+                    action: 'projectNameList'
+                })
+                self.loadingProList = true;
+                $http({
+                    method: 'POST',
+                    url: util.getApiUrl('project', '', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var data = response.data;
+                    if (data.rescode == '200') {
+                        self.searchVal.projects = [];
+                        self.searchVal.projects[0] = {value: 'all', name: '全部项目'};
+                        data.data.forEach(function(item, index, array) {
+                            self.searchVal.projects.push({ value:item.ProjectName , name: item.ProjectNameCHZ });
+                            self.searchVal.project = 'all';
+                        })
+                        deferred.resolve();
+                    } 
+                    else {
+                        alert(data.rescode + ' ' + data.errInfo);
+                        deferred.reject();
+                    }
+                }, function errorCallback(response) {
+                    alert('连接服务器出错');
+                    deferred.reject();
+                }).finally(function(value) {
+                    self.loadingProList = false;
+                });
+                return deferred.promise;
+            }
+
+            self.loadChart1 = function () {
+                var deferred = $q.defer();
+
+                var data = JSON.stringify({
+                    token: util.getParams("token"),
+                    action: 'getProjectPurchasePrice',
+                    startDate: $scope.searchStartDate + ' 00:00:00',
+                    endDate: $scope.searchEndDate + ' 00:00:00',
+                    projectList: [self.searchVal.project]
+                })
+                self.loadingChart1 = true;
+                $http({
+                    method: 'POST',
+                    url: util.getApiUrl('room/statistics', '', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var data = response.data;
+                    if (data.rescode == '200') {
+
+                        self.categories1[0].category = [];
+                        self.dataset1 = [];
+                        self.dataSet1 = [];
+                        self.dataset1.total = 0;
+
+                        data.projectListCHZ.forEach(function(item, index, array) {
+                            if (index < 5) self.categories1[0].category.push({label: item});
+                            self.dataSet1.push({'projectList': item});
+                        });
+
+                        self.dataset1.push({seriesname: "已完成订单金额", data:[]});
+                        data.COMPLETED.forEach(function(item, index, array) {
+                            if (index < 5) self.dataset1[0].data.push({ value: item/100 });
+                            self.dataSet1[index].COMPLETED = item/100;
+                        });
+
+                        data.COMPLETED.forEach(function(item, index, array) {
+                            self.dataset1.total += Number(item)
+                        })
+
+                        deferred.resolve();
+                    } 
+                    else {
+                        alert(data.errInfo);
+                        deferred.reject();
+                    }
+                }, function errorCallback(response) {
+                    alert('连接服务器出错');
+                    deferred.reject();
+                }).finally(function(value) {
+                    self.loadingChart1 = false;
+                });
+                return deferred.promise;
+            }
+
+            self.loadChart2 = function () {
+                var deferred = $q.defer();
+
+                var data = JSON.stringify({
+                    token: util.getParams("token"),
+                    action: 'getProjectPurchaseCount',
+                    startDate: $scope.searchStartDate + ' 00:00:00',
+                    endDate: $scope.searchEndDate + ' 00:00:00',
+                    projectList: [self.searchVal.project]
+                })
+                self.loadingChart2 = true;
+                $http({
+                    method: 'POST',
+                    url: util.getApiUrl('room/statistics', '', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var data = response.data;
+                    if (data.rescode == '200') {
+                        $scope.categories2[0].category = [];
+                        $scope.dataset2 = [];
+                        self.dataSet2 = [];
+                        self.dataSet2.total1 = 0
+                        self.dataSet2.total2 = 0
+                        data.projectListCHZ.forEach(function(item, index, array) {
+                            if (index < 5) $scope.categories2[0].category.push({label: item});
+                            self.dataSet2.push({'projectList': item});
+                        });
+                        $scope.dataset2.push({seriesname: "订单总量", data:[]});
+                        data.ALL.forEach(function(item, index, array) {
+                            if (index < 5) $scope.dataset2[0].data.push({ value: item });
+                            // $scope.dataset2.total += Number(item);
+                            self.dataSet2[index].ALL = Number(item);
+                        });
+                        $scope.dataset2.push({seriesname: "已完成订单量", data:[]});
+                        data.COMPLETED.forEach(function(item, index, array) {
+                            if (index < 5) $scope.dataset2[1].data.push({ value: item });
+                            self.dataSet2[index].COMPLETED = Number(item);
+                        });
+
+                        data.ALL.forEach(function(item, index, array) {
+                            self.dataSet2.total1 += Number(item);
+                        });
+
+                        data.COMPLETED.forEach(function(item, index, array) {
+                            self.dataSet2.total2 += Number(item);
+                        });
+
+                        deferred.resolve();
+                    }
+                    else {
+                        alert(data.errInfo);
+                        deferred.reject();
+                    }
+                }, function errorCallback(response) {
+                    alert('连接服务器出错');
+                    deferred.reject();
+                }).finally(function(value) {
+                    self.loadingChart2 = false;
+                });
+                return deferred.promise;
+            }
+
+            self.loadChart3 = function () {
+                var deferred = $q.defer();
+
+                var data = JSON.stringify({
+                    token: util.getParams("token"),
+                    action: 'getDatePurchasePrice',
+                    startDate: $scope.searchStartDate + ' 00:00:00',
+                    endDate: $scope.searchEndDate + ' 00:00:00',
+                    projectList: [self.searchVal.project]
+                })
+                self.loadingChart3 = true;
+                $http({
+                    method: 'POST',
+                    url: util.getApiUrl('room/statistics', '', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var data = response.data;
+                    if (data.rescode == '200') {
+                        $scope.categories3[0].category = [];
+                        $scope.dataset3 = [];
+                        self.dataSet3 = [];
+
+                        data.dataList.forEach(function(item, index, array) {
+                            $scope.categories3[0].category.push({label: item.substring(5, 10)});
+                            self.dataSet3.push({'date': item.substring(5, 10)});
+                        });
+
+                        $scope.dataset3.push({seriesname: "已完成订单", data:[]});
+                        data.COMPLETED.forEach(function(item, index, array) {
+                            $scope.dataset3[0].data.push({ value: item/100 });
+                            self.dataSet3[index].sumPPrice = item/100;
+                        });
+
+                        deferred.resolve();
+                    } 
+                    else {
+                        alert(data.errInfo);
+                        deferred.reject();
+                    }
+                }, function errorCallback(response) {
+                    alert('连接服务器出错');
+                    deferred.reject();
+                }).finally(function(value) {
+                    self.loadingChart3 = false;
+                });
+                return deferred.promise;
+            }
+
+            self.loadChart4 = function () {
+                var deferred = $q.defer();
+
+                var data = JSON.stringify({
+                    token: util.getParams("token"),
+                    action: 'getDatePurchaseCount',
+                    startDate: $scope.searchStartDate + ' 00:00:00',
+                    endDate: $scope.searchEndDate + ' 00:00:00',
+                    projectList: [self.searchVal.project]
+                })
+                self.loadingChart4 = true;
+                $http({
+                    method: 'POST',
+                    url: util.getApiUrl('room/statistics', '', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var data = response.data;
+                    if (data.rescode == '200') {
+                        $scope.categories4[0].category = [];
+                        $scope.dataset4 = [];
+                        self.dataSet4 = [];
+
+                        data.dataList.forEach(function(item, index, array) {
+                            $scope.categories4[0].category.push({label: item.substring(5, 10)});
+                            self.dataSet4.push({'date': item.substring(5, 10)});
+                        });
+
+                        $scope.dataset4.push({seriesname: "总订单量", data:[]});
+                        data.ALL.forEach(function(item, index, array) {
+                            $scope.dataset4[0].data.push({ value: item });
+                            self.dataSet4[index].ALL = item;
+                        });
+
+                        $scope.dataset4.push({seriesname: "已完成订单量", data:[]});
+                        data.COMPLETED.forEach(function(item, index, array) {
+                            $scope.dataset4[1].data.push({ value: item });
+                            self.dataSet4[index].COMPLETED = item;
+                        });
+
+                        deferred.resolve();
+                    } 
+                    else {
+                        alert(data.errInfo);
+                        deferred.reject();
+                    }
+                }, function errorCallback(response) {
+                    alert('连接服务器出错');
+                    deferred.reject();
+                }).finally(function(value) {
+                    self.loadingChart4 = false;
+                });
+                return deferred.promise;
+            }
+
+            /**
+             * 列表排序
+             * @param index
+             * @param orderby
+             */
+            self.changeOrderby = function (index, orderby) {
+                self.orderby[index].sort = orderby;
+                self.orderby[index].desc = !self.orderby[index].desc;
+            }
+        }
+    ]) 
+
+    .controller('shopPayController', ['$http', '$scope', '$state', '$location','$filter', '$stateParams', '$q', 'util', 'CONFIG',
+        function($http, $scope, $state,$location, $filter, $stateParams, $q, util, CONFIG) {
+            var self = this;
+            self.searchVal = {}; // 筛选内容
+
+            // 日期选择初始化
+            moment.locale('zh-cn');
+            $scope.startDateBeforeRender = startDateBeforeRender;
+            $scope.startDateOnSetTime = startDateOnSetTime;
+            $scope.endDateOnSetTime = endDateOnSetTime;
+
+            function startDateOnSetTime () {
+              // https://github.com/dalelotts/angular-bootstrap-datetimepicker/issues/111
+              // 在controller里操作dom会影响性能，但这样能解决问题
+              angular.element(document.querySelector('#dropdownStart')).click();  
+              $scope.$broadcast('start-date-changed');
+              self.search();
+            }
+
+            function endDateOnSetTime () {
+              // https://github.com/dalelotts/angular-bootstrap-datetimepicker/issues/111
+              // 在controller里操作dom会影响性能，但这样能解决问题
+              angular.element(document.querySelector('#dropdownEnd')).click();  
+              $scope.$broadcast('end-date-changed');
+              self.search();
+            }
+
+            function startDateBeforeRender ($dates) {
+              if ($scope.dateRangeStart) {
+                var activeDate = moment($scope.dateRangeStart);
+
+                $dates.filter(function (date) {
+                  return date.localDateValue() >= activeDate.valueOf()
+                }).forEach(function (date) {
+                  date.selectable = false;
+                })
+              }
+            }
+
+
+            self.init = function() {
+              self.searchVal = {};
+              self.loadProList().then(function() {
+                return self.search();
+              });
+              self.initCharts();
+              $scope.dateRangeStart = $filter('date')((new Date().getTime()) + 1*24*60*60*1000, 'yyyy-MM-dd');
+              $scope.searchStartDate = $filter('date')((new Date().getTime() - 6*24*60*60*1000), 'yyyy-MM-dd');
+              $scope.searchEndDate = $filter('date')((new Date().getTime()), 'yyyy-MM-dd');
+            }
+
+            self.initCharts = function () {
+                // init chart1
+                self.attrs1 = {
+                    "caption": "各项目付费金额统计",
+                    "xAxisname": "项目",
+                    "yAxisName": "金额 (元)",
+                    "numberPrefix": "¥ ",
+                    "plotFillAlpha" : "",
+
+                    //Cosmetics
+                    "paletteColors" : "#0075c2,#1aaf5d",
+                    "baseFontColor" : "#333333",
+                    "baseFont" : "Helvetica Neue,Arial",
+                    "captionFontSize" : "14",
+                    "subcaptionFontSize" : "14",
+                    "subcaptionFontBold" : "0",
+                    "showBorder" : "0",
+                    "bgColor" : "#ffffff",
+                    "showShadow" : "0",
+                    "canvasBgColor" : "#ffffff",
+                    "canvasBorderAlpha" : "0",
+                    "divlineAlpha" : "100",
+                    "divlineColor" : "#999999",
+                    "divlineThickness" : "1",
+                    "divLineIsDashed" : "1",
+                    "divLineDashLen" : "1",
+                    "divLineGapLen" : "1",
+                    "usePlotGradientColor" : "0",
+                    "showplotborder" : "0",
+                    "valueFontColor" : "#ffffff",
+                    "placeValuesInside" : "1",
+                    "showHoverEffect" : "1",
+                    "rotateValues" : "1",
+                    "showXAxisLine" : "1",
+                    "xAxisLineThickness" : "1",
+                    "xAxisLineColor" : "#999999",
+                    "showAlternateHGridColor" : "0",
+                    "legendBgAlpha" : "0",
+                    "legendBorderAlpha" : "0",
+                    "legendShadow" : "0",
+                    "legendItemFontSize" : "10",
+                    "legendItemFontColor" : "#666666"
+                };
+                self.categories1 = [
+                    {
+                        "category": [
+                        ]
+                    }
+                ];
+                self.dataset1 = [];
+                self.orderby = [
+                    {sort: 'sumPPrice', desc: true},
+                    {sort: 'sumPCount', desc: true},
+                    {sort: '', desc: true},
+                    {sort: '', desc: true}
+                ];
+
+
+                // init chart2
+                $scope.attrs2 = {
+                    "caption": "各项目付费次数统计",
+                    "xAxisname": "项目",
+                    "yAxisName": "次数",
+                    "numberPrefix": "",
+                    "plotFillAlpha" : "",
+
+                    //Cosmetics
+                    "paletteColors" : "#0075c2,#1aaf5d",
+                    "baseFontColor" : "#333333",
+                    "baseFont" : "Helvetica Neue,Arial",
+                    "captionFontSize" : "14",
+                    "subcaptionFontSize" : "14",
+                    "subcaptionFontBold" : "0",
+                    "showBorder" : "0",
+                    "bgColor" : "#ffffff",
+                    "showShadow" : "0",
+                    "canvasBgColor" : "#ffffff",
+                    "canvasBorderAlpha" : "0",
+                    "divlineAlpha" : "100",
+                    "divlineColor" : "#999999",
+                    "divlineThickness" : "1",
+                    "divLineIsDashed" : "1",
+                    "divLineDashLen" : "1",
+                    "divLineGapLen" : "1",
+                    "usePlotGradientColor" : "0",
+                    "showplotborder" : "0",
+                    "valueFontColor" : "#ffffff",
+                    "placeValuesInside" : "1",
+                    "showHoverEffect" : "1",
+                    "rotateValues" : "1",
+                    "showXAxisLine" : "1",
+                    "xAxisLineThickness" : "1",
+                    "xAxisLineColor" : "#999999",
+                    "showAlternateHGridColor" : "0",
+                    "legendBgAlpha" : "0",
+                    "legendBorderAlpha" : "0",
+                    "legendShadow" : "0",
+                    "legendItemFontSize" : "10",
+                    "legendItemFontColor" : "#666666"
+                };
+                $scope.categories2 = [
+                    {
+                        "category": []
+                    }
+                ];
+                $scope.dataset2 = [];
+
+                // init chart3
+                $scope.attrs3 = {
+                    "caption": "每日支付金额统计",
+                    "numberprefix": "¥ ",
+                    "yAxisname": "金额（元）",
+                    "xAxisName": "日期",
+                    "plotgradientcolor": "",
+                    "bgcolor": "FFFFFF",
+                    "showalternatehgridcolor": "0",
+                    "divlinecolor": "CCCCCC",
+                    "showvalues": "0",
+                    "showcanvasborder": "0",
+                    "canvasborderalpha": "0",
+                    "canvasbordercolor": "CCCCCC",
+                    "canvasborderthickness": "1",
+                    "yaxismaxvalue": "",
+                    "captionpadding": "30",
+                    "linethickness": "3",
+                    "yaxisvaluespadding": "15",
+                    "legendshadow": "0",
+                    "legendborderalpha": "0",
+                    "palettecolors": "#f8bd19,#008ee4,#33bdda,#e44a00,#6baa01,#583e78",
+                    "showborder": "0"
+                };
+                $scope.categories3 = [
+                    {
+                        "category": []
+                    }
+                ];
+                $scope.dataset3 = [];
+
+                // init chart4
+                $scope.attrs4 = {
+                    "caption": "每日支付次数统计",
+                    "numberprefix": "",
+                    "yAxisname": "次数（次）",
+                    "xAxisName": "日期",
+                    "plotgradientcolor": "",
+                    "bgcolor": "FFFFFF",
+                    "showalternatehgridcolor": "0",
+                    "divlinecolor": "CCCCCC",
+                    "showvalues": "0",
+                    "showcanvasborder": "0",
+                    "canvasborderalpha": "0",
+                    "canvasbordercolor": "CCCCCC",
+                    "canvasborderthickness": "1",
+                    "yaxismaxvalue": "",
+                    "captionpadding": "30",
+                    "linethickness": "3",
+                    "yaxisvaluespadding": "15",
+                    "legendshadow": "0",
+                    "legendborderalpha": "0",
+                    "palettecolors": "#f8bd19,#008ee4,#33bdda,#e44a00,#6baa01,#583e78",
+                    "showborder": "0"
+                };
+                $scope.categories4 = [
+                    {
+                        "category": []
+                    }
+                ];
+                $scope.dataset4 = [];
+            }
+
+            self.search = function () {
+                self.loadChart3().then(function() {
+                    return self.loadChart4();
+                }).then(function() {
+                    return self.loadChart1();
+                }).then(function() {
+                    return self.loadChart2();
+                })
+            }
+
+            self.loadProList = function () {
+                var deferred = $q.defer();
+                var data = JSON.stringify({
+                    token: util.getParams("token"),
+                    action: 'projectNameList'
+                })
+                self.loadingProList = true;
+                $http({
+                    method: 'POST',
+                    url: util.getApiUrl('project', '', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var data = response.data;
+                    if (data.rescode == '200') {
+                        self.searchVal.projects = [];
+                        self.searchVal.projects[0] = {value: 'all', name: '全部项目'};
+                        data.data.forEach(function(item, index, array) {
+                            self.searchVal.projects.push({ value:item.ProjectName , name: item.ProjectNameCHZ });
+                            self.searchVal.project = 'all';
+                        })
+                        deferred.resolve();
+                    } 
+                    else {
+                        alert(data.rescode + ' ' + data.errInfo);
+                        deferred.reject();
+                    }
+                }, function errorCallback(response) {
+                    alert('连接服务器出错');
+                    deferred.reject();
+                }).finally(function(value) {
+                    self.loadingProList = false;
+                });
+                return deferred.promise;
+            }
+
+            self.loadChart1 = function () {
+                var deferred = $q.defer();
+
+                var data = JSON.stringify({
+                    token: util.getParams("token"),
+                    action: 'getProjectPurchasePrice',
+                    startDate: $scope.searchStartDate + ' 00:00:00',
+                    endDate: $scope.searchEndDate + ' 00:00:00',
+                    projectList: [self.searchVal.project]
+                })
+                self.loadingChart1 = true;
+                $http({
+                    method: 'POST',
+                    url: util.getApiUrl('statistics', '', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var data = response.data;
+                    if (data.rescode == '200') {
+
+                        self.categories1[0].category = [];
+                        self.dataset1 = [];
+                        self.dataSet1 = [];
+                        self.dataset1.total = 0;
+
+                        data.projectListCHZ.forEach(function(item, index, array) {
+                            if (index < 5) self.categories1[0].category.push({label: item});
+                            self.dataSet1.push({'projectListCHZ': item});
+                        });
+
+                        self.dataset1.push({seriesname: "打包支付金额", data:[]});
+                        data.packagePPrice.forEach(function(item, index, array) {
+                            if (index < 5) self.dataset1[0].data.push({ value: item/100 });
+                            self.dataSet1[index].packagePPrice = item/100;
+                        });
+
+                        self.dataset1.push({seriesname: "单次支付金额", data:[]});
+                        data.onlyPPrice.forEach(function(item, index, array) {
+                            if (index < 5) self.dataset1[1].data.push({ value: item/100 });
+                            self.dataSet1[index].onlyPPrice = item/100;
+                        });
+
+                        self.dataset1.push({seriesname: "总金额", data:[]});
+                        data.sumPPrice.forEach(function(item, index, array) {
+                            // self.dataset1.total += Number(item);
+                            if (index < 5) self.dataset1[2].data.push({ value: item/100 });
+                            self.dataSet1[index].sumPPrice = item/100;
+                        });
+                        self.dataset1.total = data.allProjectSumPrice/100;
+
+                        deferred.resolve();
+                    } 
+                    else {
+                        alert(data.errInfo);
+                        deferred.reject();
+                    }
+                }, function errorCallback(response) {
+                    alert('连接服务器出错');
+                    deferred.reject();
+                }).finally(function(value) {
+                    self.loadingChart1 = false;
+                });
+                return deferred.promise;
+            }
+
+            self.loadChart2 = function () {
+                var deferred = $q.defer();
+
+                var data = JSON.stringify({
+                    token: util.getParams("token"),
+                    action: 'getProjectPurchaseCount',
+                    startDate: $scope.searchStartDate + ' 00:00:00',
+                    endDate: $scope.searchEndDate + ' 00:00:00',
+                    projectList: [self.searchVal.project]
+                })
+                self.loadingChart2 = true;
+                $http({
+                    method: 'POST',
+                    url: util.getApiUrl('statistics', '', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var data = response.data;
+                    if (data.rescode == '200') {
+                        $scope.categories2[0].category = [];
+                        $scope.dataset2 = [];
+                        self.dataSet2 = [];
+                        $scope.dataset2.total = 0;
+
+                        data.projectListCHZ.forEach(function(item, index, array) {
+                            if (index < 5) $scope.categories2[0].category.push({label: item});
+                            self.dataSet2.push({'projectListCHZ': item});
+                        });
+
+                        $scope.dataset2.push({seriesname: "打包支付次数", data:[]});
+                        data.packagePCount.forEach(function(item, index, array) {
+                            if (index < 5) $scope.dataset2[0].data.push({ value: item });
+                            self.dataSet2[index].packagePCount = Number(item);
+                        });
+
+                        $scope.dataset2.push({seriesname: "单次支付次数", data:[]});
+                        data.onlyPCount.forEach(function(item, index, array) {
+                            if (index < 5) $scope.dataset2[1].data.push({ value: item });
+                            self.dataSet2[index].onlyPCount = Number(item);
+                        });
+
+                        $scope.dataset2.push({seriesname: "总次数", data:[]});
+                        data.sumPCount.forEach(function(item, index, array) {
+                            if (index < 5) $scope.dataset2[2].data.push({ value: item });
+                            // $scope.dataset2.total += Number(item);
+                            self.dataSet2[index].sumPCount = Number(item);
+                        });
+                        $scope.dataset2.total = data.allProjectSumCount;
+                        deferred.resolve();
+                    } 
+                    else {
+                        alert(data.errInfo);
+                        deferred.reject();
+                    }
+                }, function errorCallback(response) {
+                    alert('连接服务器出错');
+                    deferred.reject();
+                }).finally(function(value) {
+                    self.loadingChart2 = false;
+                });
+                return deferred.promise;
+            }
+
+            self.loadChart3 = function () {
+                var deferred = $q.defer();
+
+                var data = JSON.stringify({
+                    token: util.getParams("token"),
+                    action: 'getDatePurchasePrice',
+                    startDate: $scope.searchStartDate + ' 00:00:00',
+                    endDate: $scope.searchEndDate + ' 00:00:00',
+                    projectList: [self.searchVal.project]
+                })
+                self.loadingChart3 = true;
+                $http({
+                    method: 'POST',
+                    url: util.getApiUrl('statistics', '', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var data = response.data;
+                    if (data.rescode == '200') {
+                        $scope.categories3[0].category = [];
+                        $scope.dataset3 = [];
+                        self.dataSet3 = [];
+
+                        data.dateList.forEach(function(item, index, array) {
+                            $scope.categories3[0].category.push({label: item.substring(5, 10)});
+                            self.dataSet3.push({'date': item.substring(5, 10)});
+                        });
+
+                        $scope.dataset3.push({seriesname: "总金额", data:[]});
+                        data.sumPPrice.forEach(function(item, index, array) {
+                            $scope.dataset3[0].data.push({ value: item/100 });
+                            self.dataSet3[index].sumPPrice = item/100;
+                        });
+
+                        $scope.dataset3.push({seriesname: "单次支付金额", data:[]});
+                        data.onlyPPrice.forEach(function(item, index, array) {
+                            $scope.dataset3[1].data.push({ value: item/100 });
+                            self.dataSet3[index].onlyPPrice = item/100;
+                        });
+
+                        $scope.dataset3.push({seriesname: "打包支付金额", data:[]});
+                        data.packagePPrice.forEach(function(item, index, array) {
+                            $scope.dataset3[2].data.push({ value: item/100 });
+                            self.dataSet3[index].packagePPrice = item/100;
+                        });
+                        deferred.resolve();
+                    } 
+                    else {
+                        alert(data.errInfo);
+                        deferred.reject();
+                    }
+                }, function errorCallback(response) {
+                    alert('连接服务器出错');
+                    deferred.reject();
+                }).finally(function(value) {
+                    self.loadingChart3 = false;
+                });
+                return deferred.promise;
+            }
+
+            self.loadChart4 = function () {
+                var deferred = $q.defer();
+
+                var data = JSON.stringify({
+                    token: util.getParams("token"),
+                    action: 'getDatePurchaseCount',
+                    startDate: $scope.searchStartDate + ' 00:00:00',
+                    endDate: $scope.searchEndDate + ' 00:00:00',
+                    projectList: [self.searchVal.project]
+                })
+                self.loadingChart4 = true;
+                $http({
+                    method: 'POST',
+                    url: util.getApiUrl('statistics', '', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var data = response.data;
+                    if (data.rescode == '200') {
+                        $scope.categories4[0].category = [];
+                        $scope.dataset4 = [];
+                        self.dataSet4 = [];
+
+                        data.dateList.forEach(function(item, index, array) {
+                            $scope.categories4[0].category.push({label: item.substring(5, 10)});
+                            self.dataSet4.push({'date': item.substring(5, 10)});
+                        });
+
+                        $scope.dataset4.push({seriesname: "总次数", data:[]});
+                        data.sumPCount.forEach(function(item, index, array) {
+                            $scope.dataset4[0].data.push({ value: item });
+                            self.dataSet4[index].sumPCount = item;
+                        });
+
+                        $scope.dataset4.push({seriesname: "单次支付次数", data:[]});
+                        data.onlyPCount.forEach(function(item, index, array) {
+                            $scope.dataset4[1].data.push({ value: item });
+                            self.dataSet4[index].onlyPCount = item;
+                        });
+
+                        $scope.dataset4.push({seriesname: "打包支付次数", data:[]});
+                        data.packagePCount.forEach(function(item, index, array) {
+                            $scope.dataset4[2].data.push({ value: item });
+                            self.dataSet4[index].packagePCount = item;
+                        });
+                        deferred.resolve();
+                    } 
+                    else {
+                        alert(data.errInfo);
+                        deferred.reject();
+                    }
+                }, function errorCallback(response) {
+                    alert('连接服务器出错');
+                    deferred.reject();
+                }).finally(function(value) {
+                    self.loadingChart4 = false;
+                });
+                return deferred.promise;
+            }
+
+            /**
+             * 列表排序
+             * @param index
+             * @param orderby
+             */
+            self.changeOrderby = function (index, orderby) {
+                self.orderby[index].sort = orderby;
+                self.orderby[index].desc = !self.orderby[index].desc;
+            }
+        }
+    ]) 
 })();

@@ -1,0 +1,186 @@
+<div ng-controller="shopPayController as shopPay" ng-init="shopPay.init()" class="col-sm-9 page col-right">
+    <!--glyphicon-th-->
+    <a>
+        <strong>
+            <i class="glyphicon glyphicon-stats"></i>
+            统计
+            <i class="glyphicon glyphicon-chevron-right"></i>
+            点播营收
+        </strong>
+    </a>
+    <hr>
+    <!--loading 筛选条件 项目列表-->
+    <div ng-show="shopPay.loadingProList">loadingProList...</div>
+    <!--loading 筛选条件 项目列表-->
+    <!--loading 筛选条件 图1-->
+    <div ng-show="shopPay.loadingChart1">loadingChart1...</div>
+    <!--loading 筛选条件 图1-->
+    <!--loading 筛选条件 图2-->
+    <div ng-show="shopPay.loadingChart2">loadingChart2...</div>
+    <!--loading 筛选条件 图2-->
+    <!--loading 筛选条件 图3-->
+    <div ng-show="shopPay.loadingChart3">loadingChart3...</div>
+    <!--loading 筛选条件 图3-->
+    <!--loading 筛选条件 图4-->
+    <div ng-show="shopPay.loadingChart4">loadingChart4...</div>
+    <!--loading 筛选条件 图4-->
+    <!--筛选 开始-->
+    <div class="row">
+        <div class="col-xs-4">
+            <!--筛选条件 开始日期 开始-->
+            <div class="dropdown form-group">
+                <a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target="#" href="#">
+                    <div class="input-group date">
+                        <span class="input-group-addon" id="basic-addon1">开始</span>
+                        <input type="text" class="form-control" data-ng-model="searchStartDate">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                    </div>
+                </a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <datetimepicker data-ng-model="searchStartDate" data-datetimepicker-config="{renderOn: 'start-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}" data-on-set-time="startDateOnSetTime()" data-before-render="startDateBeforeRender($dates)"></datetimepicker>
+                </ul>
+            </div>
+            <!--筛选条件 开始日期 结束-->
+        </div>
+        <div class="col-xs-4">
+            <!--筛选条件 结束日期 开始-->
+            <div class="dropdown form-group">
+                <a class="dropdown-toggle" id="dropdownEnd" role="button" data-toggle="dropdown" data-target="#" href="#">
+                    <div class="input-group date">
+                        <span class="input-group-addon" id="basic-addon2">结束</span>
+                        <input type="text" class="form-control" data-ng-model="searchEndDate">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                    </div>
+                </a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <datetimepicker data-ng-model="searchEndDate" data-datetimepicker-config="{renderOn: 'end-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}" data-on-set-time="endDateOnSetTime()" data-before-render="startDateBeforeRender($dates)"></datetimepicker>
+                </ul>
+            </div>
+            <!--筛选条件 结束日期 结束-->
+        </div>
+        <div class="col-xs-4">
+            <!--筛选条件 项目 开始-->
+            <select ng-model="shopPay.searchVal.project" ng-change="shopPay.search()" class="form-control">
+                <option ng-repeat="item in shopPay.searchVal.projects" value="{{item.value}}">{{item.name}}</option>
+            </select>
+            <!--筛选条件 项目 结束-->
+        </div>
+    </div>
+    <!--筛选 结束-->
+    
+    <div class="row">
+        <div class="col-lg-6 col-md-12">
+            <div class="row">
+                <div class="col-xs-12">
+                    <!--每日支付金额统计 chart 开始-->
+                    <div fusioncharts width="100%" height="400" type="msline" chart="{{attrs3}}" categories="{{categories3}}" dataset="{{dataset3}}"></div>
+                    <!--每日支付金额统计 chart 结束-->
+                </div>
+                <!--每日支付金额统计 table 开始-->
+                <div class="col-xs-12">
+                    <table class="table">
+                        <th><a ng-click="shopPay.changeOrderby(2, 'date')">日期</a></th>
+                        <th><a ng-click="shopPay.changeOrderby(2, 'sumPPrice')">总金额</a></th>
+                        <th><a ng-click="shopPay.changeOrderby(2, 'onlyPPrice')">单次支付金额</a></th>
+                        <th><a ng-click="shopPay.changeOrderby(2, 'packagePPrice')">打包支付金额</a></th>
+                        <tr ng-repeat="n in shopPay.dataSet3 | orderBy: shopPay.orderby[2].sort : shopPay.orderby[2].desc">
+                            <td>{{n.date}}</td>
+                            <td>{{n.sumPPrice}}</td>
+                            <td>{{n.onlyPPrice}}</td>
+                            <td>{{n.packagePPrice}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <!--每日支付金额统计 table 结束-->
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12">
+            <div class="row">
+                <div class="col-xs-12">
+                    <!--每日支付次数统计 chart 开始-->
+                    <div fusioncharts width="100%" height="400" type="msline" chart="{{attrs4}}" categories="{{categories4}}" dataset="{{dataset4}}"></div>
+                    <!--每日支付次数统计 chart 结束-->
+                </div>
+                <!--每日支付次数统计 table 开始-->
+                <div class="col-xs-12">
+                    <table class="table">
+                        <th><a ng-click="shopPay.changeOrderby(3, 'date')">日期</a></th>
+                        <th><a ng-click="shopPay.changeOrderby(3, 'sumPCount')">总次数</a></th>
+                        <th><a ng-click="shopPay.changeOrderby(3, 'onlyPCount')">单次支付次数</a></th>
+                        <th><a ng-click="shopPay.changeOrderby(3, 'packagePCount')">打包支付次数</a></th>
+                        <tr ng-repeat="n in shopPay.dataSet4 | orderBy: shopPay.orderby[3].sort : shopPay.orderby[3].desc">
+                            <td>{{n.date}}</td>
+                            <td>{{n.sumPCount}}</td>
+                            <td>{{n.onlyPCount}}</td>
+                            <td>{{n.packagePCount}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <!--每日支付次数统计 table 结束-->
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-lg-6 col-md-12">
+            <div class="row">
+                <!--各项目付费金额统计 chart 开始-->
+                <div class="col-xs-12">
+                    <h5>总金额 {{shopPay.dataset1.total}}（元）</h5>
+                    <div fusioncharts width="100%" height="400" type="mscolumn2d" chart="{{shopPay.attrs1}}" categories="{{shopPay.categories1}}" dataset="{{shopPay.dataset1}}"></div>
+                </div>
+                <!--各项目付费金额统计 chart 结束-->
+                <!--各项目付费金额统计 table 开始-->
+                <div class="col-xs-12">
+                    <table class="table">
+                        <th><a ng-click="shopPay.changeOrderby(0, 'projectListCHZ')">项目</a></th>
+                        <th><a ng-click="shopPay.changeOrderby(0, 'sumPPrice')">总金额</a></th>
+                        <th><a ng-click="shopPay.changeOrderby(0, 'onlyPPrice')">单次支付金额</a></th>
+                        <th><a ng-click="shopPay.changeOrderby(0, 'packagePPrice')">打包支付金额</a></th>
+                        <tr ng-repeat="n in shopPay.dataSet1 | orderBy: shopPay.orderby[0].sort : shopPay.orderby[0].desc">
+                            <td>{{n.projectListCHZ}}</td>
+                            <td>{{n.sumPPrice}}</td>
+                            <td>{{n.onlyPPrice}}</td>
+                            <td>{{n.packagePPrice}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <!--各项目付费金额统计 table 结束-->
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-12">
+            <div class="row">
+                <!--各项目付费次数统计 chart 开始-->
+                <div class="col-xs-12">
+                    <h5>总次数 {{dataset2.total}}（次）</h5>
+                    <div fusioncharts width="100%" height="400" type="mscolumn2d" chart="{{attrs2}}" categories="{{categories2}}" dataset="{{dataset2}}"></div>
+                </div>
+                <!--各项目付费次数统计 chart 结束-->
+                <!--各项目付费次数统计 table 开始-->
+                <div class="col-xs-12">
+                    <table class="table">
+                        <th><a ng-click="shopPay.changeOrderby(1, 'projectListCHZ')">项目</a></th>
+                        <th><a ng-click="shopPay.changeOrderby(1, 'sumPCount')">总次数</a></th>
+                        <th><a ng-click="shopPay.changeOrderby(1, 'onlyPCount')">单次支付次数</a></th>
+                        <th><a ng-click="shopPay.changeOrderby(1, 'packagePCount')">打包支付次数</a></th>
+                        <tr ng-repeat="n in shopPay.dataSet2 | orderBy: shopPay.orderby[1].sort : shopPay.orderby[1].desc">
+                            <td>{{n.projectListCHZ}}</td>
+                            <td>{{n.sumPCount}}</td>
+                            <td>{{n.onlyPCount}}</td>
+                            <td>{{n.packagePCount}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <!--各项目付费次数统计 table 结束-->
+            </div>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+/*日期选择下拉框宽度*/
+
+.datetimepicker {
+    width: 400px;
+}
+</style>

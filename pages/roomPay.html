@@ -1,0 +1,174 @@
+<div ng-controller="roomPayController as roomPay" ng-init="roomPay.init()" class="col-sm-9 page col-right">
+    <!--glyphicon-th-->
+    <a>
+        <strong>
+            <i class="glyphicon glyphicon-stats"></i>
+            统计
+            <i class="glyphicon glyphicon-chevron-right"></i>
+            订房营收
+        </strong>
+    </a>
+    <hr>
+    <!--loading 筛选条件 项目列表-->
+    <div ng-show="roomPay.loadingProList">loadingProList...</div>
+    <!--loading 筛选条件 项目列表-->
+    <!--loading 筛选条件 图1-->
+    <div ng-show="roomPay.loadingChart1">loadingChart1...</div>
+    <!--loading 筛选条件 图1-->
+    <!--loading 筛选条件 图2-->
+    <div ng-show="roomPay.loadingChart2">loadingChart2...</div>
+    <!--loading 筛选条件 图2-->
+    <!--loading 筛选条件 图3-->
+    <div ng-show="roomPay.loadingChart3">loadingChart3...</div>
+    <!--loading 筛选条件 图3-->
+    <!--loading 筛选条件 图4-->
+    <div ng-show="roomPay.loadingChart4">loadingChart4...</div>
+    <!--loading 筛选条件 图4-->
+    <!--筛选 开始-->
+    <div class="row">
+        <div class="col-xs-4">
+            <!--筛选条件 开始日期 开始-->
+            <div class="dropdown form-group">
+                <a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target="#" href="#">
+                    <div class="input-group date">
+                        <span class="input-group-addon" id="basic-addon1">开始</span>
+                        <input type="text" class="form-control" data-ng-model="searchStartDate">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                    </div>
+                </a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <datetimepicker data-ng-model="searchStartDate" data-datetimepicker-config="{renderOn: 'start-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}" data-on-set-time="startDateOnSetTime()" data-before-render="startDateBeforeRender($dates)"></datetimepicker>
+                </ul>
+            </div>
+            <!--筛选条件 开始日期 结束-->
+        </div>
+        <div class="col-xs-4">
+            <!--筛选条件 结束日期 开始-->
+            <div class="dropdown form-group">
+                <a class="dropdown-toggle" id="dropdownEnd" role="button" data-toggle="dropdown" data-target="#" href="#">
+                    <div class="input-group date">
+                        <span class="input-group-addon" id="basic-addon2">结束</span>
+                        <input type="text" class="form-control" data-ng-model="searchEndDate">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                    </div>
+                </a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <datetimepicker data-ng-model="searchEndDate" data-datetimepicker-config="{renderOn: 'end-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}" data-on-set-time="endDateOnSetTime()" data-before-render="startDateBeforeRender($dates)"></datetimepicker>
+                </ul>
+            </div>
+            <!--筛选条件 结束日期 结束-->
+        </div>
+        <div class="col-xs-4">
+            <!--筛选条件 项目 开始-->
+            <select ng-model="roomPay.searchVal.project" ng-change="roomPay.search()" class="form-control">
+                <option ng-repeat="item in roomPay.searchVal.projects" value="{{item.value}}">{{item.name}}</option>
+            </select>
+            <!--筛选条件 项目 结束-->
+        </div>
+    </div>
+    <!--筛选 结束-->
+    
+    <div class="row">
+        <div class="col-lg-6 col-md-12">
+            <div class="row">
+                <div class="col-xs-12">
+                    <!--每日订单金额统计 chart 开始-->
+                    <div fusioncharts width="100%" height="400" type="msline" chart="{{attrs3}}" categories="{{categories3}}" dataset="{{dataset3}}"></div>
+                    <!--每日订单金额统计 chart 结束-->
+                </div>
+                <!--每日支付金额统计 table 开始-->
+                <div class="col-xs-12">
+                    <table class="table">
+                        <th><a ng-click="roomPay.changeOrderby(2, 'date')">日期</a></th>
+                        <th><a ng-click="roomPay.changeOrderby(2, 'sumPPrice')">已完成订单总金额</a></th>
+                        <tr ng-repeat="n in roomPay.dataSet3 | orderBy: roomPay.orderby[2].sort : roomPay.orderby[2].desc">
+                            <td>{{n.date}}</td>
+                            <td>{{n.sumPPrice}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <!--每日支付金额统计 table 结束-->
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12">
+            <div class="row">
+                <div class="col-xs-12">
+                    <!--每日支付次数统计 chart 开始-->
+                    <div fusioncharts width="100%" height="400" type="msline" chart="{{attrs4}}" categories="{{categories4}}" dataset="{{dataset4}}"></div>
+                    <!--每日支付次数统计 chart 结束-->
+                </div>
+                <!--每日支付次数统计 table 开始-->
+                <div class="col-xs-12">
+                    <table class="table">
+                        <th><a ng-click="roomPay.changeOrderby(3, 'date')">日期</a></th>
+                        <th><a ng-click="roomPay.changeOrderby(3, 'ALL')">总订单量</a></th>
+                        <th><a ng-click="roomPay.changeOrderby(3, 'COMPLETED')">已完成订单量</a></th>
+                        <tr ng-repeat="n in roomPay.dataSet4 | orderBy: roomPay.orderby[3].sort : roomPay.orderby[3].desc">
+                            <td>{{n.date}}</td>
+                            <td>{{n.ALL}}</td>
+                            <td>{{n.COMPLETED}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <!--每日支付次数统计 table 结束-->
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-lg-6 col-md-12">
+            <div class="row">
+                <!--各项目付费金额统计 chart 开始-->
+                <div class="col-xs-12">
+                    <h5>总金额 {{roomPay.dataset1.total}}（元）</h5>
+                    <div fusioncharts width="100%" height="400" type="mscolumn2d" chart="{{roomPay.attrs1}}" categories="{{roomPay.categories1}}" dataset="{{roomPay.dataset1}}"></div>
+                </div>
+                <!--各项目付费金额统计 chart 结束-->
+                <!--各项目付费金额统计 table 开始-->
+                <div class="col-xs-12">
+                    <table class="table">
+                        <th><a ng-click="roomPay.changeOrderby(0, 'projectList')">项目</a></th>
+                        <th><a ng-click="roomPay.changeOrderby(0, 'COMPLETED')">已完成订单金额</a></th>
+                        <tr ng-repeat="n in roomPay.dataSet1 | orderBy: roomPay.orderby[0].sort : roomPay.orderby[0].desc">
+                            <td>{{n.projectList}}</td>
+                            <td>{{n.COMPLETED}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <!--各项目付费金额统计 table 结束-->
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-12">
+            <div class="row">
+                <!--各项目付费次数统计 chart 开始-->
+                <div class="col-xs-12">
+                    <h5>订单总量 {{roomPay.dataSet2.total1}}，已完成订单总量 {{roomPay.dataSet2.total2}}</h5>
+                    <div fusioncharts width="100%" height="400" type="mscolumn2d" chart="{{attrs2}}" categories="{{categories2}}" dataset="{{dataset2}}"></div>
+                </div>
+                <!--各项目付费次数统计 chart 结束-->
+                <!--各项目付费次数统计 table 开始-->
+                <div class="col-xs-12">
+                    <table class="table">
+                        <th><a ng-click="roomPay.changeOrderby(1, 'projectList')">项目</a></th>
+                        <th><a ng-click="roomPay.changeOrderby(1, 'COMPLETED')">已完成订单量</a></th>
+                        <th><a ng-click="roomPay.changeOrderby(1, 'ALL')">订单总量</a></th>
+                        <tr ng-repeat="n in roomPay.dataSet2 | orderBy: roomPay.orderby[1].sort : roomPay.orderby[1].desc">
+                            <td>{{n.projectList}}</td>
+                            <td>{{n.COMPLETED}}</td>
+                            <td>{{n.ALL}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <!--各项目付费次数统计 table 结束-->
+            </div>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+/*日期选择下拉框宽度*/
+
+.datetimepicker {
+    width: 400px;
+}
+</style>

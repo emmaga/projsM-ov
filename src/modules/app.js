@@ -64,6 +64,14 @@
                 url: '/moviePay',
                 templateUrl: 'pages/moviePay.html'
             })
+            .state('app.shopPay', {
+                url: '/shopPay',
+                templateUrl: 'pages/shopPay.html'
+            })
+            .state('app.roomPay', {
+                url: '/roomPay',
+                templateUrl: 'pages/roomPay.html'
+            })
             // .state('app.proxy', {
             //     url: '/proxy',
             //     templateUrl: 'pages/proxy.html'
