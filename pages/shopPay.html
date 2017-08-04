@@ -5,7 +5,7 @@
             <i class="glyphicon glyphicon-stats"></i>
             统计
             <i class="glyphicon glyphicon-chevron-right"></i>
-            点播营收
+            商城营收
         </strong>
     </a>
     <hr>
@@ -72,22 +72,18 @@
         <div class="col-lg-6 col-md-12">
             <div class="row">
                 <div class="col-xs-12">
-                    <!--每日支付金额统计 chart 开始-->
+                    <!--每日订单金额统计 chart 开始-->
                     <div fusioncharts width="100%" height="400" type="msline" chart="{{attrs3}}" categories="{{categories3}}" dataset="{{dataset3}}"></div>
-                    <!--每日支付金额统计 chart 结束-->
+                    <!--每日订单金额统计 chart 结束-->
                 </div>
                 <!--每日支付金额统计 table 开始-->
                 <div class="col-xs-12">
                     <table class="table">
                         <th><a ng-click="shopPay.changeOrderby(2, 'date')">日期</a></th>
-                        <th><a ng-click="shopPay.changeOrderby(2, 'sumPPrice')">总金额</a></th>
-                        <th><a ng-click="shopPay.changeOrderby(2, 'onlyPPrice')">单次支付金额</a></th>
-                        <th><a ng-click="shopPay.changeOrderby(2, 'packagePPrice')">打包支付金额</a></th>
+                        <th><a ng-click="shopPay.changeOrderby(2, 'sumPPrice')">已完成订单总金额</a></th>
                         <tr ng-repeat="n in shopPay.dataSet3 | orderBy: shopPay.orderby[2].sort : shopPay.orderby[2].desc">
                             <td>{{n.date}}</td>
                             <td>{{n.sumPPrice}}</td>
-                            <td>{{n.onlyPPrice}}</td>
-                            <td>{{n.packagePPrice}}</td>
                         </tr>
                     </table>
                 </div>
@@ -105,14 +101,12 @@
                 <div class="col-xs-12">
                     <table class="table">
                         <th><a ng-click="shopPay.changeOrderby(3, 'date')">日期</a></th>
-                        <th><a ng-click="shopPay.changeOrderby(3, 'sumPCount')">总次数</a></th>
-                        <th><a ng-click="shopPay.changeOrderby(3, 'onlyPCount')">单次支付次数</a></th>
-                        <th><a ng-click="shopPay.changeOrderby(3, 'packagePCount')">打包支付次数</a></th>
+                        <th><a ng-click="shopPay.changeOrderby(3, 'ALL')">总订单量</a></th>
+                        <th><a ng-click="shopPay.changeOrderby(3, 'COMPLETED')">已完成订单量</a></th>
                         <tr ng-repeat="n in shopPay.dataSet4 | orderBy: shopPay.orderby[3].sort : shopPay.orderby[3].desc">
                             <td>{{n.date}}</td>
-                            <td>{{n.sumPCount}}</td>
-                            <td>{{n.onlyPCount}}</td>
-                            <td>{{n.packagePCount}}</td>
+                            <td>{{n.ALL}}</td>
+                            <td>{{n.COMPLETED}}</td>
                         </tr>
                     </table>
                 </div>
@@ -133,15 +127,11 @@
                 <!--各项目付费金额统计 table 开始-->
                 <div class="col-xs-12">
                     <table class="table">
-                        <th><a ng-click="shopPay.changeOrderby(0, 'projectListCHZ')">项目</a></th>
-                        <th><a ng-click="shopPay.changeOrderby(0, 'sumPPrice')">总金额</a></th>
-                        <th><a ng-click="shopPay.changeOrderby(0, 'onlyPPrice')">单次支付金额</a></th>
-                        <th><a ng-click="shopPay.changeOrderby(0, 'packagePPrice')">打包支付金额</a></th>
+                        <th><a ng-click="shopPay.changeOrderby(0, 'projectList')">项目</a></th>
+                        <th><a ng-click="shopPay.changeOrderby(0, 'COMPLETED')">已完成订单金额</a></th>
                         <tr ng-repeat="n in shopPay.dataSet1 | orderBy: shopPay.orderby[0].sort : shopPay.orderby[0].desc">
-                            <td>{{n.projectListCHZ}}</td>
-                            <td>{{n.sumPPrice}}</td>
-                            <td>{{n.onlyPPrice}}</td>
-                            <td>{{n.packagePPrice}}</td>
+                            <td>{{n.projectList}}</td>
+                            <td>{{n.COMPLETED}}</td>
                         </tr>
                     </table>
                 </div>
@@ -153,22 +143,20 @@
             <div class="row">
                 <!--各项目付费次数统计 chart 开始-->
                 <div class="col-xs-12">
-                    <h5>总次数 {{dataset2.total}}（次）</h5>
+                    <h5>订单总量 {{shopPay.dataSet2.total1}}，已完成订单总量 {{shopPay.dataSet2.total2}}</h5>
                     <div fusioncharts width="100%" height="400" type="mscolumn2d" chart="{{attrs2}}" categories="{{categories2}}" dataset="{{dataset2}}"></div>
                 </div>
                 <!--各项目付费次数统计 chart 结束-->
                 <!--各项目付费次数统计 table 开始-->
                 <div class="col-xs-12">
                     <table class="table">
-                        <th><a ng-click="shopPay.changeOrderby(1, 'projectListCHZ')">项目</a></th>
-                        <th><a ng-click="shopPay.changeOrderby(1, 'sumPCount')">总次数</a></th>
-                        <th><a ng-click="shopPay.changeOrderby(1, 'onlyPCount')">单次支付次数</a></th>
-                        <th><a ng-click="shopPay.changeOrderby(1, 'packagePCount')">打包支付次数</a></th>
+                        <th><a ng-click="shopPay.changeOrderby(1, 'projectList')">项目</a></th>
+                        <th><a ng-click="shopPay.changeOrderby(1, 'COMPLETED')">已完成订单量</a></th>
+                        <th><a ng-click="shopPay.changeOrderby(1, 'ALL')">订单总量</a></th>
                         <tr ng-repeat="n in shopPay.dataSet2 | orderBy: shopPay.orderby[1].sort : shopPay.orderby[1].desc">
-                            <td>{{n.projectListCHZ}}</td>
-                            <td>{{n.sumPCount}}</td>
-                            <td>{{n.onlyPCount}}</td>
-                            <td>{{n.packagePCount}}</td>
+                            <td>{{n.projectList}}</td>
+                            <td>{{n.COMPLETED}}</td>
+                            <td>{{n.ALL}}</td>
                         </tr>
                     </table>
                 </div>

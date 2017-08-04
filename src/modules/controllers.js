@@ -2236,7 +2236,7 @@
             self.initCharts = function () {
                 // init chart1
                 self.attrs1 = {
-                    "caption": "各项目付费金额统计",
+                    "caption": "各项目订单金额统计",
                     "xAxisname": "项目",
                     "yAxisName": "金额 (元)",
                     "numberPrefix": "¥ ",
@@ -2293,7 +2293,7 @@
 
                 // init chart2
                 $scope.attrs2 = {
-                    "caption": "各项目付费次数统计",
+                    "caption": "各项目订单数量统计",
                     "xAxisname": "项目",
                     "yAxisName": "次数",
                     "numberPrefix": "",
@@ -2342,7 +2342,7 @@
 
                 // init chart3
                 $scope.attrs3 = {
-                    "caption": "每日支付金额统计",
+                    "caption": "每日订单金额统计",
                     "numberprefix": "¥ ",
                     "yAxisname": "金额（元）",
                     "xAxisName": "日期",
@@ -2373,7 +2373,7 @@
 
                 // init chart4
                 $scope.attrs4 = {
-                    "caption": "每日支付次数统计",
+                    "caption": "每日订单量统计",
                     "numberprefix": "",
                     "yAxisname": "次数（次）",
                     "xAxisName": "日期",
@@ -2461,7 +2461,7 @@
                 self.loadingChart1 = true;
                 $http({
                     method: 'POST',
-                    url: util.getApiUrl('statistics', '', 'server'),
+                    url: util.getApiUrl('shop/statistics', '', 'server'),
                     data: data
                 }).then(function successCallback(response) {
                     var data = response.data;
@@ -2474,28 +2474,18 @@
 
                         data.projectListCHZ.forEach(function(item, index, array) {
                             if (index < 5) self.categories1[0].category.push({label: item});
-                            self.dataSet1.push({'projectListCHZ': item});
+                            self.dataSet1.push({'projectList': item});
                         });
 
-                        self.dataset1.push({seriesname: "打包支付金额", data:[]});
-                        data.packagePPrice.forEach(function(item, index, array) {
+                        self.dataset1.push({seriesname: "已完成订单金额", data:[]});
+                        data.COMPLETED.forEach(function(item, index, array) {
                             if (index < 5) self.dataset1[0].data.push({ value: item/100 });
-                            self.dataSet1[index].packagePPrice = item/100;
+                            self.dataSet1[index].COMPLETED = item/100;
                         });
 
-                        self.dataset1.push({seriesname: "单次支付金额", data:[]});
-                        data.onlyPPrice.forEach(function(item, index, array) {
-                            if (index < 5) self.dataset1[1].data.push({ value: item/100 });
-                            self.dataSet1[index].onlyPPrice = item/100;
-                        });
-
-                        self.dataset1.push({seriesname: "总金额", data:[]});
-                        data.sumPPrice.forEach(function(item, index, array) {
-                            // self.dataset1.total += Number(item);
-                            if (index < 5) self.dataset1[2].data.push({ value: item/100 });
-                            self.dataSet1[index].sumPPrice = item/100;
-                        });
-                        self.dataset1.total = data.allProjectSumPrice/100;
+                        data.COMPLETED.forEach(function(item, index, array) {
+                            self.dataset1.total += Number(item)
+                        })
 
                         deferred.resolve();
                     } 
@@ -2525,7 +2515,7 @@
                 self.loadingChart2 = true;
                 $http({
                     method: 'POST',
-                    url: util.getApiUrl('statistics', '', 'server'),
+                    url: util.getApiUrl('shop/statistics', '', 'server'),
                     data: data
                 }).then(function successCallback(response) {
                     var data = response.data;
@@ -2533,34 +2523,34 @@
                         $scope.categories2[0].category = [];
                         $scope.dataset2 = [];
                         self.dataSet2 = [];
-                        $scope.dataset2.total = 0;
-
+                        self.dataSet2.total1 = 0
+                        self.dataSet2.total2 = 0
                         data.projectListCHZ.forEach(function(item, index, array) {
                             if (index < 5) $scope.categories2[0].category.push({label: item});
-                            self.dataSet2.push({'projectListCHZ': item});
+                            self.dataSet2.push({'projectList': item});
                         });
-
-                        $scope.dataset2.push({seriesname: "打包支付次数", data:[]});
-                        data.packagePCount.forEach(function(item, index, array) {
+                        $scope.dataset2.push({seriesname: "订单总量", data:[]});
+                        data.ALL.forEach(function(item, index, array) {
                             if (index < 5) $scope.dataset2[0].data.push({ value: item });
-                            self.dataSet2[index].packagePCount = Number(item);
-                        });
-
-                        $scope.dataset2.push({seriesname: "单次支付次数", data:[]});
-                        data.onlyPCount.forEach(function(item, index, array) {
-                            if (index < 5) $scope.dataset2[1].data.push({ value: item });
-                            self.dataSet2[index].onlyPCount = Number(item);
-                        });
-
-                        $scope.dataset2.push({seriesname: "总次数", data:[]});
-                        data.sumPCount.forEach(function(item, index, array) {
-                            if (index < 5) $scope.dataset2[2].data.push({ value: item });
                             // $scope.dataset2.total += Number(item);
-                            self.dataSet2[index].sumPCount = Number(item);
+                            self.dataSet2[index].ALL = Number(item);
                         });
-                        $scope.dataset2.total = data.allProjectSumCount;
+                        $scope.dataset2.push({seriesname: "已完成订单量", data:[]});
+                        data.COMPLETED.forEach(function(item, index, array) {
+                            if (index < 5) $scope.dataset2[1].data.push({ value: item });
+                            self.dataSet2[index].COMPLETED = Number(item);
+                        });
+
+                        data.ALL.forEach(function(item, index, array) {
+                            self.dataSet2.total1 += Number(item);
+                        });
+
+                        data.COMPLETED.forEach(function(item, index, array) {
+                            self.dataSet2.total2 += Number(item);
+                        });
+
                         deferred.resolve();
-                    } 
+                    }
                     else {
                         alert(data.errInfo);
                         deferred.reject();
@@ -2587,7 +2577,7 @@
                 self.loadingChart3 = true;
                 $http({
                     method: 'POST',
-                    url: util.getApiUrl('statistics', '', 'server'),
+                    url: util.getApiUrl('shop/statistics', '', 'server'),
                     data: data
                 }).then(function successCallback(response) {
                     var data = response.data;
@@ -2596,28 +2586,17 @@
                         $scope.dataset3 = [];
                         self.dataSet3 = [];
 
-                        data.dateList.forEach(function(item, index, array) {
+                        data.dataList.forEach(function(item, index, array) {
                             $scope.categories3[0].category.push({label: item.substring(5, 10)});
                             self.dataSet3.push({'date': item.substring(5, 10)});
                         });
 
-                        $scope.dataset3.push({seriesname: "总金额", data:[]});
-                        data.sumPPrice.forEach(function(item, index, array) {
+                        $scope.dataset3.push({seriesname: "已完成订单", data:[]});
+                        data.COMPLETED.forEach(function(item, index, array) {
                             $scope.dataset3[0].data.push({ value: item/100 });
                             self.dataSet3[index].sumPPrice = item/100;
                         });
 
-                        $scope.dataset3.push({seriesname: "单次支付金额", data:[]});
-                        data.onlyPPrice.forEach(function(item, index, array) {
-                            $scope.dataset3[1].data.push({ value: item/100 });
-                            self.dataSet3[index].onlyPPrice = item/100;
-                        });
-
-                        $scope.dataset3.push({seriesname: "打包支付金额", data:[]});
-                        data.packagePPrice.forEach(function(item, index, array) {
-                            $scope.dataset3[2].data.push({ value: item/100 });
-                            self.dataSet3[index].packagePPrice = item/100;
-                        });
                         deferred.resolve();
                     } 
                     else {
@@ -2646,7 +2625,7 @@
                 self.loadingChart4 = true;
                 $http({
                     method: 'POST',
-                    url: util.getApiUrl('statistics', '', 'server'),
+                    url: util.getApiUrl('shop/statistics', '', 'server'),
                     data: data
                 }).then(function successCallback(response) {
                     var data = response.data;
@@ -2655,28 +2634,23 @@
                         $scope.dataset4 = [];
                         self.dataSet4 = [];
 
-                        data.dateList.forEach(function(item, index, array) {
+                        data.dataList.forEach(function(item, index, array) {
                             $scope.categories4[0].category.push({label: item.substring(5, 10)});
                             self.dataSet4.push({'date': item.substring(5, 10)});
                         });
 
-                        $scope.dataset4.push({seriesname: "总次数", data:[]});
-                        data.sumPCount.forEach(function(item, index, array) {
+                        $scope.dataset4.push({seriesname: "总订单量", data:[]});
+                        data.ALL.forEach(function(item, index, array) {
                             $scope.dataset4[0].data.push({ value: item });
-                            self.dataSet4[index].sumPCount = item;
+                            self.dataSet4[index].ALL = item;
                         });
 
-                        $scope.dataset4.push({seriesname: "单次支付次数", data:[]});
-                        data.onlyPCount.forEach(function(item, index, array) {
+                        $scope.dataset4.push({seriesname: "已完成订单量", data:[]});
+                        data.COMPLETED.forEach(function(item, index, array) {
                             $scope.dataset4[1].data.push({ value: item });
-                            self.dataSet4[index].onlyPCount = item;
+                            self.dataSet4[index].COMPLETED = item;
                         });
 
-                        $scope.dataset4.push({seriesname: "打包支付次数", data:[]});
-                        data.packagePCount.forEach(function(item, index, array) {
-                            $scope.dataset4[2].data.push({ value: item });
-                            self.dataSet4[index].packagePCount = item;
-                        });
                         deferred.resolve();
                     } 
                     else {
