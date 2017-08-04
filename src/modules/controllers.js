@@ -1990,6 +1990,7 @@
                         data.COMPLETED.forEach(function(item, index, array) {
                             self.dataset1.total += Number(item)
                         })
+                        self.dataset1.total /= 100
 
                         deferred.resolve();
                     } 
@@ -2486,6 +2487,7 @@
                         data.COMPLETED.forEach(function(item, index, array) {
                             self.dataset1.total += Number(item)
                         })
+                        self.dataset1.total /= 100
 
                         deferred.resolve();
                     } 
