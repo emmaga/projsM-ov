@@ -1166,6 +1166,7 @@
 
     .controller('moviePayController', ['$http', '$scope', '$state', '$location','$filter', '$stateParams', '$q', 'util', 'CONFIG',
         function($http, $scope, $state,$location, $filter, $stateParams, $q, util, CONFIG) {
+            
             var self = this;
             self.searchVal = {}; // 筛选内容
 
@@ -1416,7 +1417,11 @@
                             self.searchVal.project = 'all';
                         })
                         deferred.resolve();
-                    } 
+                    }
+                    else if (data.rescode == '401') {
+                        alert('登录超时，请重现登录。')
+                        $location.path("pages/login.html");
+                    }
                     else {
                         alert(data.rescode + ' ' + data.errInfo);
                         deferred.reject();
@@ -1939,6 +1944,10 @@
                         })
                         deferred.resolve();
                     } 
+                    else if (data.rescode == '401') {
+                        alert('登录超时，请重现登录。')
+                        $location.path("pages/login.html");
+                    }
                     else {
                         alert(data.rescode + ' ' + data.errInfo);
                         deferred.reject();
@@ -2091,7 +2100,7 @@
                         $scope.dataset3 = [];
                         self.dataSet3 = [];
 
-                        data.dataList.forEach(function(item, index, array) {
+                        data.dateList.forEach(function(item, index, array) {
                             $scope.categories3[0].category.push({label: item.substring(5, 10)});
                             self.dataSet3.push({'date': item.substring(5, 10)});
                         });
@@ -2139,7 +2148,7 @@
                         $scope.dataset4 = [];
                         self.dataSet4 = [];
 
-                        data.dataList.forEach(function(item, index, array) {
+                        data.dateList.forEach(function(item, index, array) {
                             $scope.categories4[0].category.push({label: item.substring(5, 10)});
                             self.dataSet4.push({'date': item.substring(5, 10)});
                         });
@@ -2436,6 +2445,10 @@
                         })
                         deferred.resolve();
                     } 
+                    else if (data.rescode == '401') {
+                        alert('登录超时，请重现登录。')
+                        $location.path("pages/login.html");
+                    }
                     else {
                         alert(data.rescode + ' ' + data.errInfo);
                         deferred.reject();
@@ -2588,7 +2601,7 @@
                         $scope.dataset3 = [];
                         self.dataSet3 = [];
 
-                        data.dataList.forEach(function(item, index, array) {
+                        data.dateList.forEach(function(item, index, array) {
                             $scope.categories3[0].category.push({label: item.substring(5, 10)});
                             self.dataSet3.push({'date': item.substring(5, 10)});
                         });
@@ -2636,7 +2649,7 @@
                         $scope.dataset4 = [];
                         self.dataSet4 = [];
 
-                        data.dataList.forEach(function(item, index, array) {
+                        data.dateList.forEach(function(item, index, array) {
                             $scope.categories4[0].category.push({label: item.substring(5, 10)});
                             self.dataSet4.push({'date': item.substring(5, 10)});
                         });
