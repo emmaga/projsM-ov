@@ -1793,10 +1793,10 @@
                 ];
                 self.dataset1 = [];
                 self.orderby = [
+                    {sort: 'COMPLETED', desc: true},
+                    {sort: 'COMPLETED', desc: true},
                     {sort: 'sumPPrice', desc: true},
-                    {sort: 'sumPCount', desc: true},
-                    {sort: '', desc: true},
-                    {sort: '', desc: true}
+                    {sort: 'ALL', desc: true}
                 ];
 
 
@@ -2294,10 +2294,10 @@
                 ];
                 self.dataset1 = [];
                 self.orderby = [
+                    {sort: 'COMPLETED', desc: true},
+                    {sort: 'COMPLETED', desc: true},
                     {sort: 'sumPPrice', desc: true},
-                    {sort: 'sumPCount', desc: true},
-                    {sort: '', desc: true},
-                    {sort: '', desc: true}
+                    {sort: 'ALL', desc: true}
                 ];
 
 
