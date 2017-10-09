@@ -6,21 +6,37 @@
         </strong>
     </a>
     <hr>
+    <!--搜索框-->
+    <div class="row">
+        <div class="col-lg-3 col-md-4">
+            <div class="input-group">
+                <input ng-model="projects.keywords" type="text" class="form-control" placeholder="请输入项目名称"/>
+                <span class="input-group-btn">
+                  <button class="btn btn-primary" ng-click="projects.getInfo()" ng-disabled="projects.loading"
+                          class="btn btn-primary">搜索</button>
+                </span>
+            </div><!-- /input-group -->
+        </div><!-- /.col-lg-6 -->
+    </div><!-- /.row -->
+    <hr class="break-space">
     <div class="btn-group">
-        <button ng-click="projects.add()" type="button" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-plus"></i> 添加项目</button>
+        <button ng-click="projects.add()" type="button" class="btn btn-default btn-sm">
+            <i class="glyphicon glyphicon-plus"></i> 添加项目
+        </button>
     </div>
     <hr class="break-space">
     <table class="table table-hover table-condensed" ng-table="projects.tableParams">
         <div ng-show="projects.loading">loading...</div>
         <tr ng-repeat="project in $data track by $index">
-            <td data-title="'项目登录名'" >{{project.ProjectName}}</td>
-            <td data-title="'项目名称'" >{{project.ProjectNameCHZ}}</td>
-            <td data-title="'在线情况'" >{{project.Online}}/{{project.Total}}</td>
-            <td data-title="'微信 AppID'" >{{project.WXAppID}}</td>
-            <td data-title="'微信名称'" >{{project.WXName}}</td>
+            <td data-title="'项目登录名'">{{project.ProjectName}}</td>
+            <td data-title="'项目名称'">{{project.ProjectNameCHZ}}</td>
+            <td data-title="'在线情况'">{{project.Online}}/{{project.Total}}</td>
+            <td data-title="'微信 AppID'">{{project.WXAppID}}</td>
+            <td data-title="'微信名称'">{{project.WXName}}</td>
             <td data-title="'操作'">
                 <a ng-click="projects.edit(project)" style="cursor: pointer">编辑</a>
-                <a ng-click="projects.queryProxy(project.ProjectName, project.ProjectNameCHZ)" ng-class="{'text-danger':project.NoticeFlag}" style="cursor: pointer">
+                <a ng-click="projects.queryProxy(project.ProjectName, project.ProjectNameCHZ)"
+                   ng-class="{'text-danger':project.NoticeFlag}" style="cursor: pointer">
                     小前端<i class="glyphicon glyphicon-warning-sign text-danger" ng-show="project.NoticeFlag"></i>
                 </a>
             </td>
