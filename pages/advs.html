@@ -1,32 +1,55 @@
 <div ng-controller="advsController as advs" ng-init="advs.init()" class="col-sm-9 page col-right">
-   <a>
-       <strong>
-           <i class="glyphicon glyphicon-glass"></i>
-           广告库发布
-       </strong>
-   </a>
+    <a>
+        <strong>
+            <i class="glyphicon glyphicon-glass"></i>
+            广告库发布
+        </strong>
+    </a>
 
-   <hr>
-   <div class="btn-group">
-       <button ng-disabled="!advs.isChecked() || advs.sending" ng-click="advs.send()" type="button" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-send"></i> 一键发布</button>
-       <div ng-show="advs.sending">sending...</div>
-   </div>
-   <hr class="break-space">
-   
-   <table class="table table-hover table-condensed" ng-table="advs.tableParams">
-       <div ng-show="advs.loading">loading...</div>
-       <tr ng-repeat="row in $data track by $index">
-           <td width="30" header="'ng-table/headers/checkbox.html'">
-               <input type="checkbox" ng-model="advs.checkboxes.items[row.ProjectName]" />
-           </td>
-           <td data-title="'项目登录名'" >{{row.ProjectName}}</td>
-           <td data-title="'项目名称'" >{{row.ProjectNameCHZ}}</td>
-           <td data-title="'微信 AppID'" >{{row.WXAppID}}</td>
-           <td data-title="'微信名称'" >{{row.WXName}}</td>
-       </tr>
-   </table>
-   <div ng-show="advs.noData">查无数据</div>
-   <script type="text/ng-template" id="ng-table/headers/checkbox.html">
-       <input type="checkbox" ng-model="advs.checkboxes.checked" value="" />
-   </script> 
+    <hr>
+    <!--搜索框-->
+    <div class="row">
+        <div class="col-lg-3 col-md-4">
+            <div class="input-group">
+                <input ng-model="advs.keywords" type="text" class="form-control" placeholder="请输入项目名称"/>
+                <span class="input-group-btn">
+                  <button class="btn btn-primary" ng-click="advs.getInfo()" ng-disabled="advs.loading"
+                          class="btn btn-primary">搜索</button>
+                </span>
+            </div><!-- /input-group -->
+        </div><!-- /.col-lg-6 -->
+    </div><!-- /.row -->
+    <!--搜索框-->
+    <hr class="break-space">
+    <div class="btn-group">
+        <button ng-disabled="!advs.isChecked() || advs.sending" ng-click="advs.send()" type="button"
+                class="btn btn-default btn-sm">
+            <i class="glyphicon glyphicon-send"></i> 一键发布
+        </button>
+        <div ng-show="advs.sending">sending...</div>
+        <div class="tags">
+            <span ng-repeat="(key, value) in advs.checkboxes.items" ng-show="value" class="tag label label-success">
+                {{key}}
+                <a class="close" ng-click="advs.checkboxes.items[key]=false">×</a>
+            </span>
+        </div>
+    </div>
+    <hr class="break-space">
+
+    <table class="table table-hover table-condensed" ng-table="advs.tableParams">
+        <div ng-show="advs.loading">loading...</div>
+        <tr ng-repeat="row in $data track by $index">
+            <td width="30" header="'ng-table/headers/checkbox.html'">
+                <input type="checkbox" ng-model="advs.checkboxes.items[row.ProjectName]"/>
+            </td>
+            <td data-title="'项目登录名'">{{row.ProjectName}}</td>
+            <td data-title="'项目名称'">{{row.ProjectNameCHZ}}</td>
+            <td data-title="'微信 AppID'">{{row.WXAppID}}</td>
+            <td data-title="'微信名称'">{{row.WXName}}</td>
+        </tr>
+    </table>
+    <div ng-show="advs.noData">查无数据</div>
+    <script type="text/ng-template" id="ng-table/headers/checkbox.html">
+        <input type="checkbox" ng-model="advs.checkboxes.checked" value=""/>
+    </script>
 </div>

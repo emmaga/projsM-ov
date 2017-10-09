@@ -7,26 +7,48 @@
     </a>
 
     <hr>
+    <!--搜索框-->
+    <div class="row">
+        <div class="col-lg-3 col-md-4">
+            <div class="input-group">
+                <input ng-model="musics.keywords" type="text" class="form-control" placeholder="请输入项目名称"/>
+                <span class="input-group-btn">
+                  <button class="btn btn-primary" ng-click="musics.getInfo()" ng-disabled="musics.loading"
+                          class="btn btn-primary">搜索</button>
+                </span>
+            </div><!-- /input-group -->
+        </div><!-- /.col-lg-6 -->
+    </div><!-- /.row -->
+    <hr class="break-space">
     <div class="btn-group">
-        <button ng-disabled="!musics.isChecked() || musics.sending" ng-click="musics.send()" type="button" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-send"></i> 一键发布</button>
+        <button ng-disabled="!musics.isChecked() || musics.sending" ng-click="musics.send()" type="button"
+                class="btn btn-default btn-sm">
+            <i class="glyphicon glyphicon-send"></i> 一键发布
+        </button>
         <div ng-show="musics.sending">sending...</div>
+        <div class="tags">
+            <span ng-repeat="(key, value) in musics.checkboxes.items" ng-show="value" class="tag label label-success">
+                {{key}}
+                <a class="close" ng-click="musics.checkboxes.items[key]=false">×</a>
+            </span>
+        </div>
     </div>
     <hr class="break-space">
-    
+
     <table class="table table-hover table-condensed" ng-table="musics.tableParams">
         <div ng-show="musics.loading">loading...</div>
         <tr ng-repeat="row in $data track by $index">
             <td width="30" header="'ng-table/headers/checkbox.html'">
-                <input type="checkbox" ng-model="musics.checkboxes.items[row.ProjectName]" />
+                <input type="checkbox" ng-model="musics.checkboxes.items[row.ProjectName]"/>
             </td>
-            <td data-title="'项目登录名'" >{{row.ProjectName}}</td>
-            <td data-title="'项目名称'" >{{row.ProjectNameCHZ}}</td>
-            <td data-title="'微信 AppID'" >{{row.WXAppID}}</td>
-            <td data-title="'微信名称'" >{{row.WXName}}</td>
+            <td data-title="'项目登录名'">{{row.ProjectName}}</td>
+            <td data-title="'项目名称'">{{row.ProjectNameCHZ}}</td>
+            <td data-title="'微信 AppID'">{{row.WXAppID}}</td>
+            <td data-title="'微信名称'">{{row.WXName}}</td>
         </tr>
     </table>
     <div ng-show="musics.noData">查无数据</div>
     <script type="text/ng-template" id="ng-table/headers/checkbox.html">
-        <input type="checkbox" ng-model="musics.checkboxes.checked" value="" />
+        <input type="checkbox" ng-model="musics.checkboxes.checked" value=""/>
     </script>
 </div>
